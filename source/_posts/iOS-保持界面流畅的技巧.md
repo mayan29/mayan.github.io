@@ -51,7 +51,7 @@ iOS 设备会始终使用双缓存，并开启垂直同步。而安卓设备直�
 
 对象的创建会分配内存、调整属性、甚至还有读取文件等操作，比较消耗 CPU 资源。
 
-1. 尽量用轻量的对象代替重量的对象，可以对性能有所优化：比如 CALayer 比 UIView 要轻量许多，那么不需要响应触摸事件的控件，用 CALayer 显示会更加合适。
+1. 尽量用轻量的对象代替重量的对象：比如 CALayer 比 UIView 要轻量许多，那么不需要响应触摸事件的控件，用 CALayer 显示会更加合适。
 2. 如果对象不涉及 UI 操作，则尽量放到后台线程去创建，但可惜的是包含有 CALayer 的控件，都只能在主线程创建和操作。
 3. 通过 Storyboard 创建视图对象时，其资源消耗会比直接通过代码创建对象要大非常多，在性能敏感的界面里不要使用 Storyboard。
 4. 如果对象可以复用，并且复用的代价比释放、创建新对象要小，那么这类对象应当尽量放到一个缓存池里复用。
@@ -68,7 +68,7 @@ iOS 设备会始终使用双缓存，并开启垂直同步。而安卓设备直�
 NSArray *tmp = self.array;
 self.array = nil;
 dispatch_async(queue, ^{
-[tmp class];
+    [tmp class];
 });
 ```
 
@@ -102,15 +102,15 @@ Autolayout 是苹果本身提倡的技术，在大部分情况下也能很好的
 
 ```objc
 - (void)display {
-dispatch_async(backgroundQueue, ^{
-CGContextRef ctx = CGBitmapContextCreate(...);
-// draw in context...
-CGImageRef img = CGBitmapContextCreateImage(ctx);
-CFRelease(ctx);
-dispatch_async(mainQueue, ^{
-layer.contents = img;
-});
-});
+    dispatch_async(backgroundQueue, ^{
+        CGContextRef ctx = CGBitmapContextCreate(...);
+        // draw in context...
+        CGImageRef img = CGBitmapContextCreateImage(ctx);
+        CFRelease(ctx);
+        dispatch_async(mainQueue, ^{
+            layer.contents = img;
+        });
+    });
 }
 ```
 
