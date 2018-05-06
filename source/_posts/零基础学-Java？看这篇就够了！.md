@@ -44,9 +44,9 @@ JRE 仅仅是运行工具，如需要开发工具则需搭建 JDK。JDK 开发�
 
 ```java
 class Demo {
-public static void main(String[] args) {
-System.out.println("Hello Java");
-}
+    public static void main(String[] args) {
+        System.out.println("Hello Java");
+    }
 }
 ```
 
@@ -54,7 +54,7 @@ System.out.println("Hello Java");
 
 ```java
 $ javac Demo.java 
-``` 
+```
 
 编译成功后在 Demo.java 文件当前目录下生成 Demo.class 文件，输入如下命令运行：
 
@@ -72,11 +72,11 @@ Hello Java
 
 Sublime Text 默认的 Java 处理方式仅仅是编译，Build 后会生成一个 .class 文件，而没有去运行，这时候就需要改配置文件达到编译 + 运行的目的。
 
-#### 1. Tools —> Build System —> New Build System
+__1.__ __Tools__ __—>__ __Build__ __System__ __—>__ __New__ __Build__ __System__
 
 ![image012](/img/img012.png)
 
-#### 2. 添加如下代码：
+__2.__ __添加如下代码：__
 
 ```java
 {
@@ -87,15 +87,15 @@ Sublime Text 默认的 Java 处理方式仅仅是编译，Build 后会生成一�
 }
 ```
 
-#### 3. 直接保存，名字随意
+__3.__ __直接保存，名字随意__
 
 ![image013](/img/img013.png)
 
-#### 4. Tools —> Build System —> 选择上一步保存的配置文件
+__4.__ __Tools__ __—>__ __Build__ __System__ __—>__ __选择上一步保存的配置文件__
 
 ![image014](/img/img014.png)
 
-#### 5. cmd + B 编译运行，就有输出结果了
+__5.__ __cmd__ __+__ __B__ __编译运行，就有输出结果了__
 
 ![image015](/img/img015.png)
 
@@ -208,9 +208,9 @@ __与运算__ __/__ __或运算__ __/__ __异或运算__
 
 ```java
 for (int i = 1; i <= 9; i++) {
-for (int j = 1; j <= i; j++) {
-System.out.println(j + "*" + i + "=" + j*i + "\t");
-}
+    for (int j = 1; j <= i; j++) {
+        System.out.println(j + "*" + i + "=" + j*i + "\t");
+    }
 }
 ```
 
@@ -220,11 +220,11 @@ System.out.println(j + "*" + i + "=" + j*i + "\t");
 
 ```java
 w: for (int i = 1; i <= 9; i++) {
-q: for (int j = 1; j <= i; j++) {
-System.out.println(j + "*" + i + "=" + j*i + "\t");
-break w;
-}
-}
+    q: for (int j = 1; j <= i; j++) {
+           System.out.println(j + "*" + i + "=" + j*i + "\t");
+           break w;
+       }
+   }
 ```
 
 ### 6. 数组
@@ -270,13 +270,13 @@ System.out.println(arr2);
 import java.util.Arrays;
 
 class Test {
-public static void main(String[] args) {
+    public static void main(String[] args) {
 
-int[] arr = {5, 2, 7, 4, 1, 3, 6};
-Arrays.sort(arr);
+    int[] arr = {5, 2, 7, 4, 1, 3, 6};
+    Arrays.sort(arr);
 
-System.out.println(Arrays.toString(arr));
-}
+    System.out.println(Arrays.toString(arr));
+    }
 }
 ```
 
@@ -287,58 +287,58 @@ System.out.println(Arrays.toString(arr));
 ```java
 // 方法一
 class Test {
-public static void main(String[] args) {
+    public static void main(String[] args) {
 
-System.out.println(Integer.toBinaryString(6));
-}
+        System.out.println(Integer.toBinaryString(6));
+    }
 }
 ```
 
 ```java
 // 方法二
 class Test {
-public static void main(String[] args) {
+    public static void main(String[] args) {
 
-toBin(6);
-}
+        toBin(6);
+    }
 
-public static void toBin(int num) {
+    public static void toBin(int num) {
 
-StringBuffer sb = new StringBuffer();
+        StringBuffer sb = new StringBuffer();
 
-while (num > 0) {
+        while (num > 0) {
 
-sb.append(num % 2);
-num = num >> 1;
-}
+            sb.append(num % 2);
+            num = num >> 1;
+        }
 
-System.out.println(sb.reverse());
-}
+        System.out.println(sb.reverse());
+    }
 }
 ```
 
 ```java
 // 方法三（查表法）
 class Test {
-public static void main(String[] args) {
+    public static void main(String[] args) {
 
-toBin(6);
-}
+        toBin(6);
+    }
 
-public static void toBin(int num) {
+    public static void toBin(int num) {
 
-char[] chars = {'0', '1'};
+        char[] chars = {'0', '1'};
 
-StringBuffer sb = new StringBuffer();
+        StringBuffer sb = new StringBuffer();
 
-while (num > 0) {
+        while (num > 0) {
 
-sb.append(chars[num & 1]);
-num = num >> 1;
-}
+            sb.append(chars[num & 1]);
+            num = num >> 1;
+        }
 
-System.out.println(sb.reverse());
-}
+        System.out.println(sb.reverse());
+    }
 }
 ```
 
@@ -347,65 +347,65 @@ System.out.println(sb.reverse());
 ```java
 // 方法一
 class Test {
-public static void main(String[] args) {
+    public static void main(String[] args) {
 
-System.out.println(Integer.toHexString(60));
-}
+        System.out.println(Integer.toHexString(60));
+    }
 }
 ```
 
 ```java
 // 方法二
 class Test {
-public static void main(String[] args) {
+    public static void main(String[] args) {
 
-toHex(60);
-}
+        toHex(60);
+    }
 
-public static void toHex(int num) {
+    public static void toHex(int num) {
 
-StringBuffer sb = new StringBuffer();
+        StringBuffer sb = new StringBuffer();
 
-for (int x = 0; x < 8; x++) {
+        for (int x = 0; x < 8; x++) {
 
-// 15 的二进制表达形式为 1111，num 和 15 与运算结果为最后四位的值
-int tmp = num & 15;              
-if (tmp > 9) {
-sb.append((char)(tmp - 10 + 'a'));
-} else {
-sb.append(tmp);
-}
-num = num >> 4;
-}
+            // 15 的二进制表达形式为 1111，num 和 15 与运算结果为最后四位的值
+            int tmp = num & 15;              
+            if (tmp > 9) {
+                sb.append((char)(tmp - 10 + 'a'));
+            } else {
+                sb.append(tmp);
+            }
+            num = num >> 4;
+        }
 
-System.out.println(sb.reverse());
-}
+        System.out.println(sb.reverse());
+    }
 }
 ```
 
 ```java
 // 方法三（查表法）
 class Test {
-public static void main(String[] args) {
+    public static void main(String[] args) {
 
-toHex(60);
-System.out.println(Integer.toHexString(60));
-}
+        toHex(60);
+        System.out.println(Integer.toHexString(60));
+    }
 
-public static void toHex(int num) {
+    public static void toHex(int num) {
 
-char[] chars = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f'};
+        char[] chars = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f'};
 
-StringBuffer sb = new StringBuffer();
+        StringBuffer sb = new StringBuffer();
 
-for (int x = 0; x < 8; x++) {
+        for (int x = 0; x < 8; x++) {
 
-sb.append(chars[num & 15]);
-num = num >> 4;
-}
+            sb.append(chars[num & 15]);
+            num = num >> 4;
+        }
 
-System.out.println(sb.reverse());
-}
+        System.out.println(sb.reverse());
+    }
 }
 ```
 
@@ -446,7 +446,7 @@ c.
 void show(int a, char b){}  // 重载，因为参数个数不同
 
 d.
-int show(int a, double b, char c){}  // 没有，重载和返回值类型没有关系
+int show(int a, char b, double c){}  // 没有，重载和返回值类型没有关系
 ```
 
 ### 4. 封装
@@ -456,20 +456,20 @@ __private__：私有权限修饰符，用于修饰类中的成员变量、成员
 ```java
 class Person {
 
-private int age;
-private void run () {
-System.out.println("I`m running.");
-}
+    private int age;
+    private void run () {
+        System.out.println("I`m running.");
+    }
 }
 
 class Demo {
 
-public static void main(String[] args) {
+    public static void main(String[] args) {
 
-Person p = new Person();
-p.age = 20;
-p.run();
-}
+        Person p = new Person();
+        p.age = 20;
+        p.run();
+    }
 }
 ```
 
