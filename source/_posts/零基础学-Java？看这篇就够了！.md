@@ -423,15 +423,11 @@ class Test {
 
 ### 3. 重载
 
-#### 定义
+__定义__：在同一个类中，允许存在一个以上的同名函数，只要它们的参数个数或者参数类似不同即可。
 
-在同一个类中，允许存在一个以上的同名函数，只要它们的参数个数或者参数类似不同即可。
+__应用场景__：当定义的功能相同，但参与运算的未知内容不同。那么，这时就定义一个函数名称以表示其功能，方便阅读，而通过参数列表的不同来区分多个同名函数。
 
-#### 应用场景
-
-当定义的功能相同，但参与运算的未知内容不同。那么，这时就定义一个函数名称以表示其功能，方便阅读，而通过参数列表的不同来区分多个同名函数。
-
-#### 判断是否重载
+__判断是否重载__：
 
 ```java
 void show(int a, char b, double c){}
@@ -449,7 +445,7 @@ d.
 int show(int a, char b, double c){}  // 没有，重载和返回值类型没有关系
 ```
 
-### 4. 封装
+### 4. 私有权限修饰符
 
 __private__：私有权限修饰符，用于修饰类中的成员变量、成员函数。只能在该类中访问，在外部不能访问。
 
@@ -475,6 +471,57 @@ class Demo {
 
 上面例子中，Person 类的 `age` 不可以赋值，同时 `run()` 方法也不可调用。
 
+### 5. 构造函数
 
+__构造函数__：可以用于给对象进行初始化，当一个类中没有定义构造函数，那么系统会默认给该类加入一个空参数的构造函数。
 
+```java
+class Person {
 
+	private String name;
+	private int age;
+
+	// 就相当于重写 init 初始化
+	Person() {
+
+	}
+
+	Person(String n) {
+		this();
+		this.name = n;
+	}
+
+	Person(String n, int a) {
+		this();
+		this.name = n;
+		this.age = a;
+	}
+
+	void say() {
+		System.out.println("Person: name = " + name + ", age = " + age);
+	}
+}
+
+class Demo {
+
+	public static void main(String[] args) {
+		
+		Person p1 = new Person(); 
+		p1.say();
+
+		Person p2 = new Person("mayan");
+		p2.say();
+
+		Person p3 = new Person("mayan", 25);
+		p3.say();
+	}
+}
+```
+
+打印结果为：
+
+```java
+Person: name = null, age = 0
+Person: name = mayan, age = 0
+Person: name = mayan, age = 25
+```
