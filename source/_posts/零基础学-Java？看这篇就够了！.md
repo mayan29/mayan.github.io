@@ -80,10 +80,10 @@ __2.__ __添加如下代码：__
 
 ```java
 {
-"shell_cmd": "javac -encoding utf-8 $file_name && java $file_base_name",
-"file_regex": "^ *\\[javac\\] (,+):([0-9]+):() (.*)$",
-"selector": "source.java",
-"encoding": "utf-8"
+    "shell_cmd": "javac -encoding utf-8 $file_name && java $file_base_name",
+    "file_regex": "^ *\\[javac\\] (,+):([0-9]+):() (.*)$",
+    "selector": "source.java",
+    "encoding": "utf-8"
 }
 ```
 
@@ -478,43 +478,43 @@ __构造函数__：可以用于给对象进行初始化，当一个类中没有�
 ```java
 class Person {
 
-	private String name;
-	private int age;
+    private String name;
+    private int age;
 
-	// 就相当于重写 init 初始化
-	Person() {
+    // 就相当于重写 init 初始化
+    Person() {
 
-	}
+    }
 
-	Person(String n) {
-		this();
-		this.name = n;
-	}
+    Person(String n) {
+        this();
+        this.name = n;
+    }
 
-	Person(String n, int a) {
-		this();
-		this.name = n;
-		this.age = a;
-	}
+    Person(String n, int a) {
+        this();
+        this.name = n;
+        this.age = a;
+    }
 
-	void say() {
-		System.out.println("Person: name = " + name + ", age = " + age);
-	}
+    void say() {
+        System.out.println("Person: name = " + name + ", age = " + age);
+    }
 }
 
 class Demo {
 
-	public static void main(String[] args) {
+    public static void main(String[] args) {
 		
-		Person p1 = new Person(); 
-		p1.say();
+        Person p1 = new Person(); 
+        p1.say();
 
-		Person p2 = new Person("mayan");
-		p2.say();
+        Person p2 = new Person("mayan");
+        p2.say();
 
-		Person p3 = new Person("mayan", 25);
-		p3.say();
-	}
+        Person p3 = new Person("mayan", 25);
+        p3.say();
+    }
 }
 ```
 
