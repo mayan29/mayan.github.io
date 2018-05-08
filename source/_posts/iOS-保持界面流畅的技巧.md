@@ -8,24 +8,27 @@ tags:
 > 本文内容整理于以下文章：
 > 
 > 1. [iOS 保持界面流畅的技巧 - ibireme](https://blog.ibireme.com/2015/11/12/smooth_user_interfaces_for_ios/)
-> 2. [离屏渲染优化详解：实例示范+性能测试](https://www.jianshu.com/p/ca51c9d3575b)
-> 3. [优化 UITableViewCell 高度计算的那些事 - sunnyxx](http://blog.sunnyxx.com/2015/05/17/cell-height-calculation/)
-> 4. [iOS 开发之多种 Cell 高度自适应实现方案的 UI 流畅度分析 - 青玉伏案](http://www.cnblogs.com/ludashi/p/5895725.html)
+> 2. [使用 ASDK 性能调优 - 提升 iOS 界面的渲染性能](https://segmentfault.com/a/1190000006699632)
+> 3. [从 iOS 的图片圆角想到渲染 - Chars
+](http://chars.tech/pieces/2017/07/03/ios-corner-radius.html)
+> 4. [离屏渲染优化详解：实例示范 + 性能测试](https://www.jianshu.com/p/ca51c9d3575b)
+> 5. [优化 UITableViewCell 高度计算的那些事 - sunnyxx](http://blog.sunnyxx.com/2015/05/17/cell-height-calculation/)
+> 6. [iOS 开发之多种 Cell 高度自适应实现方案的 UI 流畅度分析 - 青玉伏案](http://www.cnblogs.com/ludashi/p/5895725.html)
 
 
 ## 1. 屏幕显示图像的原理
 
-首先从过去的 CRT 显示器原理说起。CRT 的电子枪按照上面方式，从上到下一行行扫描，扫描完成后显示器就呈现一帧画面，随后电子枪回到初始位置继续下一次扫描。
+首先从过去的显像管显示器（CRT）原理说起。CRT 的电子枪按照上面方式，从上到下一行行扫描，扫描完成后显示器就呈现一帧画面，随后电子枪回到初始位置继续下一次扫描。
 
 当电子枪换到新的一行，准备进行扫描时，显示器会发出一个__水平同步信号__（horizonal synchronization），简称 HSync；而当一帧画面绘制完成后，电子枪回复到原位，准备画下一帧前，显示器会发出一个__垂直同步信号__（vertical synchronization），简称 VSync。
 
-显示器通常以固定频率进行刷新，这个刷新率就是__垂直同步信号__产生的频率。尽管现在的设备大都是液晶显示屏了，但原理仍然没有变。
+显示器通常以固定频率进行刷新，这个刷新率就是__垂直同步信号__产生的频率。尽管液晶显示器（LCD）的成像原理和显像管显示器截然不同，但是由于历史原因，液晶显示器仍然需要按照一定的刷新频率向 GPU 获取新的图像用于显示。
 
 ![image001](/img/img001.png)
 
 通常来说，计算机系统中 CPU、GPU、显示器是以上面这种方式协同工作的。CPU 计算好显示内容提交到 GPU，GPU 渲染完成后将渲染结果放入帧缓冲区（FrameBuffer），随后视频控制器会按照__垂直同步信号__逐行读取帧缓冲区的数据，经过数模转换传递给显示器显示。
 
-在最简单的情况下，帧缓冲区只有一个，这时帧缓冲区的读取和刷新都会有比较大的效率问题。为了解决效率问题，显示系统通常会引入两个缓冲区，即双缓冲机制。在这种情况下，GPU 会预先渲染好一帧放入一个缓冲区内，让视频控制器读取，当下一帧渲染好后，GPU 会直接把视频控制器的指针指向第二个缓冲器。如此一来效率会有很大的提升。
+在最简单的情况下，帧缓冲区只有一个，这时帧缓冲区的读取和刷新都会有比较大的效率问题。为了解决效率问题，显示系统引入双缓冲机制，即同时使用__帧缓冲区（frame buffer）__和__后备缓冲区（back buffer）__。在这种情况下，GPU 会预先渲染好一帧放入一个缓冲区内，让视频控制器读取，当下一帧渲染好后，GPU 会直接把视频控制器的指针指向第二个缓冲器。如此一来效率会有很大的提升。
 
 双缓冲虽然能解决效率问题，但会引入一个新的问题。当视频控制器还未读取完成时，即屏幕内容刚显示一半时，GPU 将新的一帧内容提交到帧缓冲区并把两个缓冲区进行交换后，视频控制器就会把新的一帧数据的下半段显示到屏幕上，造成画面撕裂现象，如下图：
 
@@ -42,11 +45,7 @@ iOS 设备会始终使用双缓存，并开启垂直同步。而安卓设备直�
 
 在__垂直同步信号__到来后，系统图形服务会通过 CADisplayLink 等机制通知 App，App 主线程开始在 CPU 中计算显示内容，比如视图的创建、布局计算、图片解码、文本绘制等。随后 CPU 会将计算好的内容提交到 GPU 去，由 GPU 进行变换、合成、渲染。随后 GPU 会把渲染结果提交到帧缓冲区去，等待下一次__垂直同步信号__到来时显示到屏幕上。由于垂直同步的机制，如果在一个__垂直同步信号__时间内，CPU 或者 GPU 没有完成内容提交，则那一帧就会被丢弃，等待下一次机会再显示，而这时显示屏会保留之前的内容不变。这就是界面卡顿的原因。
 
-从上图中可以看到，CPU 和 GPU 不论哪个阻碍了显示流程，都会造成掉帧现象。所以开发时，也需要分别对 CPU 和 GPU 压力进行评估和优化。
-
-> 结合上图，这里我个人的理解是：
-> 
-> 假设双缓存机制中两个帧缓冲区命名为：FrameBufferA 和 FrameBufferB。第一个__垂直同步信号__发出后，视频控制器读取的是 FrameBufferA 中准备好的数据以供显示，CPU 和 GPU 所计算和渲染的是下一帧准备放入 FrameBufferB 中的数据。以此类推，第二个__垂直同步信号__发出后，视频控制器读取的是 FrameBufferB 中的数据。。。
+从上图中可以看到，CPU 和 GPU 不论哪个阻碍了显示流程，都会造成掉帧现象。所以开发时，需要分别对 CPU 和 GPU 压力进行评估和优化。
 
 
 ## 3. CPU 资源消耗原因和解决方案
@@ -57,7 +56,7 @@ iOS 设备会始终使用双缓存，并开启垂直同步。而安卓设备直�
 
 1. 尽量用轻量的对象代替重量的对象：比如 CALayer 比 UIView 要轻量许多，那么不需要响应触摸事件的控件，用 CALayer 显示会更加合适。
 2. 如果对象不涉及 UI 操作，则尽量放到后台线程去创建，但可惜的是包含有 CALayer 的控件，都只能在主线程创建和操作。
-3. 通过 Storyboard 创建视图对象时，其资源消耗会比直接通过代码创建对象要大非常多，在性能敏感的界面里不要使用 Storyboard。
+3. 通过 Xib/Storyboard 创建视图对象时，其资源消耗会比直接通过代码创建对象要大非常多，在性能敏感的界面里不要使用。
 4. 如果对象可以复用，并且复用的代价比释放、创建新对象要小，那么这类对象应当尽量放到一个缓存池里复用。
 
 ### 对象调整
@@ -75,8 +74,6 @@ dispatch_async(queue, ^{
     [tmp class];
 });
 ```
-
-> 经过测试，页面销毁的时候，首先调用 `viewDidDisappear`，其次调用 `dealloc`，所以对象销毁的时候应该在 `viewDidDisappear ` 中实现。
 
 ### Autolayout
 
@@ -114,7 +111,6 @@ Autolayout 是苹果本身提倡的技术，但是对于复杂视图来说会产
 }
 ```
 
-
 ## 4. GPU 资源消耗原因和解决方案
 
 相对于 CPU 来说，GPU 能干的事情比较单一：接收提交的纹理（Texture）和顶点描述（三角形），应用变换（transform）、混合并渲染，然后输出到屏幕上。通常你所能看到的内容，主要也就是纹理（图片）和形状（三角模拟的矢量图形）两类。
@@ -135,27 +131,72 @@ Autolayout 是苹果本身提倡的技术，但是对于复杂视图来说会产
 
 #### a. 当前屏幕渲染与离屏渲染
 
-OpenGL 中 GPU 屏幕渲染有两种方式：当前屏幕渲染（GPU 的渲染操作是在当前用于显示的屏幕缓冲区中进行）和离屏渲染（GPU 在当前屏幕缓冲区以外新开辟一个缓冲区进行渲染操作）。
+OpenGL 中 GPU 屏幕渲染有两种方式：
 
-相比于当前屏幕渲染，离屏渲染的代价是很高的，主要体现在两个方面：创建新缓冲区，上下文切换。其中创建新缓冲区代价并不算太大，付出代价最大的是上下文切换。
+- On-Screen Rendering，当前屏幕渲染，指的是 GPU 的渲染操作是在当前用于显示的屏幕缓冲区中进行。
+- Off-Screen Rendering，离屏渲染，指的是 GPU 在当前屏幕缓冲区以外新开辟一个缓冲区进行渲染操作。
+
+相比于当前屏幕渲染，离屏渲染的代价是很高的。首先要创建一个新的缓冲区，然后需要多次切换上下文环境。其中创建新缓冲区代价并不算太大，付出代价最大的是上下文切换。
 
 > 上下文切换：不管是在 GPU 渲染过程中，还是一直所熟悉的进程切换，上下文切换在哪里都是一个相当耗时的操作。首先我要保存当前屏幕渲染环境，然后切换到一个新的绘制环境，申请绘制资源，初始化环境，然后开始一个绘制，绘制完毕后销毁这个绘制环境，切换到当前屏幕渲染或者再开始一个新的离屏渲染重复之前的操作。
 
-要想进行离屏渲染，首先要创建一个新的缓冲区。离屏渲染的整个过程，需要多次切换上下文环境：先是从当前屏幕（On-Screen）切换到离屏（Off-Screen）；等到离屏渲染结束以后，将离屏缓冲区的渲染结果显示到当前屏幕。
-
 #### b. 离屏渲染触发方式
 
-- shouldRasterize（光栅化）
-- masks（遮罩）
-- shadows（阴影）
-- edge antialiasing（抗锯齿）
-- group opacity（不透明）
+- drawRect
+- layer.shouldRasterize = true;
+- layer.masksToBounds / layer.shadow
+	- shouldRasterize（光栅化）
+	- masks（遮罩）
+	- shadows（阴影）
+	- edge antialiasing（抗锯齿）
+	- group opacity（不透明）
+- Text（UILabel, CATestLayer, Core Text...）
 
 其中 shouldRasterize（光栅化）是比较特别的一种，如果 `CALayer.shouldRasterize =  YES`，在其他属性触发离屏绘制的同时，会将光栅化后的内容缓存起来，如果对应的 layer 及其 sublayers 没有发生改变，在下一帧的时候可以直接复用。这样会隐式的创建一个位图，各种阴影遮罩等效果也会保存到位图中并缓存起来，相当于把 GPU 的操作转到 CPU 上了，生成位图缓存，直接读取复用，这将在很大程度上提升渲染性能。但是对于经常变动的内容，建议不要开启，否则会造成性能的浪费。比如 TableViewCell 重绘是很频繁的，因为复用，cell 需要不断的重绘，如果此时设置了 cell.layer 可光栅化，则会造成大量的离屏渲染，降低图形性能。
 
 > 光栅化：将图转化成一个个栅格组成的图像，每个元素对应帧缓冲区中的一个像素。
 
-对于只需要圆角的某些场合，也可以用一张已经绘制好的圆角图片覆盖到原本视图上面来模拟相同的视觉效果。最彻底的解决办法，就是把需要显示的图形在后台线程绘制为图片，避免使用圆角、阴影、遮罩等属性。
+对于圆角的优化，目前可以考虑三方面：
+
+- 第一，用一张已经绘制好的圆角图片覆盖到原本视图上面来模拟相同的视觉效果；
+- 第二，将图片切割成指定圆角的样式；
+
+```objc
+UIGraphicsBeginImageContextWithOptions(self.size, NO, 0);
+CGContextRef context = UIGraphicsGetCurrentContext();
+CGRect rect = CGRectMake(0, 0, self.size.width, self.size.height);
+CGContextScaleCTM(context, 1, -1);
+CGContextTranslateCTM(context, 0, -rect.size.height);
+
+CGFloat minSize = MIN(self.size.width, self.size.height);
+if (borderWidth < minSize / 2.0) {
+    UIBezierPath *path = [UIBezierPath bezierPathWithRoundedRect:CGRectInset(rect, borderWidth, borderWidth) byRoundingCorners:corners cornerRadii:CGSizeMake(radius, borderWidth)];
+    CGContextSaveGState(context);
+    [path addClip];
+    CGContextDrawImage(context, rect, self.CGImage);
+    CGContextRestoreGState(context);
+}
+
+UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
+image = [image dd_imageByCornerRadius:radius borderedColor:borderColor borderWidth:borderWidth corners:corners];
+UIGraphicsEndImageContext();
+```
+
+- 第三，使用贝塞尔曲线，利用 CALayer 层绘制指定圆角样式的 mask 遮盖 View。
+
+```objc
+UIGraphicsBeginImageContextWithOptions(self.size, NO, 0);
+[self drawAtPoint:CGPointZero];
+CGRect rect = CGRectMake(0, 0, self.size.width, self.size.height);
+CGFloat strokeInset = borderWidth / 2.0;
+CGRect strokeRect = CGRectInset(rect, strokeInset, strokeInset);
+UIBezierPath *path = [UIBezierPath bezierPathWithRoundedRect:strokeRect byRoundingCorners:corners cornerRadii:CGSizeMake(radius, borderWidth)];
+path.lineWidth = borderWidth;
+[borderColor setStroke];
+[path stroke];
+UIImage *result = UIGraphicsGetImageFromCurrentImageContext();
+UIGraphicsEndImageContext();
+```
 
 #### c. 另一种特殊的离屏渲染：CPU 渲染
 
