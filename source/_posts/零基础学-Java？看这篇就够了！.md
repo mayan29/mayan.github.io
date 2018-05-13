@@ -547,9 +547,9 @@ class Demo {
 
 	public static void main(String[] args) {
 		
-		Person p = new Person(); 
+	    Person p = new Person(); 
 
-		// 打印的结果都是 "CN"
+	    // 打印的结果都是 "CN"
 	    System.out.println(p.country);
 	    System.out.println(Person.country);
 	}
@@ -589,27 +589,27 @@ public static void main(String[] args) {
 */
 public class Tool {
 	
-	/**
-	获取两个数中最大值
-	@param num1 两个比较的数中其一
-	@param num2 两个比较的数中其二
-	@return 返回其中最大的数
-	*/
-	public static int max(int num1, int num2) {
+    /**
+    获取两个数中最大值
+    @param num1 两个比较的数中其一
+    @param num2 两个比较的数中其二
+    @return 返回其中最大的数
+    */
+    public static int max(int num1, int num2) {
 
-		return num1 > num2 ? num1 : num2;
-	}
+	    return num1 > num2 ? num1 : num2;
+    }
 
-	/**
-	获取两个数中最小值
-	@param num1 两个比较的数中其一
-	@param num2 两个比较的数中其二
-	@return 返回其中最小的数
-	*/
-	public static int min(int num1, int num2) {
+    /**
+    获取两个数中最小值
+    @param num1 两个比较的数中其一
+    @param num2 两个比较的数中其二
+    @return 返回其中最小的数
+    */
+    public static int min(int num1, int num2) {
 
-		return num1 < num2 ? num1 : num2;
-	}
+        return num1 < num2 ? num1 : num2;
+    }
 }
 ```
 
@@ -618,11 +618,10 @@ public class Tool {
 ```java
 public class Demo {
 
-	public static void main(String[] args) {
+    public static void main(String[] args) {
 
-		int num = Tool.max(5, 10);
-
-	    System.out.println(num);
+        int num = Tool.max(5, 10);
+        System.out.println(num);
 	}
 }
 ```
@@ -640,36 +639,36 @@ $ javadoc -d myhelp -author -version Tool.java -encoding utf-8 -charset utf-8
 ```java
 class Person {
 
-	int age = 26;
+    int age = 26;
 
-	static {
-		System.out.println("I`m a man");
-	}
+    static {
+        System.out.println("I`m a man");
+    }
 
-	{
-		System.out.println("I`m " + this.age);
-	}
+    {
+        System.out.println("I`m " + this.age);
+    }
 
-	void cry() {
-		System.out.println("I`m crying");
-	}
+    void cry() {
+        System.out.println("I`m crying");
+    }
 }
 
 
 public class Demo {
 
-	public static void main(String[] args) {
+    public static void main(String[] args) {
 
-		Person p1 = new Person();
-		p1.cry();
+        Person p1 = new Person();
+        p1.cry();
 
-		Person p2 = new Person();
-		p2.cry();
-	}
+        Person p2 = new Person();
+        p2.cry();
+    }
 }
 ```
 
-打印结果如下，其中打印年龄的为代码块，每次创建对象都会按照顺序运行一次，因为 age 的初始化在其前面，所以代码块里面可以调用 `this.age` 方法。
+打印结果如下，其中打印年龄的为代码块，每次创建对象都会运行一次，因为 age 的初始化在其前面，所以代码块里面可以调用 `this.age` 方法。
 
 ```java
 I`m a man
@@ -678,4 +677,242 @@ I`m crying
 I`m 26
 I`m crying
 ```
+
+### 8. 对象初始化过程
+
+```java
+Person p = new Person();
+```
+
+上面初始化方法都做了哪些事情？
+
+1. 首先 javac 编译 .java 源文件形成 .class 字节码文件；
+2. JVM 的类加载器将 Person.class 文件加载到内存中；
+3. 先初始化类中静态属性，再初始化静态代码块；
+4. 在堆内存中开辟空间，分配内存地址；
+5. 初始化特有属性；
+6. 初始化构造代码块；
+7. 初始化构造函数；
+8. 将内存地址赋给栈内存中的 p 变量。
+
+### 9. 单例设计模式
+
+#### 饿汉式
+
+```java
+class Single {
+
+	private static Single s = new Single();
+
+	public static Single getInstance() {
+		
+		return s;
+	}
+}
+```
+
+#### 懒汉式
+
+```java
+class Single {
+
+	private static Single s = null;
+
+	public static Single getInstance() {
+
+		if (s == null) {
+			synchronized(Single.class) {  // 加锁
+				if (s == null) {
+					s = new Single();
+				}
+			}
+		}
+		return s;
+	}
+}
+```
+
+以上两种单例方法的调用，打印结果都相同
+
+```java
+public class Demo {
+
+	public static void main(String[] args) {
+
+		Single s1 = Single.getInstance();
+		Single s2 = Single.getInstance();
+
+		System.out.println("s1 = " + s1 + " s2 = " + s2);
+	}
+}
+```
+
+打印结果
+
+```java
+s1 = Single@2cfb4a64 s2 = Single@2cfb4a64
+```
+
+### 10. 继承
+
+```java
+class Person {
+
+	String name;
+	int age;
+}
+
+class Student extends Person {
+
+}
+
+class Worker extends Person  {
+
+}
+
+public class Demo {
+
+	public static void main(String[] args) {
+
+		Student s = new Student();
+		s.name = "student";
+		s.age = 8;
+
+		Worker w = new Worker();
+		w.name = "worker";
+		w.age = 26;
+
+		System.out.println("Student - " + "name: " + s.name + " age: " + s.age);
+		System.out.println("Worker - " + "name: " + w.name + " age: " + w.age);
+	}
+}
+```
+
+打印结果
+
+```java
+Student - name: student age: 8
+Worker - name: worker age: 26
+```
+
+#### final 修饰符
+
+- 被 final 修饰的类不可以被继承
+- 被 final 修饰的函数不能被复写
+- 被 final 修饰的成员变量/局部变量是一个常量，只能赋值一次。
+
+### 11. 抽象类
+
+- 抽象方法一定定义在抽象类中；
+- 抽象方法和抽象类都必须被 abstract 关键字修饰；
+- 抽象类不可以用 new 创建对象，因为调用抽象方法没意义；
+- 抽象类中的方法要被使用，必须由子类复写所有的抽象方法后，建立子类对象调用；
+- 如果子类只覆盖部分抽象方法，那么该子类还是一个抽象类；
+- 特殊用法：抽象类中可以不定义抽象方法，这样做仅仅是不让该类建立对象。
+
+```java
+abstract class Student {
+
+	abstract void study();
+
+	void sleep() {
+		System.out.println("睡觉");
+	}
+}
+
+class Science_student extends Student {
+
+	void study() {
+		System.out.println("学习科学");
+	}
+}
+
+class Art_student extends Student {
+	
+	void study() {
+		System.out.println("学习艺术");
+	}
+}
+
+public class Demo {
+
+	public static void main(String[] args) {
+
+		Science_student ss = new Science_student();
+		ss.study();
+
+		Art_student as = new Art_student();
+		as.study();
+	}
+}
+```
+
+打印结果
+
+```java
+学习科学
+学习艺术
+```
+
+#### 模板方法
+
+在定义功能时，功能的一部分是确定的，但是有一部分是不确定的。确定的部分在使用不确定的部分，将不确定的部分暴露出去，由该类的子类来完成。
+
+应用场景：获取一段程序运行的时间
+
+```java
+abstract class GetTime {
+
+	public final void getTime() {
+
+		// 获取当前时间
+		long start = System.currentTimeMillis();
+
+		runcode();
+
+		// 获取当前时间
+		long end = System.currentTimeMillis();
+
+		System.out.println("毫秒：" + (end - start));
+	}
+
+	public abstract void runcode();
+}
+
+class GetErgodicTime extends GetTime {
+	
+	public void runcode() {
+		for (int x = 0; x < 10000; x++) {
+			System.out.println(x);
+		}
+	}
+}
+
+public class Demo {
+
+	public static void main(String[] args) {
+
+		GetErgodicTime t = new GetErgodicTime();
+		t.getTime();
+	}
+}
+```
+
+打印结果
+
+```java
+0
+1
+2
+...
+9997
+9998
+9999
+毫秒：79
+```
+
+
+
+
+
 
