@@ -412,16 +412,16 @@ class Test {
 
 ## 四、函数
 
-### 1. 面向对象
+面向对象三个特征：
 
-三个特征：__封装__、__继承__、__多态__。
+- __封装__、__继承__、__多态__。
 
-### 2. 变量
+两种变量：
 
-成员变量：定义在函数之外，存在堆内存中。
-局部变量：定义在函数之内，存在栈内存中。
+- 成员变量：定义在函数之外，存在堆内存中。
+- 局部变量：定义在函数之内，存在栈内存中。
 
-### 3. 重载
+### 1. 重载
 
 __定义__：在同一个类中，允许存在一个以上的同名函数，只要它们的参数个数或者参数类似不同即可。
 
@@ -445,7 +445,7 @@ d.
 int show(int a, char b, double c){}  // 没有，重载和返回值类型没有关系
 ```
 
-### 4. 私有权限修饰符
+### 2. 私有权限修饰符
 
 __private__：私有权限修饰符，用于修饰类中的成员变量、成员函数。只能在该类中访问，在外部不能访问。
 
@@ -471,7 +471,7 @@ class Demo {
 
 上面例子中，Person 类的 `age` 不可以赋值，同时 `run()` 方法也不可调用。
 
-### 5. 构造函数
+### 3. 构造函数
 
 __构造函数__：可以用于给对象进行初始化，当一个类中没有定义构造函数，那么系统会默认给该类加入一个空参数的构造函数。
 
@@ -525,3 +525,157 @@ Person: name = null, age = 0
 Person: name = mayan, age = 0
 Person: name = mayan, age = 25
 ```
+
+### 4. 静态修饰符
+
+static 是一个修饰符，用于修饰成员变量/成员函数（不能修饰局部变量/局部函数）。
+
+#### 类变量和实例变量的区别
+
+被 static 修饰的静态成员变量，称为类变量；不被 static 修饰的成员变量，称为实例变量，也就是对象变量。
+
+1. 存放位置，类变量随着类的加载而存在于方法区中；实例变量随着对象的建立而存在于堆内存中。
+2. 生命周期，类变量随着类的消失而消失；实例变量随着对象的消失而消失。
+3. 调用方式，类变量可以被类名或者对象调用；实例变量必须被对象调用。
+
+```java
+class Person {
+	static String country = "CN";
+}
+
+class Demo {
+
+	public static void main(String[] args) {
+		
+		Person p = new Person(); 
+
+		// 打印的结果都是 "CN"
+	    System.out.println(p.country);
+	    System.out.println(Person.country);
+	}
+}
+```
+
+#### 静态的利弊
+
+- 利处：对对象的共享数据进行单独空间存储，节省空间。没有必要每一个对象中都存储一份，可以直接被类名调用。
+- 弊端：生命周期过长，访问出现局限性，只能访问静态。
+
+### 5. 主函数
+
+main 函数解析：
+
+```java
+// public : 代表该函数访问权限是最大的 
+// static : 代表主函数随着类的加载就已经存在了 
+// void   : 主函数没有具体的返回值 
+// main   : 不是关键字，但是是一个特殊的单词，可以被 jvm 识别 
+// args   : arguments 的缩写，意思为参数。
+
+public static void main(String[] args) {
+
+}
+```
+
+### 6. 类文档
+
+新建一个文件 `Tool.java`
+
+```java
+/**
+这是一个基本函数工具类，该类目前提供了，获取两个数中最大值、最小值两个方法
+@author mayan
+@version v1.0
+*/
+public class Tool {
+	
+	/**
+	获取两个数中最大值
+	@param num1 两个比较的数中其一
+	@param num2 两个比较的数中其二
+	@return 返回其中最大的数
+	*/
+	public static int max(int num1, int num2) {
+
+		return num1 > num2 ? num1 : num2;
+	}
+
+	/**
+	获取两个数中最小值
+	@param num1 两个比较的数中其一
+	@param num2 两个比较的数中其二
+	@return 返回其中最小的数
+	*/
+	public static int min(int num1, int num2) {
+
+		return num1 < num2 ? num1 : num2;
+	}
+}
+```
+
+在 `Demo.java` 文件中调用工具类中的函数
+
+```java
+public class Demo {
+
+	public static void main(String[] args) {
+
+		int num = Tool.max(5, 10);
+
+	    System.out.println(num);
+	}
+}
+```
+
+进入该工具类所在的文件夹，在终端输入如下命令，可在该路径下生成文档
+
+```java
+$ javadoc -d myhelp -author -version Tool.java -encoding utf-8 -charset utf-8
+```
+
+### 7. 静态代码块
+
+静态代码块随着类的加载而执行，并且只执行一次，用于给类进行初始化。
+
+```java
+class Person {
+
+	int age = 26;
+
+	static {
+		System.out.println("I`m a man");
+	}
+
+	{
+		System.out.println("I`m " + this.age);
+	}
+
+	void cry() {
+		System.out.println("I`m crying");
+	}
+}
+
+
+public class Demo {
+
+	public static void main(String[] args) {
+
+		Person p1 = new Person();
+		p1.cry();
+
+		Person p2 = new Person();
+		p2.cry();
+	}
+}
+```
+
+打印结果如下，其中打印年龄的为代码块，每次创建对象都会按照顺序运行一次，因为 age 的初始化在其前面，所以代码块里面可以调用 `this.age` 方法。
+
+```java
+I`m a man
+I`m 26
+I`m crying
+I`m 26
+I`m crying
+```
+
