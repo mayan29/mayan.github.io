@@ -911,6 +911,226 @@ public class Demo {
 毫秒：79
 ```
 
+### 12. 接口
+
+接口初期理解，可以认为是一个特殊的抽象类，当抽象类中的方法都是抽象的，那么该类可以通过接口的形式来表示。
+
+- class：用于定义类
+- interface：用于定义接口
+
+接口中的成员都有固定修饰符
+
+- 常量：public static final
+- 方法：public abstract
+
+__基本应用__
+
+```java
+interface Inter {
+
+	public static final int NUM = 3;
+	public abstract void method();
+}
+
+class Test implements Inter {
+	
+	public void method() {
+
+	};
+}
+
+public class Demo {
+
+	public static void main(String[] args) {
+
+		Test t = new Test();
+		System.out.println(t.NUM);
+		System.out.println(Test.NUM);
+		System.out.println(Inter.NUM);
+	}
+}
+```
+
+打印结果
+
+```java
+3
+3
+3
+```
+__多继承__
+
+```java
+interface InterA {
+
+	public static final int NUM = 3;
+	public abstract void methodA();
+}
+
+interface InterB {
+
+	public abstract void methodB();
+}
+
+class Test implements InterA, InterB {
+	
+	public void methodA() {
+
+	};
+
+	public void methodB() {
+
+	};
+}
+
+public class Demo {
+
+	public static void main(String[] args) {
+
+		Test t = new Test();
+		System.out.println(t.NUM);
+		System.out.println(Test.NUM);
+		System.out.println(Inter.NUM);
+	}
+}
+```
+
+打印结果
+
+```java
+3
+3
+3
+```
+
+__接口继承接口__
+
+```java
+interface InterA {
+
+	public static final int NUM = 3;
+	public abstract void methodA();
+}
+
+interface InterB extends InterA {
+
+	public abstract void methodB();
+}
+
+class Test implements InterB {
+	
+	public void methodA() {
+
+	};
+
+	public void methodB() {
+
+	};
+}
+
+public class Demo {
+
+	public static void main(String[] args) {
+
+		Test t = new Test();
+		System.out.println(t.NUM);
+		System.out.println(Test.NUM);
+		System.out.println(Inter.NUM);
+	}
+}
+```
+
+打印结果
+
+```java
+3
+3
+3
+```
+
+抽象类和接口的区别
+
+1. 抽象类可以有构造方法，接口不能有构造方法 
+2. 抽象类中可以有普通成员变量，接口中没有普通成员变量 
+3. 抽象类中可以包含非抽象的普通方法，接口中的所有方法必须是抽象的，不能有非抽象的普通方法 
+4. 抽象类中抽象方法的访问类型可以是 public、protected 和默认类型，接口中的抽象方法只能是 public 类型，并且默认即为 public abstract 类型 
+5. 抽象类中可以包含静态方法，接口中不能包含静态方法 
+6. 抽象类和接口中都可以包含静态成员变量，抽象类中的静态成员变量的访问类型可以任意，但接口中定义的变量只能是 public static final 类型
+7. 一个类只能继承一个抽象类，一个类可以实现多个接口
+8. 抽象类的设计理念是 `is a` 关系（继承），接口的设计理念是 `like a` 关系（功能扩展）
+
+### 13. 多态
+
+- 多态的体现：父类的引用指向了自己的子类对象。
+- 多态的前提：必须是类与类之间有关系，要么继承，要么实现。
+- 多态的好处：提高了程序的扩展性。
+- 多态的弊端：只能使用父类的引用访问父类中的成员。
+
+__基本应用__
+
+```java
+abstract class Animal {
+
+	public abstract void eat();
+
+	public void doSomething(String thing) {
+		System.out.println(thing);
+	}
+}
+
+class Cat extends Animal {
+	
+	public void eat() {
+		System.out.println("cat: 吃鱼");
+	}
+}
+
+class Dog extends Animal {
+	
+	public void eat() {
+		System.out.println("dog: 吃骨头");
+	}
+}
+
+public class Demo {
+
+	public static void main(String[] args) {
+
+		Animal c = new Cat();
+		Animal d = new Dog();
+
+		function(c);
+		function(d);
+	}
+
+	public static void function(Animal a) {
+
+		// 先吃
+		a.eat();
+
+	 	// 然后实现动作，正常不会这样判断，拓展性不好
+	 	if (a instanceof Cat) {
+	 		
+	 		Cat c = (Cat)a;
+	 		c.doSomething("cat: 捉老鼠");
+	 	}
+	 	else if (a instanceof Dog) {
+
+	 		Dog d = (Dog)a;
+	 		d.doSomething("dog: 看家");
+	 	}
+	}
+}
+```
+
+打印结果
+
+```java
+cat: 吃鱼
+cat: 捉老鼠
+dog: 吃骨头
+dog: 看家
+```
 
 
 
