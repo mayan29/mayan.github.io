@@ -1132,6 +1132,87 @@ dog: 吃骨头
 dog: 看家
 ```
 
+__特殊情况 1__
+
+```java
+class Father {
+
+	String name = "Father";
+}
+
+class Child extends Father {
+
+	String name = "Child";
+}
+
+public class Demo {
+
+	public static void main(String[] args) {
+
+		Father f = new Child();
+		System.out.println(f.name);
+	}
+}
+```
+
+打印结果
+
+```java
+Father
+```
+
+注意：
+
+1. 在多态中，非静态成员变量无论编译和运行，都参考左边（引用型变量所属的类）。
+
+__特殊情况 2__
+
+```java
+class Father {
+
+	void method() {
+		System.out.println("Father Method");
+	}
+
+	static void staticMethod() {
+		System.out.println("Father StaticMethod");
+	}
+}
+
+class Child extends Father {
+
+	void method() {
+		System.out.println("Child Method");
+	}
+
+	static void staticMethod() {
+		System.out.println("Child StaticMethod");
+	}
+}
+
+public class Demo {
+
+	public static void main(String[] args) {
+
+		Father f = new Child();
+
+		f.method();
+		f.staticMethod();
+	}
+}
+```
+
+打印结果
+
+```java
+Child Method
+Father StaticMethod
+```
+
+注意：
+
+1. 在多态中，静态成员函数无论编译和运行，都参考左边（引用型变量所属的类）；
+2. 非静态区用 this 来调用对象，所以会调用子类方法；而静态区用 Father 来调用对象，所以会调用父类方法。
 
 
 
