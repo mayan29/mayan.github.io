@@ -7,6 +7,7 @@ tags:
 
 坚持每日记录一道面试题，持续更新。★ 为超级简单题目，★★ 为简单题目，以此类推，满级 ★★★★★ 五星。
 
+
 ## 1
 
 __题目：把 "www.zhidao.baidu.com" 字符串改成 "com/baidu/zhidao/www"。__ 
@@ -68,7 +69,25 @@ a = 20, b = 10
 
 __题目：OC 中 load 和 initialize 方法有何异同？__
 
-__星级：★__ 
+__星级：★__
+
+相同点
+
+- load 和 initialize 方法都会在实例化对象之前调用，main 函数之前调用前者，之后调用后者
+- load 和 initialize 方法都是自动调用，不能手动调用
+
+不同点 load
+
+- load 方法在类文件被添加到 runTime 中被调用，与这个类是否被调用无关，因此 load 方法总是在 main 函数之前调用
+- 一般来说，除了 Method Swizzle（方法交换）别的逻辑不应该放在 load 方法中
+- load 方法调用顺序根据 Compile Sources 文件排放顺序，尽量减少 load 方法中的逻辑，如果 A 类在 load 方法中 B 类的属性，B 类的属性在 load 中声明，但是此时 B 类还没有加载，那么 A 类获取 B 类的属性为 nil
+
+不同点 initialize
+
+- initialize 方法在第一次给某个类发送消息时调用，比如实例化一个对象，并且只会调用一次。如果一个类一直没有被用到，它的 initialize 方法也不会调用
+- 如果在 A 类的分类中实现了 initialize 会覆盖 A 类中的 initialize
+- 调用 initialize 方法会从父到子依次实现父类们的 initialize 方法
+- initialize 方法主要用来初始化 NSMutableArray
 
 
 ## 参考资料
