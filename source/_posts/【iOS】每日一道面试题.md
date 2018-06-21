@@ -8,10 +8,9 @@ tags:
 坚持每日记录一道面试题，持续更新。★ 为超级简单题目，★★ 为简单题目，以此类推，满级 ★★★★★ 五星。
 
 
-## 1
+# 1
 
 __题目：把 "www.zhidao.baidu.com" 字符串改成 "com/baidu/zhidao/www"。__ 
-
 __星级：★__  
 
 ```objc
@@ -36,10 +35,9 @@ com/baidu/zhidao/www
 > enumerator - n. 枚举器
 
 
-## 2
+# 2
 
 __题目：不用临时变量怎么实现 swap(a, b) ？__
-
 __星级：★__  
 
 ```objc
@@ -62,34 +60,35 @@ a = 10, b = 20
 a = 20, b = 10
 ```
 
-> 用加法或者异或都可以，我比较偏好于异或，使用加法，如果两个数值太大，容易超出 int 范围。
+> 用加法或者异或都可以，我比较偏好于异或，因为如果使用加法，两个数值太大的情况下，容易超出 int 范围。
 
 
-## 3
+# 3
 
 __题目：OC 中 load 和 initialize 方法有何异同？__
-
 __星级：★__
 
-相同点
+相同点：
 
-- load 和 initialize 方法都会在实例化对象之前调用，main 函数之前调用前者，之后调用后者
-- load 和 initialize 方法都是自动调用，不能手动调用
+1. load 和 initialize 方法都会在实例化对象之前调用，main 函数之前调用 load，之后调用 initialize；
+2. load 和 initialize 方法都只会调用一次；
+3. load 和 initialize 方法都会被自动调用，不能手动调用它们；
+4. load 和 initialize 方法调用，会从父到子依次实现父类们的 load 和 initialize 方法；
+5. load 和 initialize 方法内部为了保证线程安全都使用了锁，实现时要保持逻辑简单，避免阻塞线程；
 
-不同点 load
+不同点：
 
-- load 方法在类文件被添加到 runTime 中被调用，与这个类是否被调用无关，因此 load 方法总是在 main 函数之前调用
-- 一般来说，除了 Method Swizzle（方法交换）别的逻辑不应该放在 load 方法中
-- load 方法调用顺序根据 Compile Sources 文件排放顺序，尽量减少 load 方法中的逻辑，如果 A 类在 load 方法中 B 类的属性，B 类的属性在 load 中声明，但是此时 B 类还没有加载，那么 A 类获取 B 类的属性为 nil
+1. load 方法通常用来进行 Method Swizzle，initialize 方法通常用于初始化全局变量或者静态变量。
+2. load 方法在类被程序装载时调用，与这个类是否被用到无关，initialize 方法是在类或者它的子类接收第一条消息前被调用。如果该类一直没有被用到，它的 initialize 方法也不会调用。
 
-不同点 initialize
+其他：
 
-- initialize 方法在第一次给某个类发送消息时调用，比如实例化一个对象，并且只会调用一次。如果一个类一直没有被用到，它的 initialize 方法也不会调用
-- 如果在 A 类的分类中实现了 initialize 会覆盖 A 类中的 initialize
-- 调用 initialize 方法会从父到子依次实现父类们的 initialize 方法
-- initialize 方法主要用来初始化 NSMutableArray
+1. load 方法调用顺序永远都是：parent > child > child+extend ；
+2. 当有 child+extend 存在的时候，child+extend 中的 initialize 方法会覆盖 child 中的 initialize 方法。
+
+具体分析和实例参考：[细说 OC 中的 load 和 initialize 方法](https://bestswifter.com/load-and-initialize/)
 
 
-## 参考资料
+# 参考资料
 
 1. [让 BAT 的 Offer 不再难拿 - bestswifter](https://bestswifter.com/bat-interview/)
