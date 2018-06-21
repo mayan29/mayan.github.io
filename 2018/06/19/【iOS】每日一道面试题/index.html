@@ -1,0 +1,982 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="坚持每日记录一道面试题，持续更新。★ 为超级简单题目，★★ 为简单题目，以此类推，满级 ★★★★★ 五星。 C / Objective-C1题目：把 “www.zhidao.baidu.com&amp;quot; 字符串改成 “com/baidu/zhidao/www”。星级：★   12345NSString *str = @&quot;www.zhidao.baidu.com&quot;;NSArray *tmpArra">
+<meta property="og:type" content="article">
+<meta property="og:title" content="【iOS】每日一道面试题">
+<meta property="og:url" content="http://yoursite.com/2018/06/19/【iOS】每日一道面试题/index.html">
+<meta property="og:site_name" content="mayan`s blog">
+<meta property="og:description" content="坚持每日记录一道面试题，持续更新。★ 为超级简单题目，★★ 为简单题目，以此类推，满级 ★★★★★ 五星。 C / Objective-C1题目：把 “www.zhidao.baidu.com&amp;quot; 字符串改成 “com/baidu/zhidao/www”。星级：★   12345NSString *str = @&quot;www.zhidao.baidu.com&quot;;NSArray *tmpArra">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-06-21T13:43:19.537Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="【iOS】每日一道面试题">
+<meta name="twitter:description" content="坚持每日记录一道面试题，持续更新。★ 为超级简单题目，★★ 为简单题目，以此类推，满级 ★★★★★ 五星。 C / Objective-C1题目：把 “www.zhidao.baidu.com&amp;quot; 字符串改成 “com/baidu/zhidao/www”。星级：★   12345NSString *str = @&quot;www.zhidao.baidu.com&quot;;NSArray *tmpArra">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/06/19/【iOS】每日一道面试题/"/>
+
+
+
+
+
+  <title>【iOS】每日一道面试题 | mayan`s blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">mayan`s blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/06/19/【iOS】每日一道面试题/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="mayan">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.jpeg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="mayan`s blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">【iOS】每日一道面试题</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-06-19T10:21:55+08:00">
+                2018-06-19
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/iOS/" itemprop="url" rel="index">
+                    <span itemprop="name">iOS</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2018/06/19/【iOS】每日一道面试题/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count"
+                        data-disqus-identifier="2018/06/19/【iOS】每日一道面试题/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>坚持每日记录一道面试题，持续更新。★ 为超级简单题目，★★ 为简单题目，以此类推，满级 ★★★★★ 五星。</p>
+<h1 id="C-Objective-C"><a href="#C-Objective-C" class="headerlink" title="C / Objective-C"></a>C / Objective-C</h1><h2 id="1"><a href="#1" class="headerlink" title="1"></a>1</h2><p><strong>题目：把 “<a href="http://www.zhidao.baidu.com&quot;" target="_blank" rel="noopener">www.zhidao.baidu.com&quot;</a> 字符串改成 “com/baidu/zhidao/www”。</strong><br><strong>星级：★</strong>  </p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">NSString</span> *str = <span class="string">@"www.zhidao.baidu.com"</span>;</span><br><span class="line"><span class="built_in">NSArray</span> *tmpArray = [str componentsSeparatedByString:<span class="string">@"."</span>];</span><br><span class="line">tmpArray = [[tmpArray reverseObjectEnumerator] allObjects];  <span class="comment">// 数组倒叙排列</span></span><br><span class="line"><span class="built_in">NSString</span> *resultStr = [tmpArray componentsJoinedByString:<span class="string">@"/"</span>];</span><br><span class="line"><span class="built_in">NSLog</span>(<span class="string">@"%@"</span>, resultStr);</span><br></pre></td></tr></table></figure>
+<p>打印结果</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">com/baidu/zhidao/www</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>其实这道题一点难点都没有，唯一需要注意的是要熟记这三个方法的方法名。</p>
+<p>components - n. 组件<br>separated - adj. 分离的<br>reverse - v. 反转，颠倒<br>enumerator - n. 枚举器</p>
+</blockquote>
+<h2 id="2"><a href="#2" class="headerlink" title="2"></a>2</h2><p><strong>题目：不用临时变量怎么实现 swap(a, b) ？</strong><br><strong>星级：★</strong>  </p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> a = <span class="number">10</span>;</span><br><span class="line"><span class="keyword">int</span> b = <span class="number">20</span>;</span><br><span class="line">    </span><br><span class="line"><span class="built_in">NSLog</span>(<span class="string">@"a = %d, b = %d"</span>, a, b);  </span><br><span class="line"></span><br><span class="line">a = a ^ b;</span><br><span class="line">b = a ^ b;</span><br><span class="line">a = a ^ b;</span><br><span class="line">    </span><br><span class="line"><span class="built_in">NSLog</span>(<span class="string">@"a = %d, b = %d"</span>, a, b);</span><br></pre></td></tr></table></figure>
+<p>打印结果</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">a = <span class="number">10</span>, b = <span class="number">20</span></span><br><span class="line">a = <span class="number">20</span>, b = <span class="number">10</span></span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>用加法或者异或都可以，我比较偏好于异或，因为如果使用加法，两个数值太大的情况下，容易超出 int 范围。</p>
+</blockquote>
+<h2 id="3"><a href="#3" class="headerlink" title="3"></a>3</h2><p><strong>题目：下面这段代码的输出结果是？</strong><br><strong>星级：★★</strong></p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> a[<span class="number">5</span>] = &#123;<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>&#125;;</span><br><span class="line"><span class="keyword">int</span> *ptr = (<span class="keyword">int</span> *)(&amp;a + <span class="number">1</span>);</span><br><span class="line">    </span><br><span class="line"><span class="built_in">printf</span>(<span class="string">"%d, %d"</span>, *(a + <span class="number">1</span>), *(ptr - <span class="number">1</span>));</span><br></pre></td></tr></table></figure>
+<p>打印结果</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">2</span>, <span class="number">5</span></span><br></pre></td></tr></table></figure>
+<p>a 是指向数组开头元素的指针，a + 1 就是指向下一个元素的指针，所以星号求值以后是 2。&amp;a 相当于是数组的指针，&amp;a + 1 是数组后面一个数组的指针，然后转换成 int * 类型是 5 这个数字后面的一个数字的指针。再减一就是指向 5 的指针，所以星号求值以后是 5。</p>
+<h1 id="UIKit"><a href="#UIKit" class="headerlink" title="UIKit"></a>UIKit</h1><h1 id="操作系统"><a href="#操作系统" class="headerlink" title="操作系统"></a>操作系统</h1><h2 id="1-1"><a href="#1-1" class="headerlink" title="1"></a>1</h2><p><strong>题目：OC 中 load 和 initialize 方法有何异同？</strong><br><strong>星级：★★</strong></p>
+<p>相同点：</p>
+<ol>
+<li>load 和 initialize 方法都会在实例化对象之前调用，main 函数之前调用 load，之后调用 initialize；</li>
+<li>load 和 initialize 方法都只会调用一次；</li>
+<li>load 和 initialize 方法都会被自动调用，不能手动调用它们；</li>
+<li>load 和 initialize 方法调用，会从父到子依次实现父类们的 load 和 initialize 方法；</li>
+<li>load 和 initialize 方法内部为了保证线程安全都使用了锁，实现时要保持逻辑简单，避免阻塞线程；</li>
+</ol>
+<p>不同点：</p>
+<ol>
+<li>load 方法通常用来进行 Method Swizzle，initialize 方法通常用于初始化全局变量或者静态变量。</li>
+<li>load 方法在类被程序装载时调用，与这个类是否被用到无关，initialize 方法是在类或者它的子类接收第一条消息前被调用。如果该类一直没有被用到，它的 initialize 方法也不会调用。</li>
+</ol>
+<p>其他：</p>
+<ol>
+<li>load 方法调用顺序永远都是：parent &gt; child &gt; child+extend ；</li>
+<li>当有 child+extend 存在的时候，child+extend 中的 initialize 方法会覆盖 child 中的 initialize 方法。</li>
+</ol>
+<p>具体分析和实例参考：<a href="https://bestswifter.com/load-and-initialize/" target="_blank" rel="noopener">细说 OC 中的 load 和 initialize 方法</a></p>
+<h1 id="网络"><a href="#网络" class="headerlink" title="网络"></a>网络</h1><h1 id="算法"><a href="#算法" class="headerlink" title="算法"></a>算法</h1><h1 id="待总结题目"><a href="#待总结题目" class="headerlink" title="待总结题目"></a>待总结题目</h1><h3 id="iOS"><a href="#iOS" class="headerlink" title="iOS"></a>iOS</h3><ol>
+<li>说说你对 block 的理解。 —— 三种 block，栈上的 block 在 ARC 下会自动复制到堆上，block 的属性修饰符是 copy，循环引用的原理和解决方案。</li>
+<li>block 为什么会有循环引用</li>
+<li>说说你对 runtime 的理解。 —— 主要是方法调用时如何查找缓存，如何找到方法，找不到方法时怎么转发，对象的内存布局。</li>
+<li>说说你对 MVC、MVVM 和 RAC 的理解。 —— MVC 的 C 太臃肿，可以和 V 合并，变成 MVVM 中的 V，而 VM 用来将 M 转化成 V 能用的数据。RAC 数据的双向绑定怎么做，bind 函数了解过么。</li>
+<li>MVC 具有什么样的优势，各个模块之间怎么通信，比如点击 Button 后 怎么通知 Model？</li>
+<li>说说 UITableView 的调优。 —— 一方面是通过 instruments 检查影响性能的地方，另一方面是估算高度并在 runloop 空闲时缓存。</li>
+<li>谈谈你对 ARC 的理解。 —— ARC 是编译器完成的，依靠引用计数，谈谈几个属性修饰符的内存管理策略，什么情况下会内存泄露。</li>
+<li>野指针是什么，iOS 开发中什么情况下会有野指针？ —— 野指针是不为 nil，但是指向已经被释放的内存的指针。</li>
+<li>介绍自己用过哪些开源库。 —— Masonry 和 SnapKit，AFNetWorking，MKNetworkKit，Alamofire，Mantle，SDWebImage</li>
+<li>SDWebImage 下载了图片后为什么要解码？ —— 要把 png 文件建立一个内存映射。</li>
+<li>两个无限长度链表（也就是可能有环） 判断有没有交点</li>
+<li>KVO、Notification、delegate 各自的优缺点，效率还有使用场景</li>
+<li>如何手动通知 KVO</li>
+<li>Objective-C 中的 copy 方法</li>
+<li>runtime 中，SEL 和 IMP 的区别</li>
+<li>autoreleasepool 的使用场景和原理</li>
+<li>RunLoop 的实现原理和数据结构，什么时候会用到</li>
+<li>使用 GCD 如何实现这个需求：A、B、C 三个任务并发，完成后执行任务 D。</li>
+<li>NSOperation 和 GCD 的区别</li>
+<li>CoreData 的使用，如何处理多线程问题</li>
+<li>如何设计图片缓存？</li>
+<li>有没有自己设计过网络控件？</li>
+<li>怎么判断某个 cell 是否显示在屏幕上</li>
+<li>进程和线程的区别</li>
+<li>TCP 与 UDP 区别</li>
+<li>TCP 流量控制</li>
+<li>数组和链表的区别</li>
+<li>UIView 生命周期</li>
+<li>如果页面 A 跳转到 页面 B，A 的 viewDidDisappear 方法和 B 的 viewDidAppear 方法哪个先调用？</li>
+<li>ARC 的本质</li>
+<li>RunLoop 的基本概念，它是怎么休眠的？</li>
+<li>Autoreleasepool 什么时候释放，在什么场景下使用？</li>
+<li>如何找到字符串中第一个不重复的字符</li>
+<li>哈希表如何处理冲突</li>
+</ol>
+<h3 id="算法-1"><a href="#算法-1" class="headerlink" title="算法"></a>算法</h3><p>算法主要分为以下几个部分：字符串、数组与查找、链表、树以及其他基础问题。</p>
+<p>再详细总结一下，比如递归、动态规划、BFS/DFS、双指针、二分搜索等。或者是直接考察数据结构的使用，如：哈希、栈和队列、链表等。</p>
+<p>将阅读《剑指 Offer》列入今年的学习计划中。</p>
+<p>列出的一些经典题目，在“【】”中标记了我对此题类型的分类，如果加星号表示此题在实际面试中出现过：</p>
+<p>字符串</p>
+<ul>
+<li>【3】最长回文子串（<a href="https://leetcode.com/problems/longest-palindromic-substring/）" target="_blank" rel="noopener">https://leetcode.com/problems/longest-palindromic-substring/）</a></li>
+<li>【3】最长无重复子串（<a href="https://leetcode.com/problems/longest-substring-without-repeating-characters/）" target="_blank" rel="noopener">https://leetcode.com/problems/longest-substring-without-repeating-characters/）</a></li>
+<li>【1*】字符串转数字（<a href="https://leetcode.com/problems/string-to-integer-atoi/）" target="_blank" rel="noopener">https://leetcode.com/problems/string-to-integer-atoi/）</a></li>
+<li>【4】KMP 算法</li>
+<li>【2】字符串全排列（<a href="http://blog.csdn.net/morewindows/article/details/7370155）" target="_blank" rel="noopener">http://blog.csdn.net/morewindows/article/details/7370155）</a></li>
+<li>【2*】翻转字符串（<a href="https://leetcode.com/problems/reverse-words-in-a-string/）" target="_blank" rel="noopener">https://leetcode.com/problems/reverse-words-in-a-string/）</a></li>
+</ul>
+<p>动态规划</p>
+<ul>
+<li>【2】背包问题（<a href="http://baike.baidu.com/link?url=rhsiQhWz0xoYrm265bZQfow1IePC8X_MVUUlw9V9Ymu9g4Cwoqu-fjZIGOJZqe_V4ONMJlXug1IN0Cj_g0O3Ya）" target="_blank" rel="noopener">http://baike.baidu.com/link?url=rhsiQhWz0xoYrm265bZQfow1IePC8X_MVUUlw9V9Ymu9g4Cwoqu-fjZIGOJZqe_V4ONMJlXug1IN0Cj_g0O3Ya）</a></li>
+<li>【3】连续子数组的最大和（<a href="https://leetcode.com/problems/maximum-subarray/）" target="_blank" rel="noopener">https://leetcode.com/problems/maximum-subarray/）</a></li>
+<li>【4】实现简单的正则表达式匹配（<a href="https://leetcode.com/problems/regular-expression-matching/）" target="_blank" rel="noopener">https://leetcode.com/problems/regular-expression-matching/）</a></li>
+</ul>
+<p>数组</p>
+<ul>
+<li>【3】求两个等长、有序数组的中位数（二分法）</li>
+<li>【4】求两个不等长、有序数组的中位数（<a href="https://leetcode.com/problems/median-of-two-sorted-arrays/）" target="_blank" rel="noopener">https://leetcode.com/problems/median-of-two-sorted-arrays/）</a></li>
+<li>【3】旋转数组求最小值（二分法）（<a href="https://leetcode.com/problems/find-minimum-in-rotated-sorted-array/）" target="_blank" rel="noopener">https://leetcode.com/problems/find-minimum-in-rotated-sorted-array/）</a></li>
+<li>【3】旋转数组求查找某个值是否存在（二分法）（<a href="https://leetcode.com/problems/search-in-rotated-sorted-array/）" target="_blank" rel="noopener">https://leetcode.com/problems/search-in-rotated-sorted-array/）</a></li>
+<li>【4*】每行从左到右，每列从上到下递增的二维数组中，判断某个数是否存在（剑指 offer 第 3 题）</li>
+<li>【3*】数组中出现次数超过一半的数字（<a href="https://bestswifter.com/arrayoccurmorethanhalf/）" target="_blank" rel="noopener">https://bestswifter.com/arrayoccurmorethanhalf/）</a></li>
+<li>【3*】第 k 大的数（拓展：最大的 k 个数）（<a href="https://leetcode.com/problems/kth-largest-element-in-an-array/）" target="_blank" rel="noopener">https://leetcode.com/problems/kth-largest-element-in-an-array/）</a></li>
+<li>【3*】有序数组中某个数字出现的次数（提示：利用二分搜索）</li>
+</ul>
+<p>链表</p>
+<ul>
+<li>【2】反转链表（使用递归和迭代两种解法，了解头插法）（<a href="https://leetcode.com/problems/reverse-linked-list/）" target="_blank" rel="noopener">https://leetcode.com/problems/reverse-linked-list/）</a></li>
+<li>【3】删除链表的当前节点（<a href="https://leetcode.com/problems/delete-node-in-a-linked-list/）" target="_blank" rel="noopener">https://leetcode.com/problems/delete-node-in-a-linked-list/）</a></li>
+<li>【3】删除倒数第 k 个节点（<a href="https://leetcode.com/problems/remove-nth-node-from-end-of-list/）" target="_blank" rel="noopener">https://leetcode.com/problems/remove-nth-node-from-end-of-list/）</a></li>
+<li>【1】两个有序链表合并（<a href="https://leetcode.com/problems/merge-two-sorted-lists/）" target="_blank" rel="noopener">https://leetcode.com/problems/merge-two-sorted-lists/）</a></li>
+<li>【4】复杂链表的复制（<a href="https://leetcode.com/problems/copy-list-with-random-pointer/）" target="_blank" rel="noopener">https://leetcode.com/problems/copy-list-with-random-pointer/）</a></li>
+<li>【2*】判断链表是否有环（<a href="https://leetcode.com/problems/linked-list-cycle-ii/）" target="_blank" rel="noopener">https://leetcode.com/problems/linked-list-cycle-ii/）</a></li>
+<li>【3*】两个链表的第一个公共节点（提示：考虑链表有环的情况）（<a href="http://blog.csdn.net/zzran/article/details/7984870）" target="_blank" rel="noopener">http://blog.csdn.net/zzran/article/details/7984870）</a></li>
+<li>【3】删除链表中重复节点（<a href="https://leetcode.com/problems/remove-duplicates-from-sorted-list/）" target="_blank" rel="noopener">https://leetcode.com/problems/remove-duplicates-from-sorted-list/）</a></li>
+</ul>
+<p>树</p>
+<ul>
+<li>【3】根据中序和后序遍历结果重建二叉树（<a href="https://leetcode.com/problems/construct-binary-tree-from-inorder-and-postorder-traversal/）" target="_blank" rel="noopener">https://leetcode.com/problems/construct-binary-tree-from-inorder-and-postorder-traversal/）</a></li>
+<li>【3】根据中序和前序遍历结果重建二叉树（<a href="https://leetcode.com/problems/construct-binary-tree-from-preorder-and-inorder-traversal/）" target="_blank" rel="noopener">https://leetcode.com/problems/construct-binary-tree-from-preorder-and-inorder-traversal/）</a></li>
+<li>【2】翻转二叉树（<a href="https://leetcode.com/problems/invert-binary-tree/）" target="_blank" rel="noopener">https://leetcode.com/problems/invert-binary-tree/）</a></li>
+<li>【2】从上往下打印二叉树 (BFS 的思想)（<a href="https://leetcode.com/problems/binary-tree-level-order-traversal-ii/）" target="_blank" rel="noopener">https://leetcode.com/problems/binary-tree-level-order-traversal-ii/）</a></li>
+<li>【3】判断某个数组是不是二叉树的后序遍历结果 (剑指 offer 第 24 题)</li>
+<li>【3】二叉树中和为某个值的路径（<a href="https://leetcode.com/problems/path-sum-ii/）" target="_blank" rel="noopener">https://leetcode.com/problems/path-sum-ii/）</a></li>
+<li>【3*】二叉树中某个节点的下一个节点 (强烈推荐准备一下，剑指 offer 第 58 题)</li>
+</ul>
+<p>栈</p>
+<ul>
+<li>【2】用两个栈实现队列（<a href="https://leetcode.com/problems/implement-queue-using-stacks/）" target="_blank" rel="noopener">https://leetcode.com/problems/implement-queue-using-stacks/）</a></li>
+<li>【2】用两个队列实现栈（<a href="https://leetcode.com/problems/implement-stack-using-queues/）" target="_blank" rel="noopener">https://leetcode.com/problems/implement-stack-using-queues/）</a></li>
+<li>【2】实现一个栈，可以用常数级时间找出栈中的最小值（<a href="https://leetcode.com/problems/min-stack/）" target="_blank" rel="noopener">https://leetcode.com/problems/min-stack/）</a></li>
+<li>【3】判断栈的压栈、弹栈序列是否合法（剑指offer 第 22 题）</li>
+</ul>
+<p>排序</p>
+<p>了解以下排序的时间、空间复杂度，是否稳定，实现原理</p>
+<ul>
+<li>归并排序、拓展：求数组中的逆序对个数（<a href="http://baike.baidu.com/link?url=awQj_m-d5Lf_g5TglfU3uN55-0Dt2SmFv3IZx6-Ia86dOyyBoxkJhDyc2oFAzlUXFIXhs2dGehbHAHDqr1DuAK）" target="_blank" rel="noopener">http://baike.baidu.com/link?url=awQj_m-d5Lf_g5TglfU3uN55-0Dt2SmFv3IZx6-Ia86dOyyBoxkJhDyc2oFAzlUXFIXhs2dGehbHAHDqr1DuAK）</a></li>
+<li>快速排序 重点：partion 函数的实现（<a href="http://baike.baidu.com/link?url=_sdhFCTSDKNM6wA5OCgqHTJc9kLWjiQBPLzO9-Cw_bYh4vZ7ofkBqySVw-MQDsJfOO9g9SJb2OCuL3yAmHIPWvv_sSPOsf-JZfKOU8QV3HrhInkkfGJ6j5Li4u3nWwiZkQlOUlGEZI-gLIyObuEM7bqwZPR8gLyVEiqutVr8pIDa6gF7cB8eixeQyur2yUt7）" target="_blank" rel="noopener">http://baike.baidu.com/link?url=_sdhFCTSDKNM6wA5OCgqHTJc9kLWjiQBPLzO9-Cw_bYh4vZ7ofkBqySVw-MQDsJfOO9g9SJb2OCuL3yAmHIPWvv_sSPOsf-JZfKOU8QV3HrhInkkfGJ6j5Li4u3nWwiZkQlOUlGEZI-gLIyObuEM7bqwZPR8gLyVEiqutVr8pIDa6gF7cB8eixeQyur2yUt7）</a></li>
+<li>堆排序（<a href="http://baike.baidu.com/link?url=eioUPqfLTP0mqIOIuJdH0tp9m3ihgtx2rjcFMDpKhNXcjRidBGuk-XuQtM2Zl0z6J43yKq8VTDfFRzCsN4zj3_）" target="_blank" rel="noopener">http://baike.baidu.com/link?url=eioUPqfLTP0mqIOIuJdH0tp9m3ihgtx2rjcFMDpKhNXcjRidBGuk-XuQtM2Zl0z6J43yKq8VTDfFRzCsN4zj3_）</a></li>
+<li>数组元素值域已知时，考虑 基数排序 和 桶排序（<a href="http://baike.baidu.com/view/1170573.htm）（http://baike.baidu.com/view/1784217.htm）" target="_blank" rel="noopener">http://baike.baidu.com/view/1170573.htm）（http://baike.baidu.com/view/1784217.htm）</a></li>
+</ul>
+<p>位运算</p>
+<ul>
+<li>【2】给一个十进制数字，求它的二进制表示中，有多少个 1 (n &amp;= n - 1)（<a href="https://leetcode.com/problems/number-of-1-bits/）" target="_blank" rel="noopener">https://leetcode.com/problems/number-of-1-bits/）</a></li>
+<li>【3】给一个数组，所有数字都出现了偶数次，只有一个出现了一次，找出这个数（<a href="https://leetcode.com/problems/single-number/）" target="_blank" rel="noopener">https://leetcode.com/problems/single-number/）</a></li>
+<li>【4】给一个数组，所有数字都出现了三次，只有一个出现了一次，找出这个数（<a href="https://leetcode.com/problems/single-number-ii/）" target="_blank" rel="noopener">https://leetcode.com/problems/single-number-ii/）</a></li>
+<li>【3】给一个数组，所有数组都出现了偶数次，只有两个数字出现了一次，找出这两个数（<a href="https://leetcode.com/problems/single-number-iii/）" target="_blank" rel="noopener">https://leetcode.com/problems/single-number-iii/）</a></li>
+</ul>
+<h3 id="网络-1"><a href="#网络-1" class="headerlink" title="网络"></a>网络</h3><p>根据不同的面试岗位，侧重点略有不同。对 iOS 和 Android 开发者来说，HTTP 考的略少，以 TCP 和 UDP 为主。其实 UDP 基本上只会考察和 TCP 的区别。</p>
+<p>当然还有一些常见的基础问题，比如 Cookie 和 Session 的考察，POST 和 GET 的考察，HTTPS 的简单了解等。这些问题在我的博客中都有简单的总结。</p>
+<ul>
+<li>【博客】我的六篇总结————不到一周（<a href="http://www.jianshu.com/notebooks/3276500/latest）" target="_blank" rel="noopener">http://www.jianshu.com/notebooks/3276500/latest）</a></li>
+<li>【书】图解 TCP/IP————半个月（<a href="http://item.jd.com/11253710.html）" target="_blank" rel="noopener">http://item.jd.com/11253710.html）</a></li>
+<li>【书】TCP/IP 详解————没读过，感觉至少需要一个月（<a href="http://item.jd.com/11182320.html）" target="_blank" rel="noopener">http://item.jd.com/11182320.html）</a></li>
+<li>【书】TCP/IP 协议簇————没读过，感觉至少需要一个月（<a href="http://item.jd.com/10485475.html）" target="_blank" rel="noopener">http://item.jd.com/10485475.html）</a></li>
+</ul>
+<p>光读书是没有用的，一问到实际问题很容易懵逼，以下是我总结的一些问题：</p>
+<ul>
+<li>简介 TCP 和 UDP 区别，他们位于哪一层？</li>
+<li>路由器和交换机的工作原理大概是什么，他们分别用到什么协议，位于哪一层？</li>
+<li>描述TCP 协议三次握手，四次释放的过程。</li>
+<li>TCP 协议是如何进行流量控制，拥塞控制的？</li>
+<li>为什么建立连接时是三次握手，两次行不行？如果第三次握手失败了怎么处理</li>
+<li>关闭连接时，第四次握手失败怎么处理？</li>
+<li>你怎么理解分层和协议？</li>
+<li>HTTP 请求中的 GET 和 POST 的区别，Session 和 Cookie 的区别。（<a href="https://bestswifter.com/bat-interview/(http://www.w3school.com.cn/tags/html_ref_httpmethods.asp)）" target="_blank" rel="noopener">https://bestswifter.com/bat-interview/(http://www.w3school.com.cn/tags/html_ref_httpmethods.asp)）</a></li>
+<li>谈谈你对 HTTP 1.1，2.0 和 HTTPS 的理解。</li>
+</ul>
+<h3 id="操作系统与编译"><a href="#操作系统与编译" class="headerlink" title="操作系统与编译"></a>操作系统与编译</h3><p>我被问到的操作系统问题很少，所以仅仅总结了一些自认为比较重要的问题。关于这一部分的知识，推荐阅读《程序员的自我修养》，如果时间有限，你可以阅读我的《程序员的自我修养读书笔记》（<a href="https://bestswifter.com/cheng-xu-yuan-de-zi-wo-xiu-yang-du-shu-bi-ji/），并思考这些问题：" target="_blank" rel="noopener">https://bestswifter.com/cheng-xu-yuan-de-zi-wo-xiu-yang-du-shu-bi-ji/），并思考这些问题：</a></p>
+<ul>
+<li>源代码是怎么变成可执行文件的，每一步的作用是什么？（预编译，词法分析，语法分析，语义分析，中间语言生成目标代码生成，汇编，链接）</li>
+<li>应用层、API、运行库、系统调用、操作系统内核之间的关系是什么？</li>
+<li>虚拟内存空间是什么，为什么要有虚拟内存空间。</li>
+<li>静态链接和动态链接分别表示什么，大概是怎么实现的？</li>
+<li>可执行文件的结构如何？（分为哪些段）</li>
+<li>它是怎么装载进内存的，为什么要分段，分页，页错误是什么？</li>
+<li>进程的内存格局是怎样的？（堆、栈、全局/静态区，代码区，常量区）</li>
+<li>堆和栈的区别，函数调用和栈的关系</li>
+<li>进程和线程的区别</li>
+<li>异步和同步，串行，并发，并行的区别</li>
+<li>多并发任务，仅多线程能加快速度么（不能，会变慢，有线程切换的开销）</li>
+<li>多个线程之间可以共享那些数据</li>
+<li>进程之间如何通信</li>
+<li>介绍几种锁，他们的用途和区别</li>
+</ul>
+<p>关于多线程相关的，推荐阅读这篇文章的前面一小部分——《iOS多线程编程——GCD与NSOperation总结》（<a href="https://bestswifter.com/multithreadconclusion/）" target="_blank" rel="noopener">https://bestswifter.com/multithreadconclusion/）</a></p>
+<p>关于操作系统和编译方面的文章，除了读原书和我的读书笔记外，还可以参考这篇文章——《修改一个数字破解Mac上的应用》（<a href="https://bestswifter.com/app-crack/）" target="_blank" rel="noopener">https://bestswifter.com/app-crack/）</a></p>
+<h3 id="OC"><a href="#OC" class="headerlink" title="OC"></a>OC</h3><p>首先两本必备的神书一定是要读完的。一本是讲 OC 的《Effective Objective-C 2.0》，中文名叫：“编写高质量 iOS 与 OS X 代码的 52 个有效方法”。另一本书叫：《Objective-C 高级编程》。前者讲解 OC 中各种细节，后者主要讲了 ARC、Block 和 GCD。</p>
+<p>光是读书，思考不够，很容易在面试时被问懵逼，所以建议一遍尝试回答面试真题，一边阅读以下总结性的文章，重要性不分先后：</p>
+<ul>
+<li>检测内存泄露（<a href="http://wereadteam.github.io/2016/02/22/MLeaksFinder/?from=singlemessage&amp;isappinstalled=0）" target="_blank" rel="noopener">http://wereadteam.github.io/2016/02/22/MLeaksFinder/?from=singlemessage&amp;isappinstalled=0）</a></li>
+<li>KVO与KVC原理、KVO、Notification、Delegate优缺点、最推荐的官方文档（<a href="http://www.jianshu.com/p/f1393d10109d）（http://www.tuicool.com/articles/mUVJVb）" target="_blank" rel="noopener">http://www.jianshu.com/p/f1393d10109d）（http://www.tuicool.com/articles/mUVJVb）</a></li>
+<li>GCD 与 NSOperation（<a href="https://bestswifter.com/multithreadconclusion/）" target="_blank" rel="noopener">https://bestswifter.com/multithreadconclusion/）</a></li>
+<li>Runtime（<a href="http://www.ianisme.com/ios/2019.html）" target="_blank" rel="noopener">http://www.ianisme.com/ios/2019.html）</a></li>
+<li>block（<a href="http://blog.ibireme.com/2013/11/27/objc-block/）" target="_blank" rel="noopener">http://blog.ibireme.com/2013/11/27/objc-block/）</a></li>
+<li>atomic 线程安全、@synchronized（<a href="http://www.cocoachina.com/bbs/read.php?tid-301674.html）（http://www.cnblogs.com/wendingding/p/3805841.html）" target="_blank" rel="noopener">http://www.cocoachina.com/bbs/read.php?tid-301674.html）（http://www.cnblogs.com/wendingding/p/3805841.html）</a></li>
+<li>对象的深浅复制（<a href="https://bestswifter.com/differenceofcopybettenswiftandoc/）" target="_blank" rel="noopener">https://bestswifter.com/differenceofcopybettenswiftandoc/）</a></li>
+<li>招聘一个靠谱的iOS（<a href="https://github.com/ChenYilong/iOSInterviewQuestions/tree/master/01%E3%80%8A%E6%8B%9B%E8%81%98%E4%B8%80%E4%B8%AA%E9%9D%A0%E8%B0%B1%E7%9A%84iOS%E3%80%8B%E9%9D%A2%E8%AF%95%E9%A2%98%E5%8F%82%E8%80%83%E7%AD%94%E6%A1%88）" target="_blank" rel="noopener">https://github.com/ChenYilong/iOSInterviewQuestions/tree/master/01%E3%80%8A%E6%8B%9B%E8%81%98%E4%B8%80%E4%B8%AA%E9%9D%A0%E8%B0%B1%E7%9A%84iOS%E3%80%8B%E9%9D%A2%E8%AF%95%E9%A2%98%E5%8F%82%E8%80%83%E7%AD%94%E6%A1%88）</a></li>
+<li>消息传递机制（<a href="http://objccn.io/issue-7-4/）" target="_blank" rel="noopener">http://objccn.io/issue-7-4/）</a></li>
+<li>深入理解Objective-C：Category（<a href="http://tech.meituan.com/DiveIntoCategory.html）" target="_blank" rel="noopener">http://tech.meituan.com/DiveIntoCategory.html）</a></li>
+</ul>
+<p>强烈推荐第八篇文章，做完这上面的题目基本上可以应付大多数 OC 方面的问题了。</p>
+<h3 id="iOS-开发"><a href="#iOS-开发" class="headerlink" title="iOS 开发"></a>iOS 开发</h3><ul>
+<li>RunLoop（<a href="http://blog.ibireme.com/2015/05/18/runloop/）" target="_blank" rel="noopener">http://blog.ibireme.com/2015/05/18/runloop/）</a></li>
+<li>Cell 图片异步加载优化（<a href="http://www.jianshu.com/p/02ab2b74c451）" target="_blank" rel="noopener">http://www.jianshu.com/p/02ab2b74c451）</a></li>
+<li>iOS 函数式编程的实现 &amp;&amp; 响应式编程概念（<a href="http://www.cocoachina.com/ios/20160307/15585.html）" target="_blank" rel="noopener">http://www.cocoachina.com/ios/20160307/15585.html）</a></li>
+<li>内存恶鬼drawRect（<a href="http://bihongbo.com/2016/01/03/memoryGhostdrawRect/）" target="_blank" rel="noopener">http://bihongbo.com/2016/01/03/memoryGhostdrawRect/）</a></li>
+<li>UIKit 性能调优(主要是UITableView)（<a href="https://bestswifter.com/uikitxing-neng-diao-you-shi-zhan-jiang-jie/）" target="_blank" rel="noopener">https://bestswifter.com/uikitxing-neng-diao-you-shi-zhan-jiang-jie/）</a></li>
+<li>优化UITableViewCell高度计算的那些事（<a href="http://blog.sunnyxx.com/2015/05/17/cell-height-calculation/）" target="_blank" rel="noopener">http://blog.sunnyxx.com/2015/05/17/cell-height-calculation/）</a></li>
+<li>高性能图片架构与设计（<a href="http://zhuanlan.zhihu.com/magilu/20273299）" target="_blank" rel="noopener">http://zhuanlan.zhihu.com/magilu/20273299）</a></li>
+<li>轻量化视图控制器（<a href="http://objccn.io/issue-1-1/）" target="_blank" rel="noopener">http://objccn.io/issue-1-1/）</a></li>
+<li>UIView的生命周期（<a href="https://bestswifter.com/uiviewlifetime/）" target="_blank" rel="noopener">https://bestswifter.com/uiviewlifetime/）</a></li>
+<li>高效设置圆角（<a href="https://bestswifter.com/efficient-rounded-corner/）" target="_blank" rel="noopener">https://bestswifter.com/efficient-rounded-corner/）</a></li>
+<li>事件的传递和响应机制（<a href="http://www.jianshu.com/p/2e074db792ba）" target="_blank" rel="noopener">http://www.jianshu.com/p/2e074db792ba）</a></li>
+<li>ReactiveCocoa 和 MVVM 入门（<a href="http://yulingtianxia.com/blog/2015/05/21/ReactiveCocoa-and-MVVM-an-Introduction/）" target="_blank" rel="noopener">http://yulingtianxia.com/blog/2015/05/21/ReactiveCocoa-and-MVVM-an-Introduction/）</a></li>
+</ul>
+<p>其中需要重点了解 runloop，它不仅仅是简单的“跑圈”的 概念，很多问题其实都与它有关，建议认真阅读 ibireme 大神的总结</p>
+<h3 id="其他面经"><a href="#其他面经" class="headerlink" title="其他面经"></a>其他面经</h3><p>我是如何同时拿到阿里和腾讯offer的（<a href="https://segmentfault.com/a/1190000002627927#articleHeader5）" target="_blank" rel="noopener">https://segmentfault.com/a/1190000002627927#articleHeader5）</a><br>大三学生拿到阿里,百度实习offer面试经验分享（<a href="http://www.wtoutiao.com/p/e2fwlu.html）" target="_blank" rel="noopener">http://www.wtoutiao.com/p/e2fwlu.html）</a><br>2016年1月TX电面题（<a href="http://blog.csdn.net/xieyupeng520/article/details/50681147）" target="_blank" rel="noopener">http://blog.csdn.net/xieyupeng520/article/details/50681147）</a></p>
+<h1 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h1><ol>
+<li><a href="https://bestswifter.com/bat-interview/" target="_blank" rel="noopener">让 BAT 的 Offer 不再难拿 - bestswifter</a></li>
+</ol>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/05/04/【Android】零基础学-Java？看这篇就够了！/" rel="next" title="【Android】零基础学 Java？看这篇就够了！">
+                <i class="fa fa-chevron-left"></i> 【Android】零基础学 Java？看这篇就够了！
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/uploads/avatar.jpeg"
+                alt="mayan" />
+            
+              <p class="site-author-name" itemprop="name">mayan</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">3</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">2</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/mayan29" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="mailto:18511560993@gmail.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#C-Objective-C"><span class="nav-text">C / Objective-C</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1"><span class="nav-text">1</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2"><span class="nav-text">2</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3"><span class="nav-text">3</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#UIKit"><span class="nav-text">UIKit</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#操作系统"><span class="nav-text">操作系统</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-1"><span class="nav-text">1</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#网络"><span class="nav-text">网络</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#算法"><span class="nav-text">算法</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#待总结题目"><span class="nav-text">待总结题目</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#iOS"><span class="nav-text">iOS</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#算法-1"><span class="nav-text">算法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#网络-1"><span class="nav-text">网络</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#操作系统与编译"><span class="nav-text">操作系统与编译</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#OC"><span class="nav-text">OC</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#iOS-开发"><span class="nav-text">iOS 开发</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#其他面经"><span class="nav-text">其他面经</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#参考资料"><span class="nav-text">参考资料</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">mayan</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Gemini</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+    
+      <script id="dsq-count-scr" src="https://mayan29.disqus.com/count.js" async></script>
+    
+
+    
+      <script type="text/javascript">
+        var disqus_config = function () {
+          this.page.url = 'http://yoursite.com/2018/06/19/【iOS】每日一道面试题/';
+          this.page.identifier = '2018/06/19/【iOS】每日一道面试题/';
+          this.page.title = '【iOS】每日一道面试题';
+        };
+        var d = document, s = d.createElement('script');
+        s.src = 'https://mayan29.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', '' + +new Date());
+        (d.head || d.body).appendChild(s);
+      </script>
+    
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
