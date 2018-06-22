@@ -377,9 +377,7 @@ A present B
 
 ### OC
 
-首先两本必备的神书一定是要读完的。一本是讲 OC 的《Effective Objective-C 2.0》，中文名叫：“编写高质量 iOS 与 OS X 代码的 52 个有效方法”。另一本书叫：《Objective-C 高级编程》。前者讲解 OC 中各种细节，后者主要讲了 ARC、Block 和 GCD。
-
-光是读书，思考不够，很容易在面试时被问懵逼，所以建议一遍尝试回答面试真题，一边阅读以下总结性的文章，重要性不分先后：
+两本神书一边阅读以下总结性的文章，重要性不分先后：
 
 - 检测内存泄露（http://wereadteam.github.io/2016/02/22/MLeaksFinder/?from=singlemessage&isappinstalled=0）
 - KVO与KVC原理、KVO、Notification、Delegate优缺点、最推荐的官方文档（http://www.jianshu.com/p/f1393d10109d）（http://www.tuicool.com/articles/mUVJVb）
