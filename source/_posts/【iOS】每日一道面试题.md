@@ -88,6 +88,59 @@ printf("%d, %d", *(a + 1), *(ptr - 1));
 a 是指向数组开头元素的指针，a + 1 就是指向下一个元素的指针，所以星号求值以后是 2。&a 相当于是数组的指针，&a + 1 是数组后面一个数组的指针，然后转换成 int * 类型是 5 这个数字后面的一个数字的指针。再减一就是指向 5 的指针，所以星号求值以后是 5。
 
 
+## 4
+
+__题目：使用 GCD 如何实现这个需求：A、B、C 三个任务并发，完成后执行任务 D。__
+__星级：★★__
+
+可以用两种方法实现：
+
+```objc
+// GCD Group
+
+dispatch_group_t group = dispatch_group_create();
+dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
+
+dispatch_group_async(group, queue, ^{
+    NSLog(@"执行 A 任务");
+});
+dispatch_group_async(group, queue, ^{
+    NSLog(@"执行 B 任务");
+});
+dispatch_group_async(group, queue, ^{
+    NSLog(@"执行 C 任务");
+});
+
+dispatch_group_notify(group, queue, ^{
+    NSLog(@"执行 D 任务");
+});
+```
+
+```objc
+// GCD Barrier
+
+dispatch_queue_t queue = dispatch_queue_create("com.mayan29.gcd", DISPATCH_QUEUE_CONCURRENT);
+
+dispatch_async(queue, ^{
+    NSLog(@"执行 A 任务");
+});
+dispatch_async(queue, ^{
+    NSLog(@"执行 B 任务");
+});
+dispatch_async(queue, ^{
+    NSLog(@"执行 C 任务");
+});
+    
+dispatch_barrier_async(queue, ^{
+    NSLog(@"可以做一些其他操作");
+});
+    
+dispatch_async(queue, ^{
+    NSLog(@"执行 D 任务");
+});
+```    
+
+
 
 # UIKit
 
@@ -122,6 +175,32 @@ __星级：★★__
 具体分析和实例参考：[细说 OC 中的 load 和 initialize 方法](https://bestswifter.com/load-and-initialize/)
 
 
+## 2
+
+__题目：如果页面 A 跳转到 页面 B，A 的 viewDidDisappear 方法和 B 的 viewDidAppear 方法哪个先调用？__
+__星级：★__
+
+注意这里分两种情况：
+
+A push B
+
+```c
+1. 调用 A 的 viewWillDisappear 方法
+2. 调用 B 的 viewWillAppear 方法
+3. 调用 A 的 viewDidDisappear 方法
+4. 调用 B 的 viewDidDAppear 方法
+```
+
+A present B
+
+```c
+1. 调用 A 的 viewWillDisappear 方法
+2. 调用 C 的 viewWillAppear 方法
+3. 调用 C 的 viewDidAppear 方法
+4. 调用 A 的 viewDidDisappear 方法
+```
+
+
 
 # 网络
 
@@ -152,7 +231,6 @@ __星级：★★__
 14. runtime 中，SEL 和 IMP 的区别
 15. autoreleasepool 的使用场景和原理
 16. RunLoop 的实现原理和数据结构，什么时候会用到
-17. 使用 GCD 如何实现这个需求：A、B、C 三个任务并发，完成后执行任务 D。
 18. NSOperation 和 GCD 的区别
 19. CoreData 的使用，如何处理多线程问题
 20. 如何设计图片缓存？
@@ -163,7 +241,6 @@ __星级：★★__
 24. TCP 流量控制
 24. 数组和链表的区别
 24. UIView 生命周期
-24. 如果页面 A 跳转到 页面 B，A 的 viewDidDisappear 方法和 B 的 viewDidAppear 方法哪个先调用？
 24. ARC 的本质
 24. RunLoop 的基本概念，它是怎么休眠的？
 24. Autoreleasepool 什么时候释放，在什么场景下使用？
