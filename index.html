@@ -1454,6 +1454,914 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/05/05/【读书笔记】《Effective Objective-C 2.0 编写高质量 iOS 与 OS X 代码的 52 个有效方法》/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="mayan">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.jpeg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="mayan`s blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2017/05/05/【读书笔记】《Effective Objective-C 2.0 编写高质量 iOS 与 OS X 代码的 52 个有效方法》/" itemprop="url">【读书笔记】《Effective Objective-C 2.0 编写高质量 iOS 与 OS X 代码的 52 个有效方法》</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-05-05T16:36:42+08:00">
+                2017-05-05
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/读书笔记/" itemprop="url" rel="index">
+                    <span itemprop="name">读书笔记</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2017/05/05/【读书笔记】《Effective Objective-C 2.0 编写高质量 iOS 与 OS X 代码的 52 个有效方法》/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count"
+                        data-disqus-identifier="2017/05/05/【读书笔记】《Effective Objective-C 2.0 编写高质量 iOS 与 OS X 代码的 52 个有效方法》/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <blockquote>
+<p>作者：Matt Galloway</p>
+<p>出版日期：2014-1</p>
+<p>豆瓣地址：<a href="https://book.douban.com/subject/25829244/" target="_blank" rel="noopener">https://book.douban.com/subject/25829244/</a></p>
+</blockquote>
+<h2 id="1-了解-Objective-C-语言"><a href="#1-了解-Objective-C-语言" class="headerlink" title="1. 了解 Objective-C 语言"></a>1. 了解 Objective-C 语言</h2><p>OC 使用<code>消息结构</code>（messaging structure）而不是<code>函数调用</code>（function calling），写法如下：</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Objective-C</span></span><br><span class="line">Object *obj = [Object new];</span><br><span class="line">[obj performWith: parameter1 and: parameter2];</span><br></pre></td></tr></table></figure>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// C++</span></span><br><span class="line">Object *obj = <span class="keyword">new</span> Object;</span><br><span class="line">obj-&gt;perform(parameter1, parameter2);</span><br></pre></td></tr></table></figure>
+<p>使用消息结构的语言，运行时执行的代码由运行环境来决定；而使用函数调用的语言，则由编译器决定。如果调用的函数是多态的，那么在运行时就要按照<code>虚方法表</code>（virtual table）来查出到底应该执行哪个函数实现。而消息结构的语言，不论是否多态，总是在运行时才会去查找所要执行的方法。实际上，编译器甚至不关心接收消息的对象是何种类型。接收消息的对象问题也要在运行时处理，其过程叫做<code>动态绑定</code>（dynamic binding）。</p>
+<p>Objective-C 的重要工作都由 runtime 组件而非编译器来完成，所需的全部数据结构和函数都在 runtime 组件里面，runtime 组件含有全部内存管理方法。runtime 本质上就是一种与开发者编写的代码相链接的<code>动态库</code>（dynamic library），其代码能把开发者编写的所有程序粘合起来。</p>
+<h2 id="2-在类的头文件中尽量少引入其他头文件"><a href="#2-在类的头文件中尽量少引入其他头文件" class="headerlink" title="2. 在类的头文件中尽量少引入其他头文件"></a>2. 在类的头文件中尽量少引入其他头文件</h2><p>与 C 和 C++ 一样，OC 也使用<code>头文件</code>（header file）和<code>实现文件</code>（implementation file）来区隔代码。用 OC 编写的任何类几乎都需要引入 <code>Foundation.h</code>，如果包含 UI 控件，需要引入 <code>UIKit.h</code></p>
+<p>一般来说，应在某个类的头文件中使用<code>前向声明</code>（forward declaring）来提及别的类，这样做可以尽量降低类之间的耦合。</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">@class</span> <span class="title">MYPerson</span>;</span></span><br></pre></td></tr></table></figure>
+<p>循环引用（chicken-and-egg situation）：如果在各自头文件中引入对方的头文件，当解析其中一个头文件时，编译器会发现它引入了另一个头文件，而那个头文件又回过头来引用第一个头文件。使用 #import 而非 #include 指令虽然不会导致死循环，但是却意味着两个类里有一个无法被正确编译。</p>
+<h2 id="3-多用字面量语法，少用与之等价的方法"><a href="#3-多用字面量语法，少用与之等价的方法" class="headerlink" title="3.多用字面量语法，少用与之等价的方法"></a>3.多用字面量语法，少用与之等价的方法</h2><p>使用<code>字面量语法</code>（literal syntax）的好处是可以缩减源代码长度，使其更为易读。其本质为一种<code>语法糖</code>（syntactic sugar），以数组为例，其效果等于是先创建一个数组，然后把方括号里的所有对象都加到这个数组中。但是数组元素中不能有 nil，因为 arrayWithObjects: 方法会依次处理各个参数，直到发现 nil 为止，如果中间元素是 nil，该方法会提前结束。这个问题同样适用于字典。</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">NSArray</span> *arr = @[@<span class="number">1</span>, @<span class="number">2</span>, @<span class="number">3</span>];</span><br></pre></td></tr></table></figure>
+<h2 id="4-多用类型常量，少用-define-预处理指令"><a href="#4-多用类型常量，少用-define-预处理指令" class="headerlink" title="4.多用类型常量，少用 #define 预处理指令"></a>4.多用类型常量，少用 #define 预处理指令</h2><p>比如想把播放动画的时间提取为常量，使用预处理指令，也就是宏定义可以这样写：</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#define ANIMATION_DURATION 0.3</span></span><br></pre></td></tr></table></figure>
+<p>上面的宏定义的缺点是，这样定义出来的常量没有类型信息，此外会把碰到的所有 ANIMATION_DURATION 一律替换成 0.3</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">static</span> <span class="keyword">const</span> <span class="built_in">NSTimeInterval</span> kAnimationDuration = <span class="number">0.3</span>;</span><br></pre></td></tr></table></figure>
+<p>上面的方式定义的常量包含类型信息，其好处是清楚的描述了常量的含义。需要注意的是，如果常量局限于 .m 文件中，则在前面加字母 k；若常量在类之外可见，通常以类名为前缀，比如 MYViewAnimationDuration。</p>
+<p>static 作用：假如声明此变量时不加 static，则编译器会为它创建一个外部符号，此时若是另一个实现文件也声明了同名变量，那么编译器会报错。</p>
+<p>如果需要对外公开某个常量，可以声明为一个外界可见的常值变量，外界无需知道实际常量值，只需知道常量名称即可，此类常量需放在<code>全局符号表</code>（global symbol table）中，如下定义：</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// .h</span></span><br><span class="line"><span class="keyword">extern</span> <span class="built_in">NSString</span> *<span class="keyword">const</span> MYStringConstant;</span><br><span class="line"></span><br><span class="line"><span class="comment">// .m</span></span><br><span class="line"><span class="built_in">NSString</span> *<span class="keyword">const</span> MYStringConstant = <span class="string">@"VALUE"</span>;</span><br></pre></td></tr></table></figure>
+<p>编译器看到头文件中的 extern 关键字，无需查看其定义，即允许代码使用此常量。因为它知道，当链接成二进制文件之后，肯定能找到这个常量。</p>
+<p>此类常量必须定义，并且只能定义一次，由实现文件生成目标文件时，编译器会在<code>数据段</code>（data section）为字符串分配存储空间。链接器会把此目标文件与其他目标文件相链接，以生成最终的二进制文件。凡是用到 MYStringConstant 这个全局符号的地方，链接器都能将其解析。</p>
+<p>前例中的动画播放时长对外公布，可以这样声明：</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// .h</span></span><br><span class="line"><span class="keyword">extern</span> <span class="keyword">const</span> <span class="built_in">NSTimeInterval</span> MYViewAnimationDuration;</span><br><span class="line"></span><br><span class="line"><span class="comment">// .m</span></span><br><span class="line"><span class="keyword">const</span> <span class="built_in">NSTimeInterval</span> MYViewAnimationDuration = <span class="number">0.3</span>;</span><br></pre></td></tr></table></figure>
+<h2 id="5-用枚举表示状态、选项、状态码"><a href="#5-用枚举表示状态、选项、状态码" class="headerlink" title="5. 用枚举表示状态、选项、状态码"></a>5. 用枚举表示状态、选项、状态码</h2><p>C++11 标准修订了枚举的某些特性，其中一项改动就是：可以指明用何种<code>底层数据类型</code>（underlying type）来保存枚举类型的变量，这样做的好处是，可以向前声明枚举变量了。若不指定底层数据类型，编译器不清楚底层数据类型的大小，所以在用到此枚举类型时，就不知道究竟该给变量分配多少空间。</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="keyword">enum</span> MYConnectionState : <span class="built_in">NSUInteger</span> &#123;</span><br><span class="line">    MYConnectionStateDisconnected,</span><br><span class="line">    MYConnectionStateConnecting,</span><br><span class="line">    MYConnectionStateConnected</span><br><span class="line">&#125; MYConnectionState;</span><br><span class="line"></span><br><span class="line"><span class="keyword">typedef</span> <span class="built_in">NS_ENUM</span>(<span class="built_in">NSUInteger</span>, MYConnectionState) &#123;</span><br><span class="line">    MYConnectionStateDisconnected,</span><br><span class="line">    MYConnectionStateConnecting,</span><br><span class="line">    MYConnectionStateConnected</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">MYConnectionState state = MYConnectionStateConnecting;</span><br></pre></td></tr></table></figure>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="keyword">enum</span> MYConnectionState : <span class="built_in">NSUInteger</span> &#123;</span><br><span class="line">    MYConnectionStateDisconnected = <span class="number">1</span> &lt;&lt; <span class="number">0</span>,</span><br><span class="line">    MYConnectionStateConnecting   = <span class="number">1</span> &lt;&lt; <span class="number">1</span>,</span><br><span class="line">    MYConnectionStateConnected    = <span class="number">1</span> &lt;&lt; <span class="number">2</span></span><br><span class="line">&#125; MYConnectionState;</span><br><span class="line"></span><br><span class="line"><span class="keyword">typedef</span> <span class="built_in">NS_OPTIONS</span>(<span class="built_in">NSUInteger</span>, MYConnectionState) &#123;</span><br><span class="line">    MYConnectionStateDisconnected = <span class="number">1</span> &lt;&lt; <span class="number">0</span>,</span><br><span class="line">    MYConnectionStateConnecting   = <span class="number">1</span> &lt;&lt; <span class="number">1</span>,</span><br><span class="line">    MYConnectionStateConnected    = <span class="number">1</span> &lt;&lt; <span class="number">2</span></span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">MYConnectionState state = MYConnectionStateDisconnected | MYConnectionStateConnecting;</span><br></pre></td></tr></table></figure>
+<h2 id="6-理解属性这一概念"><a href="#6-理解属性这一概念" class="headerlink" title="6. 理解属性这一概念"></a>6. 理解属性这一概念</h2><figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">MYPerson</span> : <span class="title">NSObject</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">	<span class="built_in">NSString</span> *_firstName;</span><br><span class="line">	<span class="built_in">NSString</span> *_lastName;</span><br><span class="line">	</span><br><span class="line"><span class="keyword">@end</span></span><br></pre></td></tr></table></figure>
+<p>以上写法一般是 Java 和 C++ 的写法，而 Objective-C 代码却很少这么做。这种写法的问题是：对象布局在<code>编译期</code>（compile time）就已经固定了。只要碰到访问 <code>_fistName</code> 变量的代码，编译器就把其替换为<code>偏移量</code>（offset），这个偏移量是<code>硬编码</code>（hardcode），表示该变量距离存放对象的内存区域的起始地址有多远。这样做目前来看没有问题，但是如果又加了一个实例变量，那就麻烦了。比如在 <code>_firstName</code> 之前又多了一个实例变量：</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">MYPerson</span> : <span class="title">NSObject</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">	<span class="built_in">NSString</span> *_dateOfBirth;</span><br><span class="line">	<span class="built_in">NSString</span> *_firstName;</span><br><span class="line">	<span class="built_in">NSString</span> *_lastName;</span><br><span class="line">	</span><br><span class="line"><span class="keyword">@end</span></span><br></pre></td></tr></table></figure>
+<p>原来表示 <code>_firstName</code> 的偏移量现在却指向 <code>_dataOfBirth</code>，把偏移量硬编码于其中的那些代码都会读取到错误的值</p>
+<p><img src="/img/img025.png" alt="image025"></p>
+<p>如果代码使用了编译期间计算出来的偏移量，那么在修改类定义之后必须重新编译，否则就会出错。</p>
+<p>Objective-C 的做法是，把实例变量当做一种存储偏移量所用的<code>特殊变量</code>（special variable），交由<code>类对象</code>（class object）保管，偏移量会在运行期查找，如果类的定义变了，那么存储的偏移量也就变了，所以总能使用正确的偏移量，甚至可以在运行期向类中新增实例变量。</p>
+<p>这个问题还有一种解决方法，就是尽量不要直接访问实例变量，应该通过存取方法来做。Objective-C 这门语言就是根据名称自动创建出存取方法，也就是 @property 语法。</p>
+<h3 id="属性特质"><a href="#属性特质" class="headerlink" title="属性特质"></a>属性特质</h3><h4 id="原子性"><a href="#原子性" class="headerlink" title="原子性"></a>原子性</h4><p>所有属性都声明为 nonatomic 是因为：在 iOS 中使用同步锁开销较大，一般不要求属性必须是原子的，因为这并不能保证线程安全，若要实现线程安全，还需采用更为深层的锁定机制才行。例如，一个线程在连续多次读取某属性值的过程中有别的线程在同时改写改值，那么即便将属性声明为 atomic 也还是会读到不同的属性值。</p>
+<h4 id="读写权限"><a href="#读写权限" class="headerlink" title="读写权限"></a>读写权限</h4><p>readwrite / readonly</p>
+<h4 id="内存管理语义"><a href="#内存管理语义" class="headerlink" title="内存管理语义"></a>内存管理语义</h4><ul>
+<li><p>assign：纯量类型（scalar type），简单赋值操作</p>
+</li>
+<li><p>strong：拥有关系（owning relationship），为这种属性设置新值时，设置方法会先保留新值，并释放旧值，然后再将新值设置上去。</p>
+</li>
+<li><p>weak：非拥有关系（nonowning relationship），为这种属性设置新值时，设置方法既不保留新值，也不释放旧值，类似 assign</p>
+</li>
+<li><p>copy：拷贝（copy），当属性类型为 NSString* 时，经常用此特质来保护其封装性，因为传递给设置方法的新值有可能指向一个 NSMutableString 类的实例，此类是 NSString 的子类，如果不拷贝字符串，那么设置完属性后，字符串的值就会在对象不知情的情况被修改</p>
+</li>
+</ul>
+<h4 id="方法名"><a href="#方法名" class="headerlink" title="方法名"></a>方法名</h4><p>getter=<name> / setter=<name></name></name></p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">@property</span> (<span class="keyword">nonatomic</span>, <span class="keyword">getter</span>=isOn) <span class="built_in">BOOL</span> on;</span><br></pre></td></tr></table></figure>
+<h2 id="7-在对象内部读写是否使用实例变量"><a href="#7-在对象内部读写是否使用实例变量" class="headerlink" title="7. 在对象内部读写是否使用实例变量"></a>7. 在对象内部读写是否使用实例变量</h2><p>直接访问实例变量和通过属性访问区别如下：</p>
+<ul>
+<li><p>直接访问实例变量的速度更快，由于不经过 OC 的<code>方法派发</code>（method dispatch），编译器所生成的代码会直接访问保存对象实例变量的那块内存；</p>
+</li>
+<li><p>直接访问实例变量不会调用设置方法，比如在 ARC 下直接访问一个声明为 copy 的属性，那么并不会拷贝该属性，只会保留新值并释放旧值；</p>
+</li>
+<li><p>直接访问实例变量不会触发 KVO 通知；</p>
+</li>
+<li><p>通过属性访问有助于排查与之相关的错误</p>
+</li>
+</ul>
+<p>总结为：在对象内部读取数据时，直接通过实例变量来读；写入数据时，通过属性 set 方法来写。</p>
+<h2 id="8-以类族模式隐藏实现细节"><a href="#8-以类族模式隐藏实现细节" class="headerlink" title="8. 以类族模式隐藏实现细节"></a>8. 以类族模式隐藏实现细节</h2><p><code>类族</code>（class cluster）是一种很有用的模式，可以隐藏<code>抽象基类</code>（abstract base class）背后的实现细节，例如 UIButton 的类方法：</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">+ (<span class="built_in">UIButton</span> *)buttonWithType:(<span class="built_in">UIButtonType</span>)type;</span><br></pre></td></tr></table></figure>
+<p>该方法所返回的对象，其类型取决于传入的按钮类型，然而，不管返回什么类型的对象，他们都继承同一个基类：UIButton，这么做的意义是，UIButton 的使用者无须关心创建出来的按钮具体属于哪个子类，只需明白如何创建按钮，设置属性即可。</p>
+<p>举一个例子，创建一个 MYPerson 抽象类，MYStudent、MYTeacher、MYWorker 每一个子类都继承 MYPerson</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#import <span class="meta-string">&lt;Foundation/Foundation.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">MYPerson</span> : <span class="title">NSObject</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">typedef</span> <span class="built_in">NS_ENUM</span>(<span class="built_in">NSUInteger</span>, MYPersonType) &#123;</span><br><span class="line"></span><br><span class="line">    MYPersonTypeStudent,</span><br><span class="line">    MYPersonTypeTeacher,</span><br><span class="line">    MYPersonTypeWorker,</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">@property</span> (<span class="keyword">nonatomic</span>, <span class="keyword">copy</span>) <span class="built_in">NSString</span> *name;</span><br><span class="line"><span class="keyword">@property</span> (<span class="keyword">nonatomic</span>, <span class="keyword">assign</span>) <span class="built_in">NSUInteger</span> age;</span><br><span class="line"></span><br><span class="line">+ (<span class="keyword">instancetype</span>)personWithType:(MYPersonType)type;</span><br><span class="line">- (<span class="keyword">void</span>)introduceMyself;</span><br><span class="line"></span><br><span class="line"><span class="keyword">@end</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#import <span class="meta-string">"MYPerson.h"</span></span></span><br><span class="line"><span class="meta">#import <span class="meta-string">"MYStudent.h"</span></span></span><br><span class="line"><span class="meta">#import <span class="meta-string">"MYTeacher.h"</span></span></span><br><span class="line"><span class="meta">#import <span class="meta-string">"MYWorker.h"</span></span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">@implementation</span> <span class="title">MYPerson</span></span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">+ (<span class="keyword">instancetype</span>)personWithType:(MYPersonType)type</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">switch</span> (type) &#123;</span><br><span class="line">        <span class="keyword">case</span> MYPersonTypeStudent:</span><br><span class="line">            <span class="keyword">return</span> [[MYStudent alloc] init];</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        <span class="keyword">case</span> MYPersonTypeTeacher:</span><br><span class="line">            <span class="keyword">return</span> [[MYTeacher alloc] init];</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        <span class="keyword">case</span> MYPersonTypeWorker:</span><br><span class="line">            <span class="keyword">return</span> [[MYWorker alloc] init];</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (<span class="keyword">void</span>)introduceMyself</span><br><span class="line">&#123;</span><br><span class="line">    <span class="built_in">NSLog</span>(<span class="string">@"%@"</span>, <span class="keyword">self</span>.class);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">@end</span></span><br></pre></td></tr></table></figure>
+<p>方法调用，打印结果为 MYWorker</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">MYPerson *person = [MYPerson personWithType:MYPersonTypeWorker];</span><br><span class="line">[person introduceMyself];</span><br></pre></td></tr></table></figure>
+<h2 id="9-理解-objc-msgSend-的作用"><a href="#9-理解-objc-msgSend-的作用" class="headerlink" title="9. 理解 objc_msgSend 的作用"></a>9. 理解 objc_msgSend 的作用</h2><h3 id="9-1-基本消息传递"><a href="#9-1-基本消息传递" class="headerlink" title="9.1 基本消息传递"></a>9.1 基本消息传递</h3><figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">id</span> returnValue = [someObject messageName:parameter];</span><br></pre></td></tr></table></figure>
+<p>上面所示方法中，someObject 叫做<code>接受者</code>（receiver），messageName 叫做<code>选择子</code>（selector），选择子和参数合起来称为<code>消息</code>（message）。编译器将其转换为一条 C 语言函数调用，所调函数乃是消息传递机制中的核心函数，叫做 <code>objc_msgSend</code>，其原型如下：</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">id</span> returnValue = objc_msgSend(someObject, <span class="keyword">@selector</span>(messageName:), parameter);</span><br></pre></td></tr></table></figure>
+<p><code>objc_msgSend</code> 函数依据<code>接受者</code>和<code>选择子</code>的类型来调用适当的方法，该方法需要在接受者所属的类中搜寻其<code>方法列表</code>（list of methods），如果能找到与选择子名称相符的方法，就跳至其实现代码。如果找不到，就沿着继承体系继续向上查找，找到合适的方法再跳转。如果最终还是找不到，那就执行<code>消息转发</code>（message forwarding）</p>
+<p>这么说来，想调用一个方法似乎需要很多步骤，但是，<code>objc_msgSend</code> 会将匹配结果缓存在<code>快速映射表</code>（fast map）里面，每个类都有这样一块缓存，如果稍后还向该类发送与选择子相同的消息，那么执行起来就很快了。</p>
+<h3 id="9-2-其他消息传递"><a href="#9-2-其他消息传递" class="headerlink" title="9.2 其他消息传递"></a>9.2 其他消息传递</h3><h4 id="objc-msgSend-stret"><a href="#objc-msgSend-stret" class="headerlink" title="objc_msgSend_stret"></a>objc_msgSend_stret</h4><p>如果待发送的消息要返回结构体，可交由此函数处理。只有当 CPU 的寄存器能够容纳得下消息返回类型时，这个函数才能处理。如果返回的结构体太大了，就由另一个函数执行派发，会通过分配在栈上的某个变量来处理消息所返回的结构体。</p>
+<h4 id="objc-msgSend-fpret"><a href="#objc-msgSend-fpret" class="headerlink" title="objc_msgSend_fpret"></a>objc_msgSend_fpret</h4><p>如果消息返回的是浮点数，那么可交由此函数处理。通常所用的 objc_msgSend 在这种情况下并不适合，这个函数是为了处理 x86 等架构 CPU 中某些奇怪状况。</p>
+<h4 id="objc-msgSendSuper"><a href="#objc-msgSendSuper" class="headerlink" title="objc_msgSendSuper"></a>objc_msgSendSuper</h4><p>如果要给超类发消息，例如 <code>[super message:parameter]</code>，那么就交由此函数处理。也有另外两个与 <code>objc_msgSend_stret</code> 和 <code>objc_msgSend_fpret</code> 等效的函数，用于处理发给 super 的相应消息。</p>
+<h3 id="9-3-尾调用优化"><a href="#9-3-尾调用优化" class="headerlink" title="9.3 尾调用优化"></a>9.3 尾调用优化</h3><p>每个类里都有一张表格，其中的指针都会指向这个函数，而选择子的名称则是查表时所用的 key，<code>objc_msgSend</code> 等函数的原理是，通过这张表格来寻找应该执行的方法。</p>
+<p>原型的样子和 <code>objc_msgSend</code> 函数很像，这是利用<code>尾调用优化</code>（tail-call optimization）技术（函数最后一项操作是调用另外一个函数），编译器会生成跳转至另一个函数所需的指令码，而且不会向调用堆栈中推入新的<code>栈帧</code>（frame stack）。这项优化对 <code>objc_msgSend</code> 非常关键，如果不这么做的话，每次调用 Objective-C 方法之前，都需要为调用 <code>objc_msgSend</code> 函数准备栈帧。此外，若不优化，还会过早的发生<code>栈溢出</code>（stack overflow）现象。</p>
+<h2 id="10-理解消息转发机制"><a href="#10-理解消息转发机制" class="headerlink" title="10. 理解消息转发机制"></a>10. 理解消息转发机制</h2><p>在编译期间向类发送了其无法解读的消息并不会报错，因为在运行期可以继续向类中添加方法。当对象接收到无法解读的消息后，就会启动<code>消息转发</code>（message forwarding）机制。</p>
+<p>消息转发分为两大阶段：</p>
+<h4 id="动态方法解析（dynamic-method-resolution）"><a href="#动态方法解析（dynamic-method-resolution）" class="headerlink" title="动态方法解析（dynamic method resolution）"></a>动态方法解析（dynamic method resolution）</h4><p>征询接收者，所属的类，看是否能动态添加方法，以处理当前这个<code>未知的选择子</code>（unknown selector）</p>
+<h4 id="完整的消息转发机制（full-forwarding-mechanism）"><a href="#完整的消息转发机制（full-forwarding-mechanism）" class="headerlink" title="完整的消息转发机制（full forwarding mechanism）"></a>完整的消息转发机制（full forwarding mechanism）</h4><p>首先，接受者看看有没有其他对象能处理这条消息，如果有，运行时会把消息转给那个对象，消息转发过程结束，一切正常。若没有<code>备援的接收者</code>（replacement receiver）则启动完整的消息转发机制，运行时会把与消息有关的全部细节封装到 <code>NSInvocation</code> 对象中，再给接受者最后一次机会，令其设法解决当前还未处理的这条消息。</p>
+<h3 id="10-1-动态方法解析"><a href="#10-1-动态方法解析" class="headerlink" title="10.1 动态方法解析"></a>10.1 动态方法解析</h3><p>对象在收到无法解读的消息后，首先将调用其所属类的下列类方法：</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">+ (<span class="built_in">BOOL</span>)resolveInstanceMethod:(SEL)selector</span><br></pre></td></tr></table></figure>
+<p>如果尚未实现的方法是类方法，那么会调用：</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">+ (<span class="built_in">BOOL</span>)resolveClassMethod:(SEL)selector</span><br></pre></td></tr></table></figure>
+<p>该方法的参数就是那个未知的选择子，其返回值为 BOOL 类型，表示这个类是否能新增一个实例方法用以处理此选择子。</p>
+<p>使用这种方法的前提是：相关方法的实现代码已经写好，只等着运行时动态插在类里面就可以了。</p>
+<p>举个例子，调用 Person 的 fly 方法</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">Person *p = [[Person alloc] init];</span><br><span class="line">    </span><br><span class="line">SEL sel = <span class="built_in">NSSelectorFromString</span>(<span class="string">@"fly"</span>);</span><br><span class="line">[p performSelector:sel];</span><br><span class="line">```    </span><br><span class="line"></span><br><span class="line">```objc</span><br><span class="line"><span class="meta">#import <span class="meta-string">"Person.h"</span></span></span><br><span class="line"><span class="meta">#import <span class="meta-string">&lt;objc/runtime.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">@implementation</span> <span class="title">Person</span></span></span><br><span class="line"></span><br><span class="line">+ (<span class="built_in">BOOL</span>)resolveInstanceMethod:(SEL)sel</span><br><span class="line">&#123;</span><br><span class="line">    <span class="built_in">NSString</span> *selString = <span class="built_in">NSStringFromSelector</span>(sel);</span><br><span class="line">    <span class="keyword">if</span> ([selString isEqualToString:<span class="string">@"fly"</span>]) &#123;</span><br><span class="line">        </span><br><span class="line">        class_addMethod(<span class="keyword">self</span>, sel, (IMP)fly, <span class="string">"v@:"</span>);</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">return</span> <span class="literal">YES</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> [<span class="keyword">super</span> resolveInstanceMethod:sel];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">void</span> fly(<span class="keyword">id</span> <span class="keyword">self</span>, SEL _cmd) &#123;</span><br><span class="line">    </span><br><span class="line">    <span class="built_in">NSLog</span>(<span class="string">@"抱歉，人是不能飞的"</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">@end</span></span><br></pre></td></tr></table></figure>
+<h3 id="10-2-备援的接收者"><a href="#10-2-备援的接收者" class="headerlink" title="10.2 备援的接收者"></a>10.2 备援的接收者</h3><p>如果上一步没有找到自定义的方法实现，这一步中，运行时系统会问它，能不能把这条消息转给其他接收者来处理</p>
+<p>在上例中，如果 <code>resolveInstanceMethod:</code> 没有方法实现，则通过 <code>forwardingTargetForSelector:</code> 方法指定其他类来实现</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#import <span class="meta-string">"Person.h"</span></span></span><br><span class="line"><span class="meta">#import <span class="meta-string">"Bird.h"</span></span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">Person</span> ()</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">@property</span> (<span class="keyword">nonatomic</span>, <span class="keyword">strong</span>) Bird *bird;</span><br><span class="line"></span><br><span class="line"><span class="keyword">@end</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">@implementation</span> <span class="title">Person</span></span></span><br><span class="line"></span><br><span class="line">- (Bird *)bird</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">if</span> (!_bird) &#123;</span><br><span class="line">        _bird = [[Bird alloc] init];</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> _bird;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (<span class="keyword">id</span>)forwardingTargetForSelector:(SEL)aSelector</span><br><span class="line">&#123;</span><br><span class="line">    </span><br><span class="line">    <span class="built_in">NSString</span> *selString = <span class="built_in">NSStringFromSelector</span>(aSelector);</span><br><span class="line">    <span class="keyword">if</span> ([selString isEqualToString:<span class="string">@"fly"</span>]) &#123;</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">self</span>.bird;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> [<span class="keyword">super</span> forwardingTargetForSelector:aSelector];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">@end</span></span><br></pre></td></tr></table></figure>
+<p>不用在 Bird.h 中暴露方法名，在 Bird.m 中实现即可</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#import <span class="meta-string">"Bird.h"</span></span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">@implementation</span> <span class="title">Bird</span></span></span><br><span class="line"></span><br><span class="line">- (<span class="keyword">void</span>)fly</span><br><span class="line">&#123;</span><br><span class="line">    <span class="built_in">NSLog</span>(<span class="string">@"我能飞"</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">@end</span></span><br></pre></td></tr></table></figure>
+<h3 id="10-3-完整的消息转发"><a href="#10-3-完整的消息转发" class="headerlink" title="10.3 完整的消息转发"></a>10.3 完整的消息转发</h3><p>如果转发算法已经来到这一步的话，则启用完整的消息转发机制。</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#import <span class="meta-string">"Person.h"</span></span></span><br><span class="line"><span class="meta">#import <span class="meta-string">"Bird.h"</span></span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">Person</span> ()</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">@property</span> (<span class="keyword">nonatomic</span>, <span class="keyword">strong</span>) Bird *bird;</span><br><span class="line"></span><br><span class="line"><span class="keyword">@end</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">@implementation</span> <span class="title">Person</span></span></span><br><span class="line"></span><br><span class="line">- (Bird *)bird</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">if</span> (!_bird) &#123;</span><br><span class="line">        _bird = [[Bird alloc] init];</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> _bird;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (<span class="built_in">NSMethodSignature</span> *)methodSignatureForSelector:(SEL)aSelector</span><br><span class="line">&#123;</span><br><span class="line">    <span class="built_in">NSMethodSignature</span> *signature = [<span class="keyword">super</span> methodSignatureForSelector:aSelector];</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">if</span> (!signature) &#123;</span><br><span class="line">        <span class="keyword">if</span> ([Bird instancesRespondToSelector:aSelector]) &#123;</span><br><span class="line">            signature = [Bird instanceMethodSignatureForSelector:aSelector];</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> signature;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (<span class="keyword">void</span>)forwardInvocation:(<span class="built_in">NSInvocation</span> *)anInvocation</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">if</span> ([Bird instancesRespondToSelector:anInvocation.selector]) &#123;</span><br><span class="line">        [anInvocation invokeWithTarget:<span class="keyword">self</span>.bird];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">@end</span></span><br></pre></td></tr></table></figure>
+<p>接收者在每一步均有机会处理消息，步骤越往后，处理消息的代价就越大，最好能在第一步就处理完，这样的话，运行时就可以将此方法缓存取来了。若想在第三步里把消息转给备援的接收者，那还不如把转发操作提前到第二步。因为第三步只是修改了调用目标，这项改动放在第二步执行会更为简单，不然的话，还得创建并处理完整的 <code>NSInvocation</code></p>
+<p><img src="/img/img026.jpg" alt="image026"></p>
+<h2 id="11-自定义初始化方法"><a href="#11-自定义初始化方法" class="headerlink" title="11. 自定义初始化方法"></a>11. 自定义初始化方法</h2><figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#import <span class="meta-string">"Person.h"</span></span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">@implementation</span> <span class="title">Person</span></span></span><br><span class="line"></span><br><span class="line">- (<span class="keyword">instancetype</span>)initWithName:(<span class="built_in">NSString</span> *)name</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">self</span> = [<span class="keyword">super</span> init];</span><br><span class="line">    <span class="keyword">if</span> (<span class="keyword">self</span>) &#123;</span><br><span class="line">        <span class="built_in">NSLog</span>(<span class="string">@"我的名字为：%@"</span>, name);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">self</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (<span class="keyword">instancetype</span>)init</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">@throw</span> [<span class="built_in">NSException</span> exceptionWithName:<span class="built_in">NSInternalInconsistencyException</span> reason:<span class="string">@"Person 类必须使用 initWithName: 方法初始化"</span> userInfo:<span class="literal">nil</span>];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">@end</span></span><br></pre></td></tr></table></figure>
+<h2 id="12-实现-description-方法"><a href="#12-实现-description-方法" class="headerlink" title="12. 实现 description 方法"></a>12. 实现 description 方法</h2><p>打印自定义的类结果如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;Person: 0x608000001530&gt;</span><br></pre></td></tr></table></figure>
+<p>上面这种内容不太有用，所以我们应该在自己的类中覆写 description 方法：</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#import <span class="meta-string">"Person.h"</span></span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">@implementation</span> <span class="title">Person</span></span></span><br><span class="line"></span><br><span class="line">- (<span class="built_in">NSString</span> *)description</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">return</span> [<span class="built_in">NSString</span> stringWithFormat:<span class="string">@"&lt;%@ : %p&gt;, name = \"%@\" age = %lu"</span>, <span class="keyword">self</span>.class, <span class="keyword">self</span>, <span class="keyword">self</span>.name, <span class="keyword">self</span>.age];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">@end</span></span><br></pre></td></tr></table></figure>
+<p>创建并打印自定义类：</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Person *p = [[Person alloc] init];</span><br><span class="line">p.name = <span class="string">@"mayan"</span>;</span><br><span class="line">p.age = <span class="number">26</span>;</span><br><span class="line">    </span><br><span class="line"><span class="built_in">NSLog</span>(<span class="string">@"%@"</span>, p);</span><br></pre></td></tr></table></figure>
+<p>打印结果如下</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;Person : <span class="number">0x600000025560</span>&gt;, name = <span class="string">"mayan"</span> age = <span class="number">26</span></span><br></pre></td></tr></table></figure>
+<p>以前还需要覆写 <code>debugDescription</code> 方法才能在断点时自定义打印，现在仅仅设置好 <code>description</code> 就可以了</p>
+<h2 id="13-理解-NSCopying-协议"><a href="#13-理解-NSCopying-协议" class="headerlink" title="13. 理解 NSCopying 协议"></a>13. 理解 NSCopying 协议</h2><p>对象的拷贝通常使用 <code>copy</code> 方法完成，如果想令自己的类支持拷贝操作，那么就要实现 NSCopying 协议</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">- (<span class="keyword">id</span>)copyWithZone:(<span class="built_in">NSZone</span> *)zone;</span><br></pre></td></tr></table></figure>
+<p>为何会出现 NSZone 呢？因为以前开发中，会据此把内存分为不同的<code>区</code>（zone），而对象会创建在某个区里面。现在不用了，每个程序只有一个<code>默认区</code>（default zone），所以实现这个方法，不必担心 zone 参数。</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#import <span class="meta-string">"Person.h"</span></span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">Person</span> () &lt;<span class="title">NSCopying</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">@end</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">@implementation</span> <span class="title">Person</span></span></span><br><span class="line"></span><br><span class="line">- (<span class="keyword">instancetype</span>)initWithName:(<span class="built_in">NSString</span> *)name andAge:(<span class="built_in">NSInteger</span>)age</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">if</span> (<span class="keyword">self</span> = [<span class="keyword">super</span> init]) &#123;</span><br><span class="line">        _name = [name <span class="keyword">copy</span>];</span><br><span class="line">        _age  = age;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">self</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (<span class="keyword">id</span>)copyWithZone:(<span class="built_in">NSZone</span> *)zone</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">return</span> [[[<span class="keyword">self</span> <span class="keyword">class</span>] allocWithZone:zone] initWithName:_name andAge:_age];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">@end</span></span><br></pre></td></tr></table></figure>
+<h2 id="14-协议、委托、分类"><a href="#14-协议、委托、分类" class="headerlink" title="14. 协议、委托、分类"></a>14. 协议、委托、分类</h2><p>Objective-C 语言有一项特性叫做<code>协议</code>（protocol），它与 Java 的<code>接口</code>（interface）类似。定义一套接口，某对象若想接受另一个对象的委托，则需遵从此接口，以便成为其<code>委托对象</code>（delegate），而这另一个对象则可以给其委托对象回传一些信息，也可以在发生相关事件时通知委托对象。</p>
+<p>此模式可将数据和业务逻辑解耦，比方说，用户界面里有个显示数据所用的视图，那么，此视图只应包含显示数据所需的逻辑代码，而不应决定要显示何种数据以及数据之间如何交互问题。视图对象的属性中，可以包含负责数据与事件处理的对象。这两种对象分别称为<code>数据源</code>（data source）与<code>委托</code>（delegate）</p>
+<p>利用<code>分类</code>（Category）机制，我们无须继承子类即可直接为当前类添加方法，而在其他语言中，需通过继承子类来实现。由于 Objective-C 运行时是高度动态的，所以才能支持这一特性。</p>
+<h2 id="15-以自动释放池块降低内存峰值"><a href="#15-以自动释放池块降低内存峰值" class="headerlink" title="15. 以自动释放池块降低内存峰值"></a>15. 以自动释放池块降低内存峰值</h2><figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">100000</span>; i++) &#123;</span><br><span class="line"></span><br><span class="line">    [<span class="keyword">self</span> doSomethingWithInt:i];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>如上所示代码，如果 <code>doSomethingWithInt:</code> 方法要创建临时对象，那么这些对象很可能放在自动释放池里，比方说，它们可能是一些临时字符串。但是，即使这些对象在调用完方法之后就不再使用，但是它们依然处于存活状态。这样一来，在执行 for 循环时，应用程序所占内存量就会持续上涨，等所有临时对象都释放之后，内存用量又突然下降。</p>
+<p>如果把循环内的代码包裹在自动释放池块中，那么在循环中自动释放的对象就会放在这个池，而不是线程的主池里面：</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">100000</span>; i++) &#123;</span><br><span class="line">        </span><br><span class="line">    <span class="keyword">@autoreleasepool</span> &#123;</span><br><span class="line">        [<span class="keyword">self</span> doSomethingWithInt:i];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这样，应用程序在执行循环时的内存峰值就会降低，但是是否应该用池来优化效率，完全取决于具体的应用程序。首先得监控内存用量，判断其中有没有需要解决的问题，别着急优化。尽管自动释放池块的开销不大，但是毕竟还是有的，所以尽量不要建立额外的自动释放池。</p>
+<h2 id="16-理解-block"><a href="#16-理解-block" class="headerlink" title="16. 理解 block"></a>16. 理解 block</h2><p>当前多线程编程的核心就是<code>块</code>（block）和<code>大中枢派发</code>（Grand Central Dispatch，GCD），block 是一种在 C、C++、OC 中使用的<code>词法闭包</code>（lexical closure）</p>
+<p><img src="/img/img027.png" alt="image027"></p>
+<ul>
+<li>在存放 block 对象的内存区域中，首个变量是 isa，指向 Class 对象的指针；</li>
+<li>最重要的就是 invoke 变量，这是个函数指针，指向 block 的实现代码；</li>
+<li>descriptor 变量是指向结构体的指针，其中声明了 block 对象的总体大小，还声明了 copy 和 dispose 这两个辅助函数所对应的函数指针，辅助函数在拷贝和丢弃 block 对象时运行，其中会执行一些操作，比如，前者要保留捕获的对象，后者将之释放；</li>
+<li>block 还会把它所捕获的所有变量都拷贝一份，这些拷贝放在 descriptor 变量后面，捕获了多少个变量，就要占据多少内存空间。拷贝的并不是对象本身，而是指向这些对象的指针变量，原因是执行 block 时，要从内存中把这些捕获到的变量读出来。</li>
+</ul>
+<h2 id="17-多用派发队列，少用同步锁"><a href="#17-多用派发队列，少用同步锁" class="headerlink" title="17. 多用派发队列，少用同步锁"></a>17. 多用派发队列，少用同步锁</h2><p>防止多线程因为执行同一份代码而出问题，通常使用锁来实现某种同步机制。</p>
+<h3 id="17-1-普通锁"><a href="#17-1-普通锁" class="headerlink" title="17.1 普通锁"></a>17.1 普通锁</h3><figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">@synchronized</span>(<span class="keyword">self</span>) &#123;</span><br><span class="line">    <span class="comment">// do something</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这种写法的缺点是，滥用同步锁会降低代码效率，因为共用同一个锁的那些同步块，都必须按顺序执行，如果在 self 对象上频繁加锁，那么程序可能要等另一段与此无关的代码执行完毕，才能继续执行当前代码。</p>
+<p>另一个办法是直接使用 NSLock 对象：</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">_lock = [[<span class="built_in">NSLock</span> alloc] init];</span><br><span class="line"></span><br><span class="line">[_lock lock];</span><br><span class="line"><span class="comment">// do something</span></span><br><span class="line">[_lock unlock];</span><br></pre></td></tr></table></figure>
+<p>也可以使用 NSRecursiveLock 这种<code>递归锁</code>（recursive lock），线程能够多次持有该锁，而不会出现死锁（deadlock）现象。</p>
+<p>这两种方法都很好，但是也有其缺陷，比如在极端情况下，同步块会导致死锁，另外其效率也不高，而如果直接使用锁对象的话，一旦遇到死锁，就会非常麻烦。</p>
+<h3 id="17-2-GCD-相关锁"><a href="#17-2-GCD-相关锁" class="headerlink" title="17.2 GCD 相关锁"></a>17.2 GCD 相关锁</h3><p>有种简单高效的方法可以代替同步块或锁对象，那就是使用<code>串行同步队列</code>（serial synchronization queue），将读取操作、写入操作都安排在同一个队列里，即可保证数据同步</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">_queue = dispatch_queue_create(<span class="string">"syncQueue"</span>, <span class="literal">NULL</span>);</span><br><span class="line"></span><br><span class="line">- (<span class="built_in">NSString</span> *)name</span><br><span class="line">&#123;</span><br><span class="line">    __block <span class="built_in">NSString</span> *localName;</span><br><span class="line">    <span class="built_in">dispatch_sync</span>(_queue, ^&#123;</span><br><span class="line">        localName = _name;</span><br><span class="line">    &#125;);</span><br><span class="line">    <span class="keyword">return</span> localName;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (<span class="keyword">void</span>)setName:(<span class="built_in">NSString</span> *)name</span><br><span class="line">&#123;</span><br><span class="line">    <span class="built_in">dispatch_sync</span>(_queue, ^&#123;</span><br><span class="line">        _name = name;</span><br><span class="line">    &#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>有个更优的方法是，使用栅栏块来实现属性的设置方法，对属性的读取操作可以并发执行，但是写入操作却必须单独执行了。测试一下性能，发现这种做法比使用串行队列要快。</p>
+<p><img src="/img/img028.png" alt="image028"></p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">_queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, <span class="number">0</span>);</span><br><span class="line"></span><br><span class="line">- (<span class="built_in">NSString</span> *)name</span><br><span class="line">&#123;</span><br><span class="line">    __block <span class="built_in">NSString</span> *localName;</span><br><span class="line">    <span class="built_in">dispatch_sync</span>(_queue, ^&#123;</span><br><span class="line">        localName = _name;</span><br><span class="line">    &#125;);</span><br><span class="line">    <span class="keyword">return</span> localName;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (<span class="keyword">void</span>)setName:(<span class="built_in">NSString</span> *)name</span><br><span class="line">&#123;</span><br><span class="line">    dispatch_barrier_async(_queue, ^&#123;</span><br><span class="line">        _name = name;</span><br><span class="line">    &#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="18-多用-GCD，少用-performSelector-方法"><a href="#18-多用-GCD，少用-performSelector-方法" class="headerlink" title="18. 多用 GCD，少用 performSelector 方法"></a>18. 多用 GCD，少用 performSelector 方法</h2><p>performSelector 编程方式极为灵活，经常可以简化复杂的代码，但是如果在 ARC 下编译代码，那么编译器会发出内存泄漏的警告。原因在于，编译器并不知道将要调用的方法名和选择子，所以没有办法运用 ARC  的内存管理规则来判定返回值是不是应该释放，所以 ARC 比较谨慎，就是不添加释放操作，然而这么做可能导致内存泄漏，因为方法在返回对象时可能已经将其保留了。</p>
+<p>替代方案就是使用 block，而且 performSelector 系列方法所提供的线程功能，都可以通过在大中枢派发机制中使用 block 来实现，延后执行可以用 dispatch_after，多线程可以使用 dispatch_sync 和 dispatch_async</p>
+<h2 id="19-GCD-和-NSOperationQueue-使用时机"><a href="#19-GCD-和-NSOperationQueue-使用时机" class="headerlink" title="19. GCD 和 NSOperationQueue 使用时机"></a>19. GCD 和 NSOperationQueue 使用时机</h2><p>GCD 并不总是最佳方案，有的时候采用对象所带来的开销微乎其微，使用完整对象所带来的好处反而大大超过其缺点。</p>
+<h4 id="取消某个操作"><a href="#取消某个操作" class="headerlink" title="取消某个操作"></a>取消某个操作</h4><p>如果使用 NSOperationQueue 取消操作是很容易的。运行任务前，可以在 NSOperation 对象上调用 cancel 方法，该方法会设置对象内的标志位，用以表明此任务不需执行，不过，已经启动的任务无法取消。如果是使用 GCD 队列，那就无法取消了。</p>
+<h4 id="指定操作间的依赖关系"><a href="#指定操作间的依赖关系" class="headerlink" title="指定操作间的依赖关系"></a>指定操作间的依赖关系</h4><p>一个操作可以依赖其他多个操作，开发者能够指定操作之间的依赖体系，使特定的操作必须在另外一个操作顺利执行完毕后方可执行。</p>
+<h4 id="通过键值观察机制监控-NSOperation-对象的属性"><a href="#通过键值观察机制监控-NSOperation-对象的属性" class="headerlink" title="通过键值观察机制监控 NSOperation 对象的属性"></a>通过键值观察机制监控 NSOperation 对象的属性</h4><p>NSOperation 对象有许多属性都适合通过 KVO 来监听，比如可以通过 isCancelled 属性来判断任务是否已经取消，又比如可以通过 isFinished 属性来判断任务是否已经完成。</p>
+<h4 id="指定操作的优先级"><a href="#指定操作的优先级" class="headerlink" title="指定操作的优先级"></a>指定操作的优先级</h4><p>GCD 的队列确实有优先级，不过那是针对整个队列来说的，而不是针对每个块来说的。因此，在优先级这一点上，NSOperationQueue 所提供的功能要比 GCD 更为便利</p>
+<h2 id="20-不要使用-dispatch-get-current-queue"><a href="#20-不要使用-dispatch-get-current-queue" class="headerlink" title="20. 不要使用 dispatch_get_current_queue"></a>20. 不要使用 dispatch_get_current_queue</h2><p>使用 GCD 时，经常需要判断当前代码正在哪个队列上执行，我们会想到下面这个函数：</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">dispatch_queue_t</span> queue = dispatch_get_current_queue();</span><br></pre></td></tr></table></figure>
+<p>然而这个方法从 iOS 6.0 就已经弃用了，因为用它检测当前队列是不是某个特定的队列，以此来避免执行同步派发时，可能遭遇死锁问题。</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">- (<span class="built_in">NSString</span> *)name</span><br><span class="line">&#123;</span><br><span class="line">    __block <span class="built_in">NSString</span> *name;</span><br><span class="line">    <span class="built_in">dispatch_sync</span>(_queue, ^&#123;</span><br><span class="line">        name = _name;</span><br><span class="line">    &#125;);</span><br><span class="line">    <span class="keyword">return</span> name;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (<span class="keyword">void</span>)setName:(<span class="built_in">NSString</span> *)name</span><br><span class="line">&#123;</span><br><span class="line">    <span class="built_in">dispatch_async</span>(_queue, ^&#123;</span><br><span class="line">        _name = name;</span><br><span class="line">    &#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这种写法的问题在于，get 方法可能会死锁，假如调用 get 方法的队列恰好是 _queue，那么 dispatch_sync 就一直不会返回，直到 block 执行完毕为止。可是，应该执行 block 的那个目标队列确是当前队列，而当前队列的 dispatch_sync 又一直堵塞着，它在等待目标队列把这个 block 执行完，这样一来，block 就永远没有机会执行了。</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">dispatch_queue_t</span> queueA = dispatch_queue_create(<span class="string">"queueA"</span>, <span class="literal">NULL</span>);</span><br><span class="line"><span class="built_in">dispatch_queue_t</span> queueB = dispatch_queue_create(<span class="string">"queueB"</span>, <span class="literal">NULL</span>);</span><br><span class="line">    </span><br><span class="line"><span class="built_in">dispatch_sync</span>(queueA, ^&#123;</span><br><span class="line">    <span class="built_in">dispatch_sync</span>(queueB, ^&#123;</span><br><span class="line">        <span class="built_in">dispatch_sync</span>(queueA, ^&#123;</span><br><span class="line">            <span class="comment">// do something</span></span><br><span class="line">        &#125;);</span><br><span class="line">    &#125;);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<p>上面这段代码执行到最内层的派发操作时，总会死锁。因为此操作是针对 queueA 队列的，所以必须等最外层的 dispatch_sync 执行完毕才行，而最外层的 dispatch_sync 要等最内层的 dispatch_sync 执行完，于是就死锁了。将上面方法进行修改：</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">dispatch_queue_t</span> queueA = dispatch_queue_create(<span class="string">"queueA"</span>, <span class="literal">NULL</span>);</span><br><span class="line"><span class="built_in">dispatch_queue_t</span> queueB = dispatch_queue_create(<span class="string">"queueB"</span>, <span class="literal">NULL</span>);</span><br><span class="line">    </span><br><span class="line"><span class="built_in">dispatch_sync</span>(queueA, ^&#123;</span><br><span class="line">    <span class="built_in">dispatch_sync</span>(queueB, ^&#123;</span><br><span class="line">        <span class="keyword">if</span> (dispatch_get_current_queue() == queueA) &#123;</span><br><span class="line">            <span class="comment">// do something</span></span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="built_in">dispatch_sync</span>(queueA, ^&#123;</span><br><span class="line">               <span class="comment">// do something</span></span><br><span class="line">            &#125;);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<p>然而这样做依然死锁，因为 dispatch_get_current_queue 返回的是当前队列，也就是 queueB，这样针对 queueA 的同步派发操作依然会执行，于是还是死锁了。</p>
+<p>要解决这个问题，最好的办法就是利用 <code>dispatch_queue_set_specific</code> 和 <code>dispatch_get_specific</code> 给 queue 关联一个 context data，后面再利用这个标识获取到 context data，如果可以获取到说明当前上下文是在自己创建的 queue 中，如果不能获取到则表示当前是在其他队列上。XMPP 中有比较多的使用案例。</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">dispatch_queue_t</span> queueA = dispatch_queue_create(<span class="string">"queueA"</span>, <span class="literal">NULL</span>);</span><br><span class="line"><span class="built_in">dispatch_queue_t</span> queueB = dispatch_queue_create(<span class="string">"queueB"</span>, <span class="literal">NULL</span>);</span><br><span class="line">    </span><br><span class="line"><span class="keyword">const</span> <span class="keyword">void</span> *queueSpecificKey = <span class="string">@"queueSpecificKey"</span>;</span><br><span class="line">dispatch_queue_set_specific(queueA, queueSpecificKey, &amp;queueSpecificKey, <span class="literal">NULL</span>);</span><br><span class="line">    </span><br><span class="line"><span class="built_in">dispatch_async</span>(queueA, ^&#123;</span><br><span class="line">        </span><br><span class="line">    <span class="keyword">if</span> (dispatch_get_specific(queueSpecificKey)) &#123;</span><br><span class="line">        <span class="built_in">NSLog</span>(<span class="string">@"queueA - 当前为 queueA 队列"</span>);</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="built_in">NSLog</span>(<span class="string">@"queueA - 当前为其他队列"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;);</span><br><span class="line">    </span><br><span class="line"><span class="built_in">dispatch_async</span>(queueB, ^&#123;</span><br><span class="line">        </span><br><span class="line">    <span class="keyword">if</span> (dispatch_get_specific(queueSpecificKey)) &#123;</span><br><span class="line">        <span class="built_in">NSLog</span>(<span class="string">@"queueB - 当前为 queueA 队列"</span>);</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="built_in">NSLog</span>(<span class="string">@"queueB - 当前为其他队列"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<h2 id="21-Foundation-和-CoreFoundation-无缝桥接"><a href="#21-Foundation-和-CoreFoundation-无缝桥接" class="headerlink" title="21. Foundation 和 CoreFoundation 无缝桥接"></a>21. Foundation 和 CoreFoundation 无缝桥接</h2><h3 id="21-1-三种桥式转换"><a href="#21-1-三种桥式转换" class="headerlink" title="21.1 三种桥式转换"></a>21.1 三种桥式转换</h3><h4 id="bridge"><a href="#bridge" class="headerlink" title="__bridge"></a>__bridge</h4><p>ARC 仍然具备这个 Objective-C 对象的所有权</p>
+<h4 id="bridge-retained"><a href="#bridge-retained" class="headerlink" title="__bridge_retained"></a>__bridge_retained</h4><p>与 __bridge 相反，意味着 ARC 将交出对象的所有权，用完需要 CFRelease 手动释放内存</p>
+<h4 id="bridge-transfer"><a href="#bridge-transfer" class="headerlink" title="__bridge_transfer"></a>__bridge_transfer</h4><p>CoreFoundation 反向转换成 Foundation 类，令 ARC 获得对象所有权</p>
+<h3 id="21-2-分析-CFMutableDictionary"><a href="#21-2-分析-CFMutableDictionary" class="headerlink" title="21.2 分析 CFMutableDictionary"></a>21.2 分析 CFMutableDictionary</h3><figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">CFMutableDictionaryRef</span> dic =</span><br><span class="line">        <span class="built_in">CFDictionaryCreateMutable</span>(<span class="built_in">CFAllocatorGetDefault</span>(),</span><br><span class="line">                                  <span class="number">0</span>,</span><br><span class="line">                                  &amp;kCFTypeDictionaryKeyCallBacks,</span><br><span class="line">                                  &amp;kCFTypeDictionaryValueCallBacks);</span><br></pre></td></tr></table></figure>
+<p>首个参数表示将要使用的<code>内存分配器</code>（allocator）,CoreFoundation 对象里的数据结构需要占用内存，而分配器负责分配及回收这些内存。通常传入 NULL，表示采用默认的分配器。</p>
+<p>第二个参数定义了字典的初始大小。并不会限制字典的最大容量，只是向分配器提示了一开始应该分配多少内存。假如要创建的字典含有 10 个对象，那就向该参数传入 10</p>
+<p>最后两个参数值定义了许多回调函数，用于指示字典中的 key 和 value 在遇到各种事件时应该执行何种操作，点击进入这两个参数头文件可以看到其结构体如下：</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="keyword">struct</span> &#123;</span><br><span class="line">    <span class="built_in">CFIndex</span> version;</span><br><span class="line">    <span class="built_in">CFDictionaryRetainCallBack</span> <span class="keyword">retain</span>;</span><br><span class="line">    <span class="built_in">CFDictionaryReleaseCallBack</span> release;</span><br><span class="line">    <span class="built_in">CFDictionaryCopyDescriptionCallBack</span>	copyDescription;</span><br><span class="line">    <span class="built_in">CFDictionaryEqualCallBack</span>	equal;</span><br><span class="line">    <span class="built_in">CFDictionaryHashCallBack</span> hash;</span><br><span class="line">&#125; <span class="built_in">CFDictionaryKeyCallBacks</span>;</span><br></pre></td></tr></table></figure>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="keyword">struct</span> &#123;</span><br><span class="line">    <span class="built_in">CFIndex</span> version;</span><br><span class="line">    <span class="built_in">CFDictionaryRetainCallBack</span> <span class="keyword">retain</span>;</span><br><span class="line">    <span class="built_in">CFDictionaryReleaseCallBack</span> release;</span><br><span class="line">    <span class="built_in">CFDictionaryCopyDescriptionCallBack</span>	copyDescription;</span><br><span class="line">    <span class="built_in">CFDictionaryEqualCallBack</span> equal;</span><br><span class="line">&#125; <span class="built_in">CFDictionaryValueCallBacks</span>;</span><br></pre></td></tr></table></figure>
+<p>version 参数用于检测新版与旧版数据结构之间是否兼容，目前应设为 0。结构体中其他成员都是函数指针，它们定义了当各种事件发生时应该采用哪个函数来执行相关任务。比如字典中加入新的 key 和 value，那么就会调用第二个 retain 函数。</p>
+<h2 id="22-构建缓存时选用-NSCache-而非-NSDictionary"><a href="#22-构建缓存时选用-NSCache-而非-NSDictionary" class="headerlink" title="22. 构建缓存时选用 NSCache 而非 NSDictionary"></a>22. 构建缓存时选用 NSCache 而非 NSDictionary</h2><p>NSCache 胜过 NSDictionary 之处在于：</p>
+<ol>
+<li>当系统资源将要耗尽时，它可以自动删减缓存，如果采用字典，需要自己实现在系统低内存时发送通知删除缓存；</li>
+<li>NSCache 还会先行删减最久未使用的对象，如果使用  NSDictionary 自己实现，会十分复杂；</li>
+<li>NSCache 并不会拷贝键，而是会保留它，用 NSDictionary 实现的话需要相当复杂的代码。NSCache 对象不拷贝键的原因是：键是由不支持拷贝的对象来充当的；</li>
+<li>NSCache 是线程安全的，而 NSDictionary 不具备此优势。在开发者不编写加锁代码的前提下，多个线程便可以同时访问 NSCache。</li>
+</ol>
+<p>下面这段代码演示了缓存的用法：</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">- (<span class="keyword">instancetype</span>)init</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">self</span> = [<span class="keyword">super</span> init];</span><br><span class="line">    <span class="keyword">if</span> (<span class="keyword">self</span>) &#123;</span><br><span class="line">        _cache = [<span class="built_in">NSCache</span> new];</span><br><span class="line">        _cache.countLimit = <span class="number">100</span>;  <span class="comment">// Cache a maximum of 100 URLs</span></span><br><span class="line">        _cache.totalCostLimit = <span class="number">5</span> * <span class="number">1024</span> * <span class="number">1024</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">self</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (<span class="keyword">void</span>)downloadDataForURL:(<span class="built_in">NSURL</span> *)url &#123;</span><br><span class="line">    <span class="built_in">NSData</span> *cacheData = [_cache objectForKey:url];</span><br><span class="line">    <span class="keyword">if</span> (cacheData) &#123;</span><br><span class="line">        <span class="comment">// get data</span></span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        MYNetworkFetcher *fetcher = [[MYNetworkFetcher alloc] initWithURL:url];</span><br><span class="line">        [fetcher startWithCompletionHandler:^(<span class="built_in">NSData</span> *data) &#123;</span><br><span class="line">            [_cache setObject:data forKey:url cost:data.length];</span><br><span class="line">            <span class="comment">// get data</span></span><br><span class="line">        &#125;];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>还有个类叫做 NSPurgeableData，和 NSCache 搭配起来使用，效果更好，此类是 NSMutableData 的子类，而且实现了 NSDiscardableContent 协议。当系统资源紧张时，可以把保存 NSPurgeableData 对象的那块内存释放掉。NSDiscardableContent 协议里定义了名为 <code>isContentDiscarded</code> 的方法，可以用来查询相关内存是否已经释放。如果需要访问某个 NSPurgeableData 对象，可以调用其 <code>beginContentAccess</code> 方法，告诉它现在还不能丢弃自己所占据的内存。用完之后，调用 <code>endContentAccess</code> 方法，告诉它在必要时可以丢弃自己所占据的内存了。如果将 NSPurgeableData 对象加入 NSCache，那么当该对象为系统所丢弃时，也会自动从缓存中移除，通过 NSCache 的 <code>evictsObjectsWithDiscardedContent</code> 属性，可以开启或关闭此功能。修改代码如下：</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">- (<span class="keyword">instancetype</span>)init</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">self</span> = [<span class="keyword">super</span> init];</span><br><span class="line">    <span class="keyword">if</span> (<span class="keyword">self</span>) &#123;</span><br><span class="line">        _cache = [<span class="built_in">NSCache</span> new];</span><br><span class="line">        _cache.countLimit = <span class="number">100</span>;  <span class="comment">// Cache a maximum of 100 URLs</span></span><br><span class="line">        _cache.totalCostLimit = <span class="number">5</span> * <span class="number">1024</span> * <span class="number">1024</span>;</span><br><span class="line">    </span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">self</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (<span class="keyword">void</span>)downloadDataForURL:(<span class="built_in">NSURL</span> *)url &#123;</span><br><span class="line">    <span class="built_in">NSPurgeableData</span> *cacheData = [_cache objectForKey:url];</span><br><span class="line">    <span class="keyword">if</span> (cacheData) &#123;</span><br><span class="line">        [cacheData beginContentAccess];</span><br><span class="line">        <span class="comment">// get data</span></span><br><span class="line">        [cacheData endContentAccess];</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        MYNetworkFetcher *fetcher = [[MYNetworkFetcher alloc] initWithURL:url];</span><br><span class="line">        [fetcher startWithCompletionHandler:^(<span class="built_in">NSData</span> *data) &#123;</span><br><span class="line">            <span class="built_in">NSPurgeableData</span> *purgeableData = [<span class="built_in">NSPurgeableData</span> dataWithData:data];</span><br><span class="line">            [_cache setObject:purgeableData forKey:url cost:purgeableData.length];</span><br><span class="line">            <span class="comment">// 创建好 NSPurgeableData 对象以后，其 purge 引用计数会多 1，所以无须再调用 beginContentAccess</span></span><br><span class="line">            <span class="comment">// 然而其后必须调用 endContentAccess，将多出来的这个 1 抵消掉</span></span><br><span class="line">            <span class="comment">// get data</span></span><br><span class="line">            [purgeableData endContentAccess];</span><br><span class="line">        &#125;];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="后记"><a href="#后记" class="headerlink" title="后记"></a>后记</h2><blockquote>
+<p>2017-05-05  一次阅读</p>
+<p>去年阅读了一少半，然后因为项目耽搁了，而且笔记没有记得很清楚，所以这次又从头开始看。这本书还是很经典的，介绍了很多细节性的问题，理论性也很强，没有浪费这么长时间。</p>
+<p>2018-01-24  二次阅读</p>
+<p>很多概念性的东西时间长不看就容易遗忘，再次阅读并重新整理了理论知识，获益匪浅。有些知识并不是心里有大概的想法就算掌握，必须形成书面文字或者思路清晰的说出来才是真正的掌握。</p>
+</blockquote>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/04/27/【读书笔记】《iOS 开发进阶（唐巧）》/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="mayan">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.jpeg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="mayan`s blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2017/04/27/【读书笔记】《iOS 开发进阶（唐巧）》/" itemprop="url">【读书笔记】《iOS 开发进阶（唐巧）》</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-04-27T16:16:55+08:00">
+                2017-04-27
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/读书笔记/" itemprop="url" rel="index">
+                    <span itemprop="name">读书笔记</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2017/04/27/【读书笔记】《iOS 开发进阶（唐巧）》/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count"
+                        data-disqus-identifier="2017/04/27/【读书笔记】《iOS 开发进阶（唐巧）》/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <blockquote>
+<p>作者：唐巧</p>
+<p>出版日期：2015-1-1</p>
+<p>豆瓣地址：<a href="https://book.douban.com/subject/26287173/" target="_blank" rel="noopener">https://book.douban.com/subject/26287173/</a></p>
+</blockquote>
+<h2 id="一、CocoaPods-的安装和使用"><a href="#一、CocoaPods-的安装和使用" class="headerlink" title="一、CocoaPods 的安装和使用"></a>一、CocoaPods 的安装和使用</h2><h3 id="1-简介"><a href="#1-简介" class="headerlink" title="1. 简介"></a>1. 简介</h3><p>每种语言发展到一定阶段，都会出现相应的依赖管理工具，例如 Java 的 Maven、Node.js 的 npm 等。CocoaPods 是开发 iOS 应用程序的一个第三方库的依赖管理工具，起始于 2011 年 8 月，用 Ruby 写的。在没有使用 CocoaPods 以前，我们需要:</p>
+<ol>
+<li>把这些第三方开源库的源代码文件复制到项目中，或者设置成 git 的 <code>submodule</code>。</li>
+<li>对于某些开源库，我还需要设置 -licucore 或者 -fno-objc-arc 等编译参数</li>
+<li>管理这些依赖包的更新。</li>
+</ol>
+<p>这些体力活虽然简单，但毫无技术含量并且浪费时间。在使用 CocoaPods 之后，就会自动将这些第三方开源库的源码下载下来，并且为我的工程设置好相应的系统依赖和编译参数。</p>
+<h3 id="2-原理"><a href="#2-原理" class="headerlink" title="2. 原理"></a>2. 原理</h3><p>CocoaPods 的原理是将所有的依赖库都放到另一个名为 Pods 的项目中，然后让主项目依赖 Pods 项目。下面是一些技术细节：</p>
+<ol>
+<li>Pods 项目最终会编译成一个名为 libPods.a 的文件，主项目只需要依赖这个 .a 文件即可</li>
+<li>对于资源文件，CocoaPods 提供了一个名为 Pods-resources.sh 的 bash 脚本，该脚本每次项目编译时都会执行，将第三方库的各种资源文件复制到目标目录中</li>
+<li>CocoaPods 通过一个名为 Pods.xcconfig 的文件在编译时设置所有的依赖和参数 </li>
+</ol>
+<h3 id="3-安装"><a href="#3-安装" class="headerlink" title="3. 安装"></a>3. 安装</h3><p>Mac 自带 ruby，如果 ruby 的开发工具包 gem 太老，首先升级 gem</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo gem update --system</span><br></pre></td></tr></table></figure>
+<p>ruby 的软件源 rubygems.org 因为使用亚马逊的云服务，所以被墙了，需要更新一下 ruby 的源，下面代码将官方的 ruby 源替换成国内淘宝的源：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ gem sources --remove https://rubygems.org/ </span><br><span class="line">$ gem sources -a https://ruby.taobao.org/</span><br></pre></td></tr></table></figure>
+<p>验证 ruby 的源是否为淘宝镜像</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ gem sources -l</span><br></pre></td></tr></table></figure>
+<p>使用 ruby 的 gem 命令即可下载安装：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ sudo gem install cocoapods</span><br><span class="line">$ pod setup</span><br></pre></td></tr></table></figure>
+<p>执行 pod setup 时，会输出 Setting up CocoaPods master repo 并等待好久，此时是 CocoaPods 将它的信息下载到 ~/.cocoapods 目录下。可以 cd 到那个目录，用 du -sh 来查看下载进度。</p>
+<p>如果没有进度，那还需更换 ruby 镜像</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ gem sources --remove https://ruby.taobao.org/ </span><br><span class="line">$ gem sources -a https://gems.ruby-china.org/</span><br></pre></td></tr></table></figure>
+<p>更换成功后再次下载安装</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ sudo gem install cocoapods</span><br><span class="line">$ pod setup</span><br></pre></td></tr></table></figure>
+<h3 id="4-使用"><a href="#4-使用" class="headerlink" title="4. 使用"></a>4. 使用</h3><p>在项目文件夹中创建名为 Podfile 的文件</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ touch Podfile</span><br></pre></td></tr></table></figure>
+<p>在文件中添加依赖库名称</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">platform :ios, ‘8.0’</span><br><span class="line"></span><br><span class="line">target ‘jiaheyingyuan’ do</span><br><span class="line">pod ‘AFNetworking’</span><br><span class="line">pod ‘SDWebImage’</span><br><span class="line">end</span><br></pre></td></tr></table></figure>
+<p>如果不确定三方库版本，查找第三方库</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ pod search AFNetworking</span><br></pre></td></tr></table></figure>
+<p>然后在项目文件夹中执行</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ pod install</span><br></pre></td></tr></table></figure>
+<p>注意事项</p>
+<ul>
+<li>每次更改了 Podfile 文件，都需要重新执行一次 pod update 命令</li>
+<li>执行 pod install 之后，会生成一个名为 Podfile.lock 的文件，不能把这个文件加入到 gitignore 中，因为 Podfile.lock 会锁定当前各依赖库的版本，之后执行 pod install 也不会更改版本，只有执行 pod update 才会改变 Podfile.lock。这样可以防止第三方库升级时造成大家各自的第三方库版本不一致。</li>
+</ul>
+<h3 id="5-其他"><a href="#5-其他" class="headerlink" title="5. 其他"></a>5. 其他</h3><h4 id="为自己的项目创建-podspec-文件"><a href="#为自己的项目创建-podspec-文件" class="headerlink" title="为自己的项目创建 podspec 文件"></a>为自己的项目创建 podspec 文件</h4><p>参考以下两篇文章：</p>
+<ul>
+<li><a href="http://ishalou.com/blog/2012/10/16/how-to-create-a-cocoapods-spec-file/" target="_blank" rel="noopener">《如何编写一个 CocoaPods 的 spec 文件》</a></li>
+<li><a href="http://studentdeng.github.io/blog/2013/09/13/cocoapods-tutorial/" target="_blank" rel="noopener">《Cocoapods 入门》</a></li>
+</ul>
+<h4 id="使用私有的-pods"><a href="#使用私有的-pods" class="headerlink" title="使用私有的 pods"></a>使用私有的 pods</h4><p>我们可以直接指定某一个依赖的 podspec，这样就可以使用企业内部的私有库。该方案有利于使企业内部的公共项目支持 CocoaPods，例：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ pod &apos;MyCommon&apos;, :podspec =&gt; &apos;https://yuantiku.com/common/myCommon.podspec&apos;</span><br></pre></td></tr></table></figure>
+<h4 id="不更新-podspec"><a href="#不更新-podspec" class="headerlink" title="不更新 podspec"></a>不更新 podspec</h4><p>在执行 pod install 和 pod update 时，默认先更新一次 podspec 索引，如下代码可以禁止其做索引更新操作</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ pod install --no-repo-update</span><br><span class="line">$ pod update  --no-repo-update</span><br></pre></td></tr></table></figure>
+<h4 id="生成第三方库的帮助文档"><a href="#生成第三方库的帮助文档" class="headerlink" title="生成第三方库的帮助文档"></a>生成第三方库的帮助文档</h4><p>如果你想让 CocoaPods 帮你生产第三方库的帮助文档，并集成到 Xcode 中，那么用 brew 安装 appledoc 即可：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ brew install appledoc</span><br></pre></td></tr></table></figure>
+<h2 id="二、网络封包分析工具-Charles"><a href="#二、网络封包分析工具-Charles" class="headerlink" title="二、网络封包分析工具 Charles"></a>二、网络封包分析工具 Charles</h2><p><img src="/img/img016.png" alt="image016"></p>
+<h3 id="1-功能简介"><a href="#1-功能简介" class="headerlink" title="1. 功能简介"></a>1. 功能简介</h3><ul>
+<li>支持 SSL 代理</li>
+<li>支持流量控制，可以模拟慢速网络、等待时间较长的请求</li>
+<li>支持 AJAX 调试，自动将 JSON 或 XML 数据格式化，方便查看</li>
+<li>支持 AMF 调试，将 Flash Remoting 或 Flex Remoting 信息格式化，方便查看</li>
+<li>支持重发网络请求，方便后端调试</li>
+<li>支持修改网络请求参数</li>
+<li>支持网络请求的截获和动态修改</li>
+<li>检查 HTML、CSS、RSS 内容是否符合 W3C 标准（<a href="http://validator.w3.org）" target="_blank" rel="noopener">http://validator.w3.org）</a></li>
+</ul>
+<h3 id="2-安装和使用"><a href="#2-安装和使用" class="headerlink" title="2. 安装和使用"></a>2. 安装和使用</h3><h4 id="安装-Charles"><a href="#安装-Charles" class="headerlink" title="安装 Charles"></a>安装 Charles</h4><p>在 Charles 官方网站（<a href="https://www.charlesproxy.com）下载安装。" target="_blank" rel="noopener">https://www.charlesproxy.com）下载安装。</a></p>
+<h4 id="安装-SSL-证书"><a href="#安装-SSL-证书" class="headerlink" title="安装 SSL 证书"></a>安装 SSL 证书</h4><p>如果需要截取分析 SSL 协议相关内容，那么需要安装 Charles 的 CA 证书（<a href="http://www.charlesproxy.com/ssl.zip）。解压后双击" target="_blank" rel="noopener">http://www.charlesproxy.com/ssl.zip）。解压后双击</a> .crt 文件，在钥匙串 -&gt; 系统 -&gt; 证书中可查看</p>
+<h4 id="截取-Mac-上的网络封包"><a href="#截取-Mac-上的网络封包" class="headerlink" title="截取 Mac 上的网络封包"></a>截取 Mac 上的网络封包</h4><p>Charles 是通过将自己设置成代理服务器来完成封包截取的，将 Charles 设置成系统代理，菜单中 Proxy -&gt; Mac OS X Proxy 将 Charles 设置成系统代理。之后浏览网页就可以看到网络请求出现在 Charles 界面中。</p>
+<h4 id="过滤网络请求"><a href="#过滤网络请求" class="headerlink" title="过滤网络请求"></a>过滤网络请求</h4><ul>
+<li><p>在主界面的中部的 Filter 栏中填入需要过滤出来的关键字，比如 baidu。这种方法是临时性的封包过滤。</p>
+</li>
+<li><p>Proxy -&gt; Recording Settings -&gt; Include，选择添加一个项目，然后填入需要监控的协议、主机地址、端口号。这种方法是经常性的封包过滤。</p>
+</li>
+</ul>
+<h4 id="截取-iPhone-上的网络封包"><a href="#截取-iPhone-上的网络封包" class="headerlink" title="截取 iPhone 上的网络封包"></a>截取 iPhone 上的网络封包</h4><p>Proxy -&gt; Proxy Settings 填入代理端口 8888，并勾选 Enable transparent HTTP proxying 然后在手机端设置代理即可</p>
+<h4 id="模拟慢速网络"><a href="#模拟慢速网络" class="headerlink" title="模拟慢速网络"></a>模拟慢速网络</h4><p>Proxy -&gt; Throttle Setting 勾选 Enable Throttling 并且可以设置 Throttle Preset 的类型。如果只想模拟指定网站的慢速网络，可以勾选 Only for selected hosts 然后在对话框的下半部分设置中增加指定的 Hosts 项即可。</p>
+<h4 id="截取-SSL-信息"><a href="#截取-SSL-信息" class="headerlink" title="截取 SSL 信息"></a>截取 SSL 信息</h4><p>在该请求上单机右键，选择 SSL Proxying 然后对于该 Host 的所有 SSL 请求都可以被截取到了</p>
+<h4 id="修改网络请求内容"><a href="#修改网络请求内容" class="headerlink" title="修改网络请求内容"></a>修改网络请求内容</h4><p>调试接口时，我们需要反复尝试不同参数的网络请求，在网络请求上点击右键，选择 Edit 即可创建一个可编辑的网络请求，可修改 URL 地址、端口、参数等，修改完成后单击 Execute 即可发送</p>
+<h4 id="修改服务器返回内容"><a href="#修改服务器返回内容" class="headerlink" title="修改服务器返回内容"></a>修改服务器返回内容</h4><p>Charles 提供了 Map、Rewrite、Breakpoints 功能，都可以达到修改服务器返回内容的目的。</p>
+<ul>
+<li>Map 适合长期将某一些请求重定向到另一个网络地址或本地文件</li>
+<li>Rewrite 适合对网络请求进行一些正则替换</li>
+<li>Breakpoints 适合做一些临时性的修改</li>
+</ul>
+<h4 id="Map-功能"><a href="#Map-功能" class="headerlink" title="Map 功能"></a>Map 功能</h4><p>Map 功能分为两种，进入方式 Tools -&gt; Map Remote 或 Map Local </p>
+<ul>
+<li>Map Remote：将指定的网络请求重定向到另一个网址</li>
+<li>Map Local：将指定的网络请求重定向到本地文件</li>
+</ul>
+<p>对于 Map Remote 功能，我们需要分别填写网络重定向的源地址和目的地址，对于不需要限制的条件，可以留空。举例：Map From 测试服务器的请求重定向到 Map To 线上服务器。</p>
+<p>对于 Map Local 功能，我们需要填写重定向的源地址和本地的目标文件。对于一些复杂的网络请求结果，我们可以先使用右键单击 Save Response 功能，将请求结果保存到本地，然后稍加修改，使其成为我们的目标映射文件。</p>
+<h4 id="Rewrite-功能"><a href="#Rewrite-功能" class="headerlink" title="Rewrite 功能"></a>Rewrite 功能</h4><p>Rewrite 功能适合对某一类网络请求进行一些替换，以达到修改结果的目的。例如，一个 API 请求时获得用户昵称，将 Rewrite Rule 界面的 Match 的 value 设置之前的昵称，Replace 的 value 设置将要修改的昵称</p>
+<h4 id="Breakpoints-功能"><a href="#Breakpoints-功能" class="headerlink" title="Breakpoints 功能"></a>Breakpoints 功能</h4><p>Rewrite 功能适合做批量和长期的替换，临时性的修改最好使用 Breakpoints 功能。Breakpoints 功能类似 Xcode 中设置的断点，当网络请求发生时，Charles 会截取该请求，这个时候，我们可以在 Charles 中临时修改网络请求的返回内容。修改完成后单击 Execute 即可让网络请求继续进行。需要注意的是，使用 Breakpoints 功能将网络请求截取并修改的过程中，整个网络请求的计时并不会暂停，所以长时间的暂停可能导致客户端的请求超时。</p>
+<h2 id="三、其他一些实用的工具"><a href="#三、其他一些实用的工具" class="headerlink" title="三、其他一些实用的工具"></a>三、其他一些实用的工具</h2><h3 id="1-界面调试工具-Reveal"><a href="#1-界面调试工具-Reveal" class="headerlink" title="1. 界面调试工具 Reveal"></a>1. 界面调试工具 Reveal</h3><p><a href="http://revealapp.com" target="_blank" rel="noopener">Reveal</a> 可以在 iOS 开发时动态的查看和修改应用程序的界面。iOS 逆向工程中使用强大，可以分析他人的 APP，缺点是真特么贵。</p>
+<p><img src="/img/img017.png" alt="image017"></p>
+<h3 id="2-移动统计工具-Flurry"><a href="#2-移动统计工具-Flurry" class="headerlink" title="2. 移动统计工具 Flurry"></a>2. 移动统计工具 Flurry</h3><p><a href="http://www.flurry.com" target="_blank" rel="noopener">Flurry</a> 是一家专门为移动应用提供数据统计和分析的公司，使用 Flurry 服务的公司包括 eBay、Yahoo、Skype 等超过 11 万家公司。Flurry 优点：保持独立和专注，数据安全性更高。友盟已经被阿里收购，当用户的应用涉及的业务和阿里有类似或重合的时候，该统计数据有潜在的安全性问题</p>
+<h3 id="3-崩溃日志记录工具-Crashlytics"><a href="#3-崩溃日志记录工具-Crashlytics" class="headerlink" title="3. 崩溃日志记录工具 Crashlytics"></a>3. 崩溃日志记录工具 Crashlytics</h3><p><a href="http://try.crashlytics.com" target="_blank" rel="noopener">Crashlytics</a> 是专门为移动应用开发者提供的保存和分析应用崩溃信息的专业工具。</p>
+<h3 id="4-App-Store-统计工具-App-Annie"><a href="#4-App-Store-统计工具-App-Annie" class="headerlink" title="4. App Store 统计工具 App Annie"></a>4. App Store 统计工具 App Annie</h3><p><a href="http://www.appannie.com" target="_blank" rel="noopener">App Annie</a> 是一个 App Store 数据的统计分析工具。该工具可以统计 App 在 App Store 的下载量、排名变化、销售收入情况、用户评价等信息。</p>
+<p>苹果官方的 iTunes Connect 提供的销售数据统计功能比较差，例如只能保存最近30天的详细销售数据、界面丑陋、无法查看应用的排名历史变化情况等</p>
+<h3 id="5-Xcode-插件"><a href="#5-Xcode-插件" class="headerlink" title="5. Xcode 插件"></a>5. Xcode 插件</h3><ul>
+<li>Alcatraz：管理 Xcode 插件、模板和颜色配置</li>
+<li>KSImageNamed：自动弹出图片预览</li>
+<li>BBUDebuggerTuckAway：智能弹出隐藏调试窗口</li>
+<li>SCXcodeSwitchExpander：迅速地在 switch 语句中填充枚举类型的每种可能的取值</li>
+<li>VVDocumenter：自动生成代码注释</li>
+<li>ClangFormat：自动调整代码风格</li>
+<li>ColorSense：编写 UIColor 时，实时预览相应的颜色</li>
+</ul>
+<h3 id="6-Dash"><a href="#6-Dash" class="headerlink" title="6. Dash"></a>6. Dash</h3><p>Dash 是一款 API 文档查询及代码片段管理工具，超级好用</p>
+<h3 id="7-Appledoc"><a href="#7-Appledoc" class="headerlink" title="7. Appledoc"></a>7. Appledoc</h3><p>Appledoc 是一个从源代码中抽取文档的工具</p>
+<h2 id="四、理解内存管理"><a href="#四、理解内存管理" class="headerlink" title="四、理解内存管理"></a>四、理解内存管理</h2><h3 id="1-什么是引用计数？"><a href="#1-什么是引用计数？" class="headerlink" title="1. 什么是引用计数？"></a>1. 什么是引用计数？</h3><p>引用计数可以有效地管理对象的生命周期。当我们创建一个新对象的时候，它的引用计数为 1，当有一个新的指针指向这个对象时，我们将其引用计数加 1，当某个指针不再指向这个对象时，我们将其引用计数减 1，当对象的引用计数变为 0 时，说明这个对象不再被任何指针指向了，这个时候我们就可以将对象销毁，回收内存。</p>
+<h3 id="2-我们为什么需要引用计数"><a href="#2-我们为什么需要引用计数" class="headerlink" title="2. 我们为什么需要引用计数"></a>2. 我们为什么需要引用计数</h3><p>假如对象 A 将其中的对象 M 作为参数传递给对象 B，没有引用计数的情况下，内存管理原则是“谁申请谁释放”。那么要在 B 不再需要 M 的时候，A 将 M 销毁。但 B 可能只是临时用一下 M，也可能觉得 M 很重要，将它设置成自己的一个成员变量。这种情况下，什么时候销毁 M 就成了一个难题。</p>
+<p>有一个暴力的做法，就是 A 调用完 B 之后，马上就销毁参数 M，然后 B 将参数另外复制一份 M2，自己管理 M2 的生命期。这种做法有一个很大的问题，就是它带来了更多的内存申请、复制、释放的工作，实在太影响性能。</p>
+<p>还有另外一种做法，A 在构造完 M 之后，始终不销毁 M，由 B 来完成 M 的销毁工作。如果 B 需要长时间使用 M，就不销毁它，如果只是临时用一下，则可以用完马上销毁。这样好像很好的解决了对象复制的问题，但是它强烈依赖于 A、B 两个对象的配合。而且 M 申请在 A 中，释放在 B 中，使得它的内存管理代码分散在不同对象中，管理起来非常费劲。再复杂点，B 需要再向 C 传递 M，那么 M 在 C 中又不能让 C 管理，所以这种方式带来的复杂性更大。</p>
+<p>所以引用计数很好的解决了这个问题，哪些对象需要长时间使用，就把它的引用计数加1，使用完了再把引用计数减1，对象的生命期管理可以完全交给引用计数了。</p>
+<h3 id="3-不要向已经释放的对象发送消息"><a href="#3-不要向已经释放的对象发送消息" class="headerlink" title="3. 不要向已经释放的对象发送消息"></a>3. 不要向已经释放的对象发送消息</h3><figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">NSObject</span> *obj = [[<span class="built_in">NSObject</span> alloc] init];</span><br><span class="line"><span class="built_in">NSLog</span>(<span class="string">@"Reference Count = %u"</span>, [obj retainCount]);</span><br><span class="line">[obj release];</span><br><span class="line"><span class="built_in">NSLog</span>(<span class="string">@"Reference Count = %u"</span>, [obj retainCount]);</span><br></pre></td></tr></table></figure>
+<p>输出结果可能是这样的</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Reference Count = <span class="number">1</span></span><br><span class="line">Reference Count = <span class="number">1</span></span><br></pre></td></tr></table></figure>
+<p>最后一次输出，引用计数为什么没有变成 0 呢？因为该对象的内存已经被回收，而我们向一个已经被回收的对象发了一个 retainCount 消息，所以它的输出结果应该是不确定的，如果该对象所占的内存被复用了，那么就有可能造成程序异常崩溃。</p>
+<p>那为什么在这个对象被回收之后，这个不确定的值是 1 而不是 0 呢？因为当最后一次执行 release 时，系统知道马上就要回收内存了，就没有必要将 retainCount 减 1 了，因为不管减不减 1，该对象都肯定被回收，而对象被回收后，它所有的内存区域，包括 retainCount 值也变得没有意义。这样减少一次内存的操作，加速对象的回收。</p>
+<h3 id="4-弱引用"><a href="#4-弱引用" class="headerlink" title="4. 弱引用"></a>4. 弱引用</h3><p>弱引用持有对象，但是不增加引用计数，这样就避免了循环引用的产生</p>
+<h3 id="5-Core-Foundation-对象的内存管理"><a href="#5-Core-Foundation-对象的内存管理" class="headerlink" title="5. Core Foundation 对象的内存管理"></a>5. Core Foundation 对象的内存管理</h3><figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">CFStringRef</span> str = <span class="built_in">CFStringCreateWithCString</span>(kCFAllocatorDefault, <span class="string">"hello world"</span>, kCFStringEncodingUTF8);</span><br><span class="line">    </span><br><span class="line"><span class="built_in">CFRetain</span>(str);  <span class="comment">// 引用计数 +1</span></span><br><span class="line"><span class="built_in">CFRelease</span>(str);  <span class="comment">// 引用计数 -1</span></span><br></pre></td></tr></table></figure>
+<p>CFRetain 和 CFRelease 方法与 Objective-C 对象的 retain 和 release 方法等价。</p>
+<p>将 Core Foundation 对象转换成一个 Objective-C 对象，引入了 bridge 相关关键字：</p>
+<ul>
+<li><code>__bridge</code>：只做类型转换，不修改相关对象的引用计数，原来的 Core Foundation 对象在不用时，需要调用 CFRelease 方法</li>
+<li><code>__bridge_retained</code>：类型转换后，将相关对象的引用计数加 1，原来的 Core Foundation 对象在不用时，需要调用 CFRelease 方法</li>
+<li><code>__bridge_transfer</code>：类型转换后，将该对象的引用计数交给 ARC 管理，Core Foundation 对象在不用时，不再需要调用 CFRelease 方法</li>
+</ul>
+<h2 id="五、后台运行"><a href="#五、后台运行" class="headerlink" title="五、后台运行"></a>五、后台运行</h2><p>正常情况下，当应用按 Home 键退出后，应用仅有最多 5 秒时间做一些保存后请理资源的工作。但是应用可以调用后台方法，让应用最多有 10 分钟的时间在后台长久运行。</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">@property</span> (<span class="keyword">nonatomic</span>, <span class="keyword">assign</span>) <span class="built_in">UIBackgroundTaskIdentifier</span> backgroundUpdateTask;</span><br><span class="line"></span><br><span class="line">- (<span class="keyword">void</span>)applicationDidEnterBackground:(<span class="built_in">UIApplication</span> *)application &#123;</span><br><span class="line">    </span><br><span class="line">    [<span class="keyword">self</span> beingBackgroundUpdateTask];</span><br><span class="line">    <span class="comment">// 在这里加上你需要长久运行的代码</span></span><br><span class="line">    [<span class="keyword">self</span> endBackgroundUpdateTask];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (<span class="keyword">void</span>)beingBackgroundUpdateTask &#123;</span><br><span class="line"> </span><br><span class="line">    <span class="keyword">self</span>.backgroundUpdateTask = [[<span class="built_in">UIApplication</span> sharedApplication] beginBackgroundTaskWithExpirationHandler:^&#123;</span><br><span class="line">        [<span class="keyword">self</span> endBackgroundUpdateTask];</span><br><span class="line">    &#125;];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (<span class="keyword">void</span>)endBackgroundUpdateTask &#123;</span><br><span class="line"> </span><br><span class="line">    [[<span class="built_in">UIApplication</span> sharedApplication] endBackgroundTask:<span class="keyword">self</span>.backgroundUpdateTask];</span><br><span class="line">    <span class="keyword">self</span>.backgroundUpdateTask = <span class="built_in">UIBackgroundTaskInvalid</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="六、UIWindow-应用场景"><a href="#六、UIWindow-应用场景" class="headerlink" title="六、UIWindow 应用场景"></a>六、UIWindow 应用场景</h2><h3 id="1-WindowLevel"><a href="#1-WindowLevel" class="headerlink" title="1. WindowLevel"></a>1. WindowLevel</h3><p>UIWindow 有一个类型为 <code>UIWindowLevel</code> 的属性，该属性定义了 UIWindow 的层级，系统定义的一共有 3 种取值：</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">UIWindowLevelNormal</span>    = <span class="number">0</span> </span><br><span class="line"><span class="built_in">UIWindowLevelStatusBar</span> = <span class="number">1000</span></span><br><span class="line"><span class="built_in">UIWindowLevelAlert</span> 	   = <span class="number">2000</span></span><br></pre></td></tr></table></figure>
+<p>默认程序的 UIWindow 的层级就是 UIWindowLevelNormal，当系统需要在其上面覆盖 UIAlertView 时，就会创建一个层级为 UIWindowLevelAlert 的 UIWindow。在实际应用中，WindowLevel 的取值并不限于这 3 个值。</p>
+<h3 id="2-使用场景"><a href="#2-使用场景" class="headerlink" title="2. 使用场景"></a>2. 使用场景</h3><p>适合用 UIWindow 来实现的功能包括：手势解锁、启动页、通知提醒显示、弹框广告等。可以封装成一个单例，方便调用：</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#import <span class="meta-string">&lt;UIKit/UIKit.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">MYAlertWindow</span> : <span class="title">UIWindow</span></span></span><br><span class="line"></span><br><span class="line">+ (<span class="keyword">instancetype</span>)sharedInstance;</span><br><span class="line"></span><br><span class="line">- (<span class="keyword">void</span>)show;</span><br><span class="line"></span><br><span class="line"><span class="keyword">@end</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#import <span class="meta-string">"MYAlertWindow.h"</span></span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">@implementation</span> <span class="title">MYAlertWindow</span></span></span><br><span class="line"></span><br><span class="line">+ (<span class="keyword">instancetype</span>)sharedInstance &#123;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">id</span> sharedInstance = <span class="literal">nil</span>;</span><br><span class="line">    <span class="keyword">static</span> <span class="built_in">dispatch_once_t</span> onceToken;</span><br><span class="line">    <span class="built_in">dispatch_once</span>(&amp;onceToken, ^&#123;</span><br><span class="line">        sharedInstance = [[<span class="keyword">self</span> alloc] initWithFrame:[<span class="built_in">UIScreen</span> mainScreen].bounds];</span><br><span class="line">    &#125;);</span><br><span class="line">    <span class="keyword">return</span> sharedInstance;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (<span class="keyword">instancetype</span>)initWithFrame:(<span class="built_in">CGRect</span>)frame</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">self</span> = [<span class="keyword">super</span> initWithFrame:frame];</span><br><span class="line">    <span class="keyword">if</span> (<span class="keyword">self</span>) &#123;</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">self</span>.backgroundColor = [<span class="built_in">UIColor</span> grayColor];</span><br><span class="line">        </span><br><span class="line">        <span class="built_in">UILabel</span> *label = [[<span class="built_in">UILabel</span> alloc] initWithFrame:<span class="built_in">CGRectMake</span>(<span class="number">0</span>, <span class="number">0</span>, <span class="number">200</span>, <span class="number">100</span>)];</span><br><span class="line">        label.center = <span class="keyword">self</span>.center;</span><br><span class="line">        label.backgroundColor = [<span class="built_in">UIColor</span> whiteColor];</span><br><span class="line">        label.text = <span class="string">@"警告"</span>;</span><br><span class="line">        label.textAlignment = <span class="built_in">NSTextAlignmentCenter</span>;</span><br><span class="line">        [<span class="keyword">self</span> addSubview:label];</span><br><span class="line">        </span><br><span class="line">        <span class="built_in">UITapGestureRecognizer</span> *tap = [[<span class="built_in">UITapGestureRecognizer</span> alloc] initWithTarget:<span class="keyword">self</span> action:<span class="keyword">@selector</span>(tapClick)];</span><br><span class="line">        [<span class="keyword">self</span> addGestureRecognizer:tap];</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">self</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (<span class="keyword">void</span>)tapClick &#123;</span><br><span class="line">    [<span class="keyword">self</span> resignKeyWindow];</span><br><span class="line">    <span class="keyword">self</span>.hidden = <span class="literal">YES</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (<span class="keyword">void</span>)show &#123;</span><br><span class="line">    [<span class="keyword">self</span> makeKeyWindow];</span><br><span class="line">    <span class="keyword">self</span>.hidden = <span class="literal">NO</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">@end</span></span><br></pre></td></tr></table></figure>
+<p>调用下列方法即可使用：</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[[MYAlertWindow sharedInstance] show];</span><br></pre></td></tr></table></figure>
+<h2 id="七、动态下载系统提供的多种中文字体"><a href="#七、动态下载系统提供的多种中文字体" class="headerlink" title="七、动态下载系统提供的多种中文字体"></a>七、动态下载系统提供的多种中文字体</h2><p>字体文件通常比较大，10 ~ 20 MB 是常见的字体库的大小，如果只是很少量的字体需要设置，导入整个字体库是不划算的，并且中文字体通常都是有版权的，所以使用特殊中文字体库的 iOS 应用较少，通常只有阅读类的应用才会使用特殊中文字体库。从 iOS 6 开始，苹果支持动态下载中文字体到系统中，使用系统提供的中文字体，既可以避免版权问题，又可以减少应用体积。</p>
+<p>首先需要使用 Mac 内自带的应用“字体册”（Font Book）来获得相应字体的 PostScript 名称。</p>
+<p>假如我们现在要下载“娃娃体”，它的 PostScript 名称为“DFWaWaSC-W5”，首先判断该字体是否已经被下载下来</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">- (<span class="built_in">BOOL</span>)isfontDownloaded:(<span class="built_in">NSString</span> *)fontName</span><br><span class="line">&#123;</span><br><span class="line">    <span class="built_in">UIFont</span> *aFont = [<span class="built_in">UIFont</span> fontWithName:fontName size:<span class="number">12.0</span>];</span><br><span class="line">    <span class="keyword">if</span> (aFont &amp;&amp; ([aFont.fontName compare:fontName] == <span class="built_in">NSOrderedSame</span> || [aFont.familyName compare:fontName] == <span class="built_in">NSOrderedSame</span>)) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">YES</span>;</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">NO</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>如果该字体没有下载过，我们需要准备下载字体 API 需要的一些参数</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">NSMutableDictionary</span> *attrs = [<span class="built_in">NSMutableDictionary</span> dictionaryWithObjectsAndKeys:fontName, kCTFontNameAttribute, <span class="literal">nil</span>];</span><br><span class="line">    </span><br><span class="line"><span class="comment">// 创建一个字体描述对象</span></span><br><span class="line"><span class="built_in">CTFontDescriptorRef</span> desc = <span class="built_in">CTFontDescriptorCreateWithAttributes</span>((__bridge <span class="built_in">CFDictionaryRef</span>)attrs);</span><br><span class="line">    </span><br><span class="line"><span class="built_in">NSMutableArray</span> *descs = [<span class="built_in">NSMutableArray</span> arrayWithObject:(__bridge <span class="keyword">id</span> _Nonnull)(desc)];</span><br><span class="line"><span class="built_in">CFRelease</span>(desc);</span><br></pre></td></tr></table></figure>
+<p>准备好上面的 descs 变量后，就可以进行字体的下载了</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">__block <span class="built_in">BOOL</span> errorDuringDownload = <span class="literal">NO</span>;</span><br><span class="line"><span class="built_in">CTFontDescriptorMatchFontDescriptorsWithProgressHandler</span>((__bridge <span class="built_in">CFArrayRef</span>)descs, <span class="literal">NULL</span>, ^<span class="keyword">bool</span>(<span class="built_in">CTFontDescriptorMatchingState</span> state, <span class="built_in">CFDictionaryRef</span>  _Nonnull progressParameter) &#123;</span><br><span class="line">        </span><br><span class="line">    <span class="keyword">double</span> progressValue = [[(__bridge <span class="built_in">NSDictionary</span> *)progressParameter objectForKey:(<span class="keyword">id</span>)kCTFontDescriptorMatchingPercentage] doubleValue];</span><br><span class="line">        </span><br><span class="line">    <span class="keyword">if</span> (state == kCTFontDescriptorMatchingDidBegin) &#123;</span><br><span class="line">        <span class="built_in">NSLog</span>(<span class="string">@"字体已经匹配"</span>);</span><br><span class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (state == kCTFontDescriptorMatchingDidFinish) &#123;</span><br><span class="line">        <span class="keyword">if</span> (!errorDuringDownload) &#123;</span><br><span class="line">            <span class="built_in">NSLog</span>(<span class="string">@"字体 %@ 下载完成"</span>, fontName);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (state == kCTFontDescriptorMatchingWillBeginDownloading) &#123;</span><br><span class="line">       <span class="built_in">NSLog</span>(<span class="string">@"字体开始下载"</span>);</span><br><span class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (state == kCTFontDescriptorMatchingDidFinishDownloading) &#123;</span><br><span class="line">        <span class="built_in">NSLog</span>(<span class="string">@"字体下载完成"</span>);</span><br><span class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (state == kCTFontDescriptorMatchingDownloading) &#123;</span><br><span class="line">        <span class="built_in">NSLog</span>(<span class="string">@"下载进度 %.0f%%"</span>, progressValue);</span><br><span class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (state == kCTFontDescriptorMatchingDidFailWithError) &#123;</span><br><span class="line">        <span class="built_in">NSError</span> *error = [(__bridge <span class="built_in">NSDictionary</span> *)progressParameter objectForKey:(<span class="keyword">id</span>)kCTFontDescriptorMatchingError];</span><br><span class="line">        errorDuringDownload = <span class="literal">YES</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">YES</span>;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<p>通常需要在下载完字体后开始使用字体，一般是将响应代码放到 kCTFontDescriptorMatchingDidFinish 条件中，用 GCD 修改 UI 或者发 Notification 来通知相应的 Controller。</p>
+<h2 id="八、安全性问题"><a href="#八、安全性问题" class="headerlink" title="八、安全性问题"></a>八、安全性问题</h2><h3 id="密文传输密码"><a href="#密文传输密码" class="headerlink" title="密文传输密码"></a>密文传输密码</h3><p>事先生成一对用于加密的公私钥，客户端在登录时，使用公钥将用户的密码加密后，将密文传输到服务器。服务器使用私钥将密码解密，然后加盐（Salt：在密码学中，指通过在密码任意固定位置插入特定的字符串，让散列后的结果和使用原始密码的散列结果不相符）之后再多次求 MD5，之后再和服务器原来存储的用同样方法处理过的密码匹配，如果一致，则登录成功。这样，即使截获了加密后的密文，由于没有私钥，也无法还原出原始的密码。</p>
+<h3 id="JSON-字段加密"><a href="#JSON-字段加密" class="headerlink" title="JSON 字段加密"></a>JSON 字段加密</h3><p>如果通讯协议被破解，黑客可以模拟客户端登录，进而伪造一些用户行为，可能对用户数据造成危害。我们可以选择类似 <a href="https://code.google.com/p/protobuf/protobuf" target="_blank" rel="noopener">Protobuf</a>（Google 提供的开源数据交换格式，其最大特点是基于二进制，比传统的 JSON 格式要小很多）之类的二进制通讯协议或者自己实现通讯协议，对于传输的内容进行一定程度的加密。</p>
+<h3 id="程序文件加密"><a href="#程序文件加密" class="headerlink" title="程序文件加密"></a>程序文件加密</h3><p>很多应用的部分逻辑是用 Web 方式实现的，解压包内容可以看到 js 文件，这些文件都有完整清晰的注释，很容易知道其调用逻辑。通过将 js 源码进行混淆和加密，可以防止黑客轻易地阅读和篡改相关的逻辑，也可以防止 Web 端和 Native 端的通讯协议泄漏。</p>
+<h3 id="本地数据加密"><a href="#本地数据加密" class="headerlink" title="本地数据加密"></a>本地数据加密</h3><p>比如一款游戏，打开本地文件，可以容易地看到各种属性变量的名称和参数，我们就可以简单修改，达到修改游戏参数的目的，淘宝上许多商家就是如此操作。对于本地的重要数据，我们应该加密存储或者将其保存到 keychain 中，以保证其不被篡改。 </p>
+<h3 id="源代码安全"><a href="#源代码安全" class="headerlink" title="源代码安全"></a>源代码安全</h3><p>通过 <a href="https://www.hex-rays.com/products/ida/" target="_blank" rel="noopener">IDA</a> 这类工具进行反编译，可以反汇编到可以方便阅读的程度，更加方便地分析出应用的通讯协议和数据加密方式。对于这类工具，我们的应对措施就比较少了，除了用一些宏来简单混淆类名外，我们也可以将关键的逻辑用存 C 实现，例如微信的 iOS 端通讯底层，就是用 C 实现的。这样的方式除了能保证通讯协议安全外，还可以在 iOS 和 Android 使用同一套底层通讯代码，达到复用的目的。</p>
+<h2 id="九、基于-CoreText-的排版引擎"><a href="#九、基于-CoreText-的排版引擎" class="headerlink" title="九、基于 CoreText 的排版引擎"></a>九、基于 CoreText 的排版引擎</h2><p>CoreText 是用于处理文字和字体的底层技术，它直接和 Core Graphics（又称为 Quartz）打交道。Quartz 是一个 2D 图形渲染引擎，能够处理 OSX 和 iOS 中的图形显示问题。使用 CoreText 技术，我们可以对富文本进行复杂的排版。经过一些简单的扩展，我们还可以实现对于图片、链接的点击效果。CoreText 技术相对于 UIWebView 有内存占用少，可以后台渲染的优点，非常适合排版工作。</p>
+<h3 id="1-CoreText-和-UIWebView-比较"><a href="#1-CoreText-和-UIWebView-比较" class="headerlink" title="1. CoreText 和 UIWebView 比较"></a>1. CoreText 和 UIWebView 比较</h3><p><img src="/img/img018.png" alt="image018"></p>
+<h4 id="优点"><a href="#优点" class="headerlink" title="优点"></a>优点</h4><ul>
+<li>CoreText 占用的内存少，渲染速度更快；</li>
+<li>CoreText 在渲染界面前就可以精确的获得显示内容的高度（只要有了 CTFrame 即可），而 UIWebView 只有渲染出内容后，才能获得内容的高度（而且还需要用 JavaScript 代码来获取）；</li>
+<li>CoreText 的 CTFrame 可以在后台线程渲染，UIWebView 的内容只能在主线程渲染；</li>
+<li>基于 CoreText 可以做更好的原生交互效果，而 UIWebView 的交互效果都是用 JavaScript 来实现的，在交互效果上会有一些卡顿情况存在。</li>
+</ul>
+<h4 id="缺点"><a href="#缺点" class="headerlink" title="缺点"></a>缺点</h4><ul>
+<li>CoreText 渲染出来的内容不能像 UIWebView 那样方便的支持内容的复制；</li>
+<li>基于 CoreText 来排版需要自己处理很多复杂的逻辑，例如需要自己处理图片和文字混排相关的逻辑，也需要自己实现链接点击操作的支持。</li>
+</ul>
+<h3 id="2-基于-CoreText-的排版引擎框架"><a href="#2-基于-CoreText-的排版引擎框架" class="headerlink" title="2. 基于 CoreText 的排版引擎框架"></a>2. 基于 CoreText 的排版引擎框架</h3><p>这部分没有细看，待总结，具体文章内容和示例点击<a href="https://github.com/Mayan29/Blog/tree/master/Notes/SDK/01.《iOS%20开发进阶（唐巧）》读书笔记" target="_blank" rel="noopener">这里</a>。</p>
+<h2 id="十、开发技巧"><a href="#十、开发技巧" class="headerlink" title="十、开发技巧"></a>十、开发技巧</h2><h3 id="1-申请加急审核"><a href="#1-申请加急审核" class="headerlink" title="1. 申请加急审核"></a>1. 申请加急审核</h3><ol>
+<li>访问 iTunes Connect 网站：<a href="https://itunesconnect.apple.com" target="_blank" rel="noopener">https://itunesconnect.apple.com</a> </li>
+<li>单击网站底部的 Contact Us 按钮</li>
+<li>在问题 1 中选择 App Review</li>
+<li>在问题 2 中选择 Request Expedited Review</li>
+<li>单击 Request an Expedited App Review 按钮即可填写加急审核的申请表。最好使用英文填写，最容易通过的理由是严重的崩溃 bug（在理由一栏选择 Critical Bug Fix），在原因处详细描述该 bug 的重现步骤，则很容易使申请通过。</li>
+</ol>
+<h3 id="2-如何将应用下架"><a href="#2-如何将应用下架" class="headerlink" title="2. 如何将应用下架"></a>2. 如何将应用下架</h3><p>最简单的办法是将应用的上架时间改成未来的一个时间，这样就会在数小时之内下架</p>
+<h3 id="3-收起键盘的其他方式"><a href="#3-收起键盘的其他方式" class="headerlink" title="3. 收起键盘的其他方式"></a>3. 收起键盘的其他方式</h3><p>在 UIViewController 中收起键盘，除了调用相应控件的 <code>resignFirstResponder</code> 方法外，还有另外三种方法：</p>
+<ol>
+<li><p>重载 UIViewController 中的 <code>touchesBegin</code> 方法，然后在里面执行 <code>[self.view endEditing:YES];</code>，这样点击 UIViewController 任意地方，就可以收起键盘；</p>
+</li>
+<li><p>直接执行 <code>[[UIApplication sharedApplication] sendAction:@selector(resignFirstResponder) to:nil from:nil forEvent:nil];</code>，用于在获取当前 UIViewController 比较困难的时候使用；</p>
+</li>
+<li><p>直接执行 <code>[[UIApplication sharedApplication].keyWindow endEditing:YES];</code></p>
+</li>
+</ol>
+<h3 id="4-NSJSONSerialization-比-NSKeyedArchiver-更好"><a href="#4-NSJSONSerialization-比-NSKeyedArchiver-更好" class="headerlink" title="4. NSJSONSerialization 比 NSKeyedArchiver 更好"></a>4. NSJSONSerialization 比 NSKeyedArchiver 更好</h3><p>在选择持久化方案时，系统提供的 NSJSONSerialization 比 NSKeyedArchiver 在效率和体积上都更优。经过测试，NSJSONSerialization 比 NSKeyedArchiver 快了 7 倍，而且序列化之后的体积是 NSKeyedArchiver 的一半。</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">NSLog</span>(<span class="string">@"NSJSONSerialization 开始存储"</span>);</span><br><span class="line">    </span><br><span class="line"><span class="built_in">NSMutableArray</span> *persons1 = [<span class="built_in">NSMutableArray</span> array];</span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">100000</span>; i++) &#123;</span><br><span class="line">        </span><br><span class="line">    [persons1 addObject:[<span class="built_in">NSJSONSerialization</span> dataWithJSONObject:dic options:<span class="number">0</span> error:<span class="literal">nil</span>]];</span><br><span class="line">&#125;</span><br><span class="line">    </span><br><span class="line"><span class="built_in">NSLog</span>(<span class="string">@"NSJSONSerialization 结束存储"</span>);</span><br><span class="line"><span class="built_in">NSLog</span>(<span class="string">@"NSKeyedArchiver 开始存储"</span>);</span><br><span class="line"></span><br><span class="line">    </span><br><span class="line"><span class="built_in">NSMutableArray</span> *persons2 = [<span class="built_in">NSMutableArray</span> array];</span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">100000</span>; i++) &#123;</span><br><span class="line">        </span><br><span class="line">    [persons2 addObject:[<span class="built_in">NSKeyedArchiver</span> archivedDataWithRootObject:dic]];</span><br><span class="line">&#125;</span><br><span class="line">    </span><br><span class="line"><span class="built_in">NSLog</span>(<span class="string">@"NSKeyedArchiver 结束存储"</span>);</span><br></pre></td></tr></table></figure>
+<p>测试结果为：NSJSONSerialization 用了 0.426 秒，NSKeyedArchiver 用了 4.344 秒</p>
+<h3 id="5-设置应用内的系统控件语言"><a href="#5-设置应用内的系统控件语言" class="headerlink" title="5. 设置应用内的系统控件语言"></a>5. 设置应用内的系统控件语言</h3><p>在 iOS 系统中，有时候会需要调用系统的一些 UI 控件，例如：</p>
+<ul>
+<li>在 UIWebView 中长按会弹出系统的上下文菜单；</li>
+<li>在 UIImagePickerController 中会使用系统的照相机界面；</li>
+<li>在编辑状态下的 UITableViewCell 处于待删除状态时，会有一个系统的删除按钮；</li>
+</ul>
+<p>以上 UI 控件中，显示的语言并不是和你当前手机的系统语言一致的，语言设置成中文，需要在 info.plist 文件中增加以下内容即可</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&lt;key&gt;CFBundleLocalizations&lt;/key&gt;</span><br><span class="line">&lt;array&gt;</span><br><span class="line">	&lt;string&gt;zh_CN&lt;/string&gt;</span><br><span class="line">	&lt;string&gt;en&lt;/string&gt;</span><br><span class="line">&lt;/array&gt;</span><br></pre></td></tr></table></figure>
+<h3 id="6-用截屏功能来实现侧滑返回效果"><a href="#6-用截屏功能来实现侧滑返回效果" class="headerlink" title="6. 用截屏功能来实现侧滑返回效果"></a>6. 用截屏功能来实现侧滑返回效果</h3><p>iOS 7 以后的系统，可以通过系统提供的 API 来实现截屏功能</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">- (<span class="keyword">nullable</span> <span class="built_in">UIView</span> *)snapshotViewAfterScreenUpdates:(<span class="built_in">BOOL</span>)afterUpdates;</span><br></pre></td></tr></table></figure>
+<p>早期的 QQ 在侧滑到一半的时候，整个当前界面被移动到了右半部分，同时在左半部分以半透明的方式露出了上一个界面。由于 ViewController 并不支持自己的 view 设置透明，所以需要我们自己实现。</p>
+<p>为了使用截屏功能达到这种效果，我们在 NavigationController 进入到一个新的 ViewController 前，先进行截屏操作，保存当前的界面效果，然后将截到的当前界面作为参数，传递给目标 ViewController 当作背景。</p>
+<p>这样，平时这个背景我们用内容遮挡住，当用户用手指向右滑动，我们将整个界面右移，露出这个背景，于是就会像看到了上一个 ViewController 一样。</p>
+<h3 id="7-内存警告"><a href="#7-内存警告" class="headerlink" title="7. 内存警告"></a>7. 内存警告</h3><ol>
+<li>CALayer 是一个 bitmap 图像的容器类，当 UIView 调用自身的 drawRect 时，CALayer 才会创建这个 bitmap 图像类。</li>
+<li>CALayer 只占 48 Bytes，UIView 只占 96 Bytes，而一个 iPad 的全屏 UIView 的 bitmap 类会占到 12 MB 的大小！</li>
+<li>当系统发出 MemoryWarning 时，系统会自动回收 bitmap 类，但是不回收 UIView 和 CALayer 类。这样既能回收大部分内存，又能在需要 bitmap 类时，通过调用 UIView 的 drawRect 方法重建。</li>
+<li>当一段内存被分配时，它会被标记成 In use 以防止被重复使用，当内存被释放时，这段内存会被标记成 Not in use，这样在有新的内存申请时，这块内存就可能被分配给其他变量。</li>
+<li>CALayer 包括的具体的 bitmap 内容的私有成员变量类型为 CABackingStore，当收到 MemoryWarning 时，CABackingStore 类型的内存区会被标记成可能再次被原变量使用。</li>
+</ol>
+<h3 id="8-Xcode-快捷键"><a href="#8-Xcode-快捷键" class="headerlink" title="8. Xcode 快捷键"></a>8. Xcode 快捷键</h3><h4 id="常用快捷键"><a href="#常用快捷键" class="headerlink" title="常用快捷键"></a>常用快捷键</h4><table>
+<thead>
+<tr>
+<th>快捷键</th>
+<th>说明 </th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Cmd + Ctrl + Up</td>
+<td>在 .h 和 .m 文件之间切换</td>
+</tr>
+<tr>
+<td>Cmd + Ctrl + Left</td>
+<td>到上 / 下一次编辑的位置</td>
+</tr>
+<tr>
+<td>Cmd + Shift + F</td>
+<td>在工程中查找</td>
+</tr>
+<tr>
+<td>Cmd + .</td>
+<td>结束本次调试</td>
+</tr>
+</tbody>
+</table>
+<h4 id="不太常用快捷键"><a href="#不太常用快捷键" class="headerlink" title="不太常用快捷键"></a>不太常用快捷键</h4><table>
+<thead>
+<tr>
+<th>快捷键</th>
+<th>说明 </th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Cmd + Shift + Y</td>
+<td>切换控制台的显示或隐藏</td>
+</tr>
+<tr>
+<td>Cmd + 0</td>
+<td>隐藏左边的导航区</td>
+</tr>
+<tr>
+<td>Cmd + Opt + 0</td>
+<td>隐藏右边的工具区</td>
+</tr>
+<tr>
+<td>Cmd + Shift + K</td>
+<td>清空编译好的文件</td>
+</tr>
+</tbody>
+</table>
+<h3 id="9-为工程增加-Daily-Build"><a href="#9-为工程增加-Daily-Build" class="headerlink" title="9. 为工程增加 Daily Build"></a>9. 为工程增加 Daily Build</h3><p>我们可以用 bash 写一个 Daily Build 脚本，可以参考 @lexrus 的自动打包脚本 <a href="https://github.com/lexrus/ios-makefile" target="_blank" rel="noopener">ios-makefile</a></p>
+<h2 id="十一、Objective-C-对象"><a href="#十一、Objective-C-对象" class="headerlink" title="十一、Objective-C 对象"></a>十一、Objective-C 对象</h2><h3 id="1-isa-指针"><a href="#1-isa-指针" class="headerlink" title="1. isa 指针"></a>1. isa 指针</h3><p>我们进入 <code>NSObject.h</code> 和 <code>objc.h</code> 可以看到，NSObject 就是一个包含 isa 指针的结构体：</p>
+<p><img src="/img/img019.png" alt="image019"></p>
+<p><img src="/img/img020.png" alt="image020"></p>
+<p>按照面向对象语言的设计原则，所有事物都应该是对象，严格来说，Objective-C 并没有完全做到这一点，因为它有像 int、double 这样的简单变量类型，而类似 Ruby 一类语言，连 int 变量也是对象。</p>
+<p>我们进入 <code>runtime.h</code> 中打开 Class 的定义头文件，可以看到，Class 也是一个包含 isa 指针的结构体</p>
+<p><img src="/img/img021.png" alt="image021"></p>
+<p>类也是一个对象，所以它也必须是另一个类的实例，这个类就是元类（metaclass），元类保存了类方法的列表。当一个类方法被调用时，元类会首先查找它本身是否有该类方法的实现。</p>
+<p>元类也是一个对象，那么元类的 isa 指针又指向哪里呢？为了设计上的完整，所有元类 isa 指针都会指向一个根元类（root metaclass），根元类本身的 isa 指针指向自己，这样就形成了一个闭环。</p>
+<h3 id="2-类的成员变量"><a href="#2-类的成员变量" class="headerlink" title="2. 类的成员变量"></a>2. 类的成员变量</h3><p>如果把类的实例看成一个 C 语言的结构体，上面说的 isa 指针就是这个结构体的第一个成员变量，而类的其他成员变量依次排列在结构体中。为了验证排列顺序，在 main.m 中运行如下代码：</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#import <span class="meta-string">&lt;UIKit/UIKit.h&gt;</span></span></span><br><span class="line"><span class="meta">#import <span class="meta-string">"AppDelegate.h"</span></span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">Father</span> : <span class="title">NSObject</span> </span>&#123;</span><br><span class="line">    <span class="keyword">int</span> _father;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">@end</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">@implementation</span> <span class="title">Father</span></span></span><br><span class="line"><span class="keyword">@end</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">Child</span> : <span class="title">Father</span> </span>&#123;</span><br><span class="line">    <span class="keyword">int</span> _child;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">@end</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">@implementation</span> <span class="title">Child</span></span></span><br><span class="line"><span class="keyword">@end</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">int</span> main(<span class="keyword">int</span> argc, <span class="keyword">char</span> * argv[]) &#123;</span><br><span class="line">    </span><br><span class="line">    Child *child = [[Child alloc] init];</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">@autoreleasepool</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="built_in">UIApplicationMain</span>(argc, argv, <span class="literal">nil</span>, <span class="built_in">NSStringFromClass</span>([AppDelegate <span class="keyword">class</span>]));</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>我们在 @autoreleasepool 处打断点，在 Console 中输入 <code>p *child</code> 则可以看到输出如下</p>
+<p><img src="/img/img022.png" alt="image022"></p>
+<p>因为对象在内存中排布可以看成一个结构体，结构体的大小并不能动态变化，所以无法在运行时动态地给对象添加成员变量。但是对象的方法定义都保存在类的可变区域中，通过修改方法列表的指针，就可以动态地为某一个类增加成员变量，这也是 Category 实现的原理，同时也说明了为什么 Category 只能为对象增加成员方法，却不能增加成员变量。</p>
+<h3 id="3-动态创建类和对象"><a href="#3-动态创建类和对象" class="headerlink" title="3. 动态创建类和对象"></a>3. 动态创建类和对象</h3><figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">- (<span class="keyword">void</span>)viewDidLoad &#123;</span><br><span class="line">    [<span class="keyword">super</span> viewDidLoad];</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 创建一个名为 MYView 的类，它是 UIView 的子类</span></span><br><span class="line">    Class newClass = objc_allocateClassPair([<span class="built_in">UIView</span> <span class="keyword">class</span>], <span class="string">"MYView"</span>, <span class="number">0</span>);</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 为该类增加一个名为 report 的方法</span></span><br><span class="line">    class_addMethod(newClass, <span class="built_in">NSSelectorFromString</span>(<span class="string">@"report"</span>), (IMP)ReportFunction, <span class="string">"v@:"</span>);</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 注册该类</span></span><br><span class="line">    objc_registerClassPair(newClass);</span><br><span class="line">    </span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 创建一个 MYView 类的实例</span></span><br><span class="line">    <span class="keyword">id</span> instanceOfNewClass = [[newClass alloc] init];</span><br><span class="line">    <span class="comment">// 调用 report 方法</span></span><br><span class="line">    [instanceOfNewClass performSelector:<span class="built_in">NSSelectorFromString</span>(<span class="string">@"report"</span>)];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">void</span> ReportFunction(<span class="keyword">id</span> <span class="keyword">self</span>, SEL _cmd)</span><br><span class="line">&#123;</span><br><span class="line">    <span class="built_in">NSLog</span>(<span class="string">@"Class is %@, and super is %@"</span>, [<span class="keyword">self</span> <span class="keyword">class</span>], [<span class="keyword">self</span> superclass]);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>执行结果为：</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Class is MYView, and <span class="keyword">super</span> is <span class="built_in">UIView</span></span><br></pre></td></tr></table></figure>
+<h3 id="4-动态方法替换"><a href="#4-动态方法替换" class="headerlink" title="4. 动态方法替换"></a>4. 动态方法替换</h3><p>4.1. <code>method_exchangeImplementations</code>，最常用的方法，当需要交换两个方法的实现时使用</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Method viewWillAppear = class_getInstanceMethod(<span class="keyword">self</span>, <span class="keyword">@selector</span>(viewWillAppear:));</span><br><span class="line">Method bimViewWillAppear = class_getInstanceMethod(<span class="keyword">self</span>, <span class="keyword">@selector</span>(bimViewWillAppear:));</span><br><span class="line">method_exchangeImplementations(viewWillAppear, bimViewWillAppear);</span><br></pre></td></tr></table></figure>
+<p>4.2. <code>class_replaceMethod</code>，当被替换的方法有可能没有实现时使用</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">- (<span class="keyword">void</span>)viewDidLoad &#123;</span><br><span class="line">    [<span class="keyword">super</span> viewDidLoad];</span><br><span class="line">    </span><br><span class="line">    Class <span class="keyword">class</span> = <span class="keyword">self</span>.class;</span><br><span class="line">    </span><br><span class="line">    SEL originalSelector = <span class="keyword">@selector</span>(viewWillAppear:);</span><br><span class="line">    SEL swizzledSelector = <span class="keyword">@selector</span>(bimViewWillAppear:);</span><br><span class="line">    </span><br><span class="line">    Method originalMethod = class_getInstanceMethod(<span class="keyword">class</span>, originalSelector);</span><br><span class="line">    Method swizzledMethod = class_getInstanceMethod(<span class="keyword">class</span>, swizzledSelector);</span><br><span class="line">    </span><br><span class="line">    <span class="built_in">BOOL</span> didAddMethod = class_addMethod(<span class="keyword">class</span>, originalSelector, method_getImplementation(swizzledMethod), method_getTypeEncoding(swizzledMethod));</span><br><span class="line">    <span class="keyword">if</span> (didAddMethod) &#123;</span><br><span class="line">        class_replaceMethod(<span class="keyword">class</span>, swizzledSelector, method_getImplementation(originalMethod), method_getTypeEncoding(originalMethod));</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (<span class="keyword">void</span>)bimViewWillAppear:(<span class="built_in">BOOL</span>)animated &#123;</span><br><span class="line">    </span><br><span class="line">    <span class="built_in">NSLog</span>(<span class="string">@"调用了 bimViewWillAppear: 方法"</span>);</span><br><span class="line">    </span><br><span class="line">    [<span class="keyword">self</span> bimViewWillAppear:animated];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>打印结果为：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">调用了 bimViewWillAppear: 方法</span><br></pre></td></tr></table></figure>
+<p>如果在该类中实现了 <code>viewWillAppear:</code> 方法：</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">- (<span class="keyword">void</span>)viewWillAppear:(<span class="built_in">BOOL</span>)animated &#123;</span><br><span class="line">    [<span class="keyword">super</span> viewWillAppear:animated];</span><br><span class="line"></span><br><span class="line">    <span class="built_in">NSLog</span>(<span class="string">@"调用了 viewWillAppear: 方法"</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>则打印结果为：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">调用了 viewWillAppear: 方法</span><br></pre></td></tr></table></figure>
+<p>说明 <code>didAddMethod</code> 返回 NO，没有实现方法交换。</p>
+<p>其实使用 <code>viewWillAppear:</code> 方法并没有展示出来该方法的作用。比较实用的地方用在：子类继承父类，在子类中没有父类方法的覆写，子类的扩展类中实现父类方法交换。</p>
+<p>4.3. <code>method_setImplementation</code>，直接为一个方法设置其实现方式时使用。</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">- (<span class="keyword">void</span>)viewDidLoad &#123;</span><br><span class="line">    [<span class="keyword">super</span> viewDidLoad];</span><br><span class="line">    </span><br><span class="line">    Method method1 = class_getInstanceMethod(<span class="keyword">self</span>.class, <span class="keyword">@selector</span>(work));</span><br><span class="line">    Method method2 = class_getInstanceMethod(<span class="keyword">self</span>.class, <span class="keyword">@selector</span>(study));</span><br><span class="line">    IMP imp2 = method_getImplementation(method2);</span><br><span class="line">    </span><br><span class="line">    method_setImplementation(method1, imp2);</span><br><span class="line">    </span><br><span class="line">    [<span class="keyword">self</span> work];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (<span class="keyword">void</span>)work &#123;</span><br><span class="line">    <span class="built_in">NSLog</span>(<span class="string">@"工作"</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (<span class="keyword">void</span>)study &#123;</span><br><span class="line">    <span class="built_in">NSLog</span>(<span class="string">@"学习"</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>打印结果为：</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">学习</span><br></pre></td></tr></table></figure>
+<p>其实 <code>method_exchangeImplementations</code> 方法就是调用了两次 <code>method_setImplementation</code></p>
+<h2 id="十二、Tagged-Pointer-对象"><a href="#十二、Tagged-Pointer-对象" class="headerlink" title="十二、Tagged Pointer 对象"></a>十二、Tagged Pointer 对象</h2><p>iPhone 5s 配备了首个采用 64 位架构的 A7 双核处理器，同时提出了 Tagged Pointer 的概念。对于 64 位系统，引入 Tagged Pointer 后，相关逻辑能减少一半的内存占用，3 倍的访问速度提升，100 倍的创建、销毁速度提升。</p>
+<h3 id="1-原有系统的问题"><a href="#1-原有系统的问题" class="headerlink" title="1. 原有系统的问题"></a>1. 原有系统的问题</h3><p>举个例子：</p>
+<ul>
+<li>NSNumber 对象，在 32 位 CPU 下占 4 个字节，在 64 位 CPU 下占 8 个字节；</li>
+<li>指针在 32 位 CPU 下占 4 个字节，在 64 位 CPU 下占 8 个字节；</li>
+</ul>
+<p>所以如果没有 Tagged Pointer 对象，从 32 位机器迁移到 64 位机器中，虽然逻辑没有变化，但是对象所占用的内存会翻倍：</p>
+<p><img src="/img/img023.jpg" alt="image023"></p>
+<h3 id="2-Tagged-Pointer-介绍"><a href="#2-Tagged-Pointer-介绍" class="headerlink" title="2. Tagged Pointer 介绍"></a>2. Tagged Pointer 介绍</h3><p>为了改进上面提到的内存占用和效率问题，苹果提出了 Tagged Pointer 对象。将一个对象的指针拆成两部分，一部分直接保存数据，另一部分作为特殊标记，表示这是一个特别的指针，不指向任何一个地址，64 位 CPU 下 NSNumber 的内存图变成下面这样：</p>
+<p><img src="/img/img024.jpg" alt="image024"></p>
+<h3 id="3-Tagged-Pointer-特点"><a href="#3-Tagged-Pointer-特点" class="headerlink" title="3. Tagged Pointer 特点"></a>3. Tagged Pointer 特点</h3><ol>
+<li>Tagged Pointer 专门用来存储小的对象，例如 NSNumber 和 NSDate；</li>
+<li>Tagged Pointer 指针的值不再是地址，而是真正的值。所以实际上它不再是一个对象了，只是一个披着对象“皮”的普通变量而已，所以，它的内存并不存储在堆中；</li>
+<li>在内存读取上有着以前 3 倍的效率，创建时比以前快 106 倍。</li>
+</ol>
+<h3 id="4-引用计数相关变化"><a href="#4-引用计数相关变化" class="headerlink" title="4. 引用计数相关变化"></a>4. 引用计数相关变化</h3><p>在 32 位环境下，对象的引用计数都保存在一个外部的表中，每一个对象的 Retain 操作，实际包括如下 5 个步骤：</p>
+<ol>
+<li>获得全局的记录引用计数的 hash 表；</li>
+<li>为了线程安全，给该 hash 表加锁；</li>
+<li>查找到目标对象的引用计数值；</li>
+<li>将该引用计数值加 1，写回 hash 表；</li>
+<li>给该 hash 表解锁。</li>
+</ol>
+<p>而在 64 位环境下，isa 指针也是 64 位，实际作为指针部分只用到其中 33 位，剩余的 31 位苹果使用了类似 Tagged Pointer 的概念，其中 19 位将保存对象的引用计数，这样对引用计数的操作只需要修改这个指针即可。只有当引用计数超出 19 位，才会将引用计数保存到外部表，但是这种情况是很少的。在 64 位环境下，新的 Retain 操作包括如下 5 个步骤：</p>
+<ol>
+<li>检查 isa 指针上面的标记位，看引用计数是否保存在 isa 变量中，如果不是，则使用以前的步骤，否则执行第 2 步；</li>
+<li>检查当前对象是否正在释放，如果是，不做任何事情；</li>
+<li>增加该对象的引用计数，但是并不马上写回到 isa 变量中；</li>
+<li>检查增加后的引用计数的值是否能够被 19 位表示，如果不是，则切换成以前的办法，否则执行第 5 步；</li>
+<li>进行一个原子的写操作，将 isa 的值写回。</li>
+</ol>
+<p>虽然步骤都是 5 步，但是由于没有了全局的加锁操作，所以引用计数的更改更快了。</p>
+<h3 id="5-isa-的-bit-位含义"><a href="#5-isa-的-bit-位含义" class="headerlink" title="5. isa 的 bit 位含义"></a>5. isa 的 bit 位含义</h3><table>
+<thead>
+<tr>
+<th>bit 位</th>
+<th>变量名</th>
+<th>意义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1 bit</td>
+<td>indexed</td>
+<td>0 表示普通的 isa，1 表示 Tagged Pointer</td>
+</tr>
+<tr>
+<td>1 bit</td>
+<td>has_assoc</td>
+<td>表示该对象是否有过 associated 对象，如果没有，在析构释放内存时可以更快</td>
+</tr>
+<tr>
+<td>1 bit</td>
+<td>has_cxx_dtor</td>
+<td>表示该对象是否有 C++ 或 ARC 的析构函数，如果没有，在析构释放内存时可以更快</td>
+</tr>
+<tr>
+<td>30 bits</td>
+<td>shiftcls</td>
+<td>类的指针</td>
+</tr>
+<tr>
+<td>9 bits</td>
+<td>magic</td>
+<td>其值固定为 0xd2，用于在调试时分辨对象是否未完成初始化</td>
+</tr>
+<tr>
+<td>1 bit</td>
+<td>weakly_referenced</td>
+<td>表示该对象是否有过 weak 对象，如果没有，在析构释放内存时可以更快 </td>
+</tr>
+<tr>
+<td>1 bit</td>
+<td>deallocating</td>
+<td>表示该对象是否正在析构</td>
+</tr>
+<tr>
+<td>1 bit</td>
+<td>has_sidetable_rc</td>
+<td>表示该对象的引用计数值是否大到无法直接在 isa 中保存</td>
+</tr>
+<tr>
+<td>19 bits</td>
+<td>extra_rc</td>
+<td>表示该对象超过 1 的引用计数值，例如，如果该对象的引用计数是 6，则 extra_rc 的值为 5 </td>
+</tr>
+</tbody>
+</table>
+<h2 id="十三、block-对象模型"><a href="#十三、block-对象模型" class="headerlink" title="十三、block 对象模型"></a>十三、block 对象模型</h2><h3 id="1-block-内部数据结构定义"><a href="#1-block-内部数据结构定义" class="headerlink" title="1. block 内部数据结构定义"></a>1. block 内部数据结构定义</h3><p>从苹果的 LLVM 项目的<a href="https://llvm.org/svn/llvm-project/compiler-rt/tags/Apple/Libcompiler_rt-10/BlocksRuntime/Block_private.h" target="_blank" rel="noopener">开源代码</a>中可以得到 block 数据结构定义，如下：</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">struct</span> Block_descriptor &#123;</span><br><span class="line">    <span class="keyword">unsigned</span> <span class="keyword">long</span> <span class="keyword">int</span> reserved;</span><br><span class="line">    <span class="keyword">unsigned</span> <span class="keyword">long</span> <span class="keyword">int</span> size;</span><br><span class="line">    <span class="keyword">void</span> (*<span class="keyword">copy</span>)(<span class="keyword">void</span> *dst, <span class="keyword">void</span> *src);</span><br><span class="line">    <span class="keyword">void</span> (*dispose)(<span class="keyword">void</span> *);</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">struct</span> Block_layout &#123;</span><br><span class="line">    <span class="keyword">void</span> *isa;</span><br><span class="line">    <span class="keyword">int</span> flags;</span><br><span class="line">    <span class="keyword">int</span> reserved; </span><br><span class="line">    <span class="keyword">void</span> (*invoke)(<span class="keyword">void</span> *, ...);</span><br><span class="line">    <span class="keyword">struct</span> Block_descriptor *descriptor;</span><br><span class="line">    <span class="comment">/* Imported variables. */</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>一个 block 实例由 6 部分构成：</p>
+<ol>
+<li>isa 指针</li>
+<li>flags，用于按 bit 位表示一些 block 的附加信息 </li>
+<li>reserved，保留变量</li>
+<li>invoke，函数指针，指向具体的 block 实现的函数调用地址</li>
+<li>descriptor，表示该 block 的附加描述信息，主要是 size 大小，以及 copy 和 dispose 函数的指针</li>
+<li>variables，capture 过来的变量，block 能够访问它外部的局部变量，就是因为将这些变量（或变量的地址）复制到了结构体中。</li>
+</ol>
+<h3 id="2-block-三种类型"><a href="#2-block-三种类型" class="headerlink" title="2. block 三种类型"></a>2. block 三种类型</h3><ul>
+<li>_NSConcreteGlobalBlock，全局的静态 block，不会访问任何外部变量；</li>
+<li>_NSConcreteStackBlock，保存在栈中的 block，当函数返回时会被销毁；</li>
+<li>_NSConcreteMallocBlock，保存在堆中的 block，当引用计数为 0 时会被销毁。</li>
+</ul>
+<h4 id="NSGlobalBlock"><a href="#NSGlobalBlock" class="headerlink" title="NSGlobalBlock"></a>NSGlobalBlock</h4><figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">void</span>(^myBlock)() = ^&#123;</span><br><span class="line">    <span class="built_in">NSLog</span>(<span class="string">@"hello world"</span>);</span><br><span class="line">&#125;;</span><br><span class="line">    </span><br><span class="line"><span class="built_in">NSLog</span>(<span class="string">@"%@"</span>, myBlock);  <span class="comment">// &lt;__NSGlobalBlock__: 0x10d65b240&gt;</span></span><br></pre></td></tr></table></figure>
+<p>对 NSGlobalBlock 的 retain、copy、release 操作都无效。</p>
+<h4 id="NSStackBlock-和-NSMallocBlock"><a href="#NSStackBlock-和-NSMallocBlock" class="headerlink" title="NSStackBlock 和 NSMallocBlock"></a>NSStackBlock 和 NSMallocBlock</h4><p>在 MRC 模式下打印：</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> num = <span class="number">10</span>;</span><br><span class="line"><span class="keyword">void</span>(^myBlock)() = ^&#123;</span><br><span class="line">    <span class="built_in">NSLog</span>(<span class="string">@"malloc block and num = %d"</span>, num);</span><br><span class="line">&#125;;</span><br><span class="line">    </span><br><span class="line"><span class="built_in">NSLog</span>(<span class="string">@"%@"</span>, myBlock);  <span class="comment">// &lt;__NSStackBlock__: 0x7fff574d5a08&gt;</span></span><br><span class="line">```  </span><br><span class="line"></span><br><span class="line">block 在函数退出的时候，就会被回收，如果再调用该 block 会导致 crash</span><br><span class="line"></span><br><span class="line">在 ARC 模式下打印：</span><br><span class="line"></span><br><span class="line">```objc</span><br><span class="line"><span class="keyword">int</span> num = <span class="number">10</span>;</span><br><span class="line"><span class="keyword">void</span>(^myBlock)() = ^&#123;</span><br><span class="line">    <span class="built_in">NSLog</span>(<span class="string">@"malloc block and num = %d"</span>, num);</span><br><span class="line">&#125;;</span><br><span class="line">    </span><br><span class="line"><span class="built_in">NSLog</span>(<span class="string">@"%@"</span>, myBlock);  <span class="comment">// &lt;__NSMallocBlock__: 0x600000048220&gt;</span></span><br><span class="line">```  </span><br><span class="line"></span><br><span class="line">这里为什么打印的是 <span class="built_in">NSMallocBlock</span> 呢？在 ARC 模式下生成的 block 也是 <span class="built_in">NSStackBlock</span>，只是当赋值给 <span class="keyword">strong</span> 对象时，系统会主动对其进行 <span class="keyword">copy</span>，将栈上复制到堆上。如果不赋值，直接打印，则为 <span class="built_in">NSStackBlock</span>   </span><br><span class="line"></span><br><span class="line">```objc</span><br><span class="line"><span class="keyword">int</span> num = <span class="number">10</span>;</span><br><span class="line">    </span><br><span class="line"><span class="built_in">NSLog</span>(<span class="string">@"%@"</span>, ^&#123;</span><br><span class="line">    <span class="built_in">NSLog</span>(<span class="string">@"hello world and num = %d"</span>, num);</span><br><span class="line">&#125;);  <span class="comment">// &lt;__NSStackBlock__: 0x7fff574d5a08&gt;</span></span><br></pre></td></tr></table></figure>
+<h3 id="11-3-循环引用"><a href="#11-3-循环引用" class="headerlink" title="11.3 循环引用"></a>11.3 循环引用</h3><ol>
+<li>在 MRC 时代，<strong>block 修饰避免循环引用；ARC 时代，</strong>block 修饰同样会引起循环引用；</li>
+<li>不用 <strong>block 修饰，block 外的变量引用，是复制其本身；使用 </strong>block 修饰，block 外的变量引用，是复制其引用地址；</li>
+<li><strong>block 不管是 ARC 还是 MRC 模式下都可以修饰对象和基本数据类型；</strong>weak 只能在 ARC 模式下使用，也只能修饰对象，不能修饰基本数据类型；</li>
+<li><strong>block 对象可以在 block 中被重新赋值，</strong>weak 不可以。</li>
+</ol>
+<h2 id="后记"><a href="#后记" class="headerlink" title="后记"></a>后记</h2><blockquote>
+<p>2017-04-27 一次阅读</p>
+<p>前前后后大概半个月，利用零碎时间看完了这本书。这本书前年就有所耳闻，网上的评价也褒贬不一，唐巧写的相对来说，语言通俗易懂，感觉像是博客一样，没有什么限制，读起来很畅快。这本书适合初学者，虽然大部分内容之前都已经熟悉掌握，但是看过一遍还是很有收获的，有些知识点的总结很到位，感觉没有浪费时间。遗留的问题是 CoreText 部分内容打算结合其他资料系统的研究一下，这里就先不仔细阅读了。</p>
+<p>2018-01-19 二次阅读 </p>
+<p>大概三天时间通读了一遍，又有一点点收获吧，模糊的概念捋顺了一遍，总体来说内容很简单，用不到的功能还是没有细看，比如内购、CoreText 等等模块。</p>
+</blockquote>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2016/12/22/【iOS】多线程编程总结/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1662,7 +2570,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">5</span>
+                  <span class="site-state-item-count">7</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
