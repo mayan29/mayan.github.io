@@ -6,6 +6,17 @@ tags:
 ---
 
 
+iOS 多线程基本有以下四类：
+
+1. pthread：跨平台、使用难度大，几乎不用（程序员管理线程）
+2. NSThread：更加面向对象、简单易用、直接操作线程对象，偶尔使用（程序员管理线程）
+3. GCD：代替 NSThread、充分利用设备内核，经常使用（自动管理线程）
+4. NSOperation：基于 GCD、更加面向对象，经常使用（自动管理线程）
+
+> 主线程：1M，显示 UI 界面、处理滚动拖拽事件
+> 子线程：512KB
+
+
 ## GCD
 
 GCD（Grand Central Dispatch，牛逼的中枢调度器）是 iOS 4.0 引入的多线程编程技术，其有两个核心的概念：任务和队列。GCD 会自动将队列中的任务取出来，放到对应的线程中执行。
@@ -287,6 +298,13 @@ dispatch_source_set_event_handler(self.timer, ^{
 // 启动定时器
 dispatch_resume(self.timer);
 ```
+
+
+## NSOperation
+
+从简单意义上来说，NSOperation 是对 GCD 中的 block 进行的封装，它也表示一个要被执行的任务。不仅如此，NSOperation 表示的任务还可以被取消。它还有三种状态 isExecuted、isFinished 和 isCancelled 以方便我们通过 KVC 对它的状态进行监听。
+
+
 
 
 ## 参考资料
