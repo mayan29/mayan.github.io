@@ -35,17 +35,17 @@ GCD（Grand Central Dispatch，牛逼的中枢调度器）是 iOS 4.0 引入的�
 
 ### 1. 同步 / 异步 & 串行队列 / 并行队列
 
-> 同步（sync） ：只能在当前线程中执行任务
-> 异步（async）：可以在新的线程中执行任务
-> 串行队列（Serial Dispatch Queue）：任务顺次执行
-> 并发队列（Serial Dispatch Queue）：任务并发执行
+> 同步（sync） ：会阻塞当前线程并等待 block 中的任务执行完毕，然后当前线程才会继续往下运行。
+> 异步（async）：当前线程会直接往下进行，不会阻塞当前线程。
+> 串行队列（Serial Dispatch Queue）：任务顺次执行，取出来一个，执行一个，然后再取下一个，这样一个一个执行。
+> 并发队列（Serial Dispatch Queue）：任务并发执行，取出来一个，放到另外的线程执行，然后再取下一个，这样看起来都是一起执行的。但是 GCD 会根据系统资源控制并行的数量，所以如果任务很多，并不会让所有任务同时执行。
 
 ```objc
-// 1. 同步执行 & 串行队列 —— 在当前线程顺次执行任务，没有意义，略
+// 1. 同步执行 & 串行队列 —— 当前线程，一个一个执行，没有意义，略
 
-// 2. 同步执行 & 并行队列 —— 在当前线程并发执行，同样没有意义，略
+// 2. 同步执行 & 并行队列 —— 当前线程，一个一个执行，同样没有意义，略
     
-// 3. 异步执行 & 串行队列 —— 新开启一条线程顺次执行任务
+// 3. 异步执行 & 串行队列 —— 其他线程，一个一个执行
     
 dispatch_queue_t queue = dispatch_queue_create("com.mayan29.queue", DISPATCH_QUEUE_SERIAL);
 dispatch_async(queue, ^{
@@ -63,7 +63,7 @@ dispatch_async(queue, ^{
 // 执行任务 B, 线程 <NSThread: 0x60000026bcc0>{number = 3, name = (null)}
 // 执行任务 C, 线程 <NSThread: 0x60000026bcc0>{number = 3, name = (null)}
     
-// 4. 异步执行 & 并行队列 —— 新开启多条线程并发执行任务
+// 4. 异步执行 & 并行队列 —— 新开启多条线程，一起执行
     
 dispatch_queue_t queue = dispatch_queue_create("com.mayan29.queue", DISPATCH_QUEUE_CONCURRENT);
 dispatch_async(queue, ^{
@@ -473,7 +473,7 @@ NSOperationQueue *queue = [NSOperationQueue mainQueue];  // 主队列
 
 ## NSThread
 
-NSThread 是轻量级的多线程开发，使用起来也并不复杂，但是使用 NSThread 需要自己管理线程生命周期。
+这套方案是经过苹果封装后的，并且完全面向对象的，所以可以直接操控线程对象，非常直观和方便。但是，它的生命周期还是需要我们手动管理，所以这套方案也是偶尔用用，比如 [NSThread currentThread]。
 
 ### 创建多线程
 
@@ -492,11 +492,26 @@ NSThread *thread = [[NSThread alloc] initWithTarget:self selector:@selector(down
 ### 其他方法
 
 ```objc
-[NSThread mainThread];  // 获取主线程
-[NSThread isMainThread];  // 当前线程是否为主线程
-[NSThread sleepForTimeInterval:5];  // 睡 5 秒
-[NSThread exit];  // 强制关闭线程
-[self performSelectorOnMainThread:@selector(downloadFinish:) withObject:image waitUntilDone:YES];  // 返回主线程
+// 判断某个线程的状态的属性
+@property (readonly, getter=isExecuting) BOOL executing;
+@property (readonly, getter=isFinished)  BOOL finished;
+@property (readonly, getter=isCancelled) BOOL cancelled;
+
+// 获取当前线程 / 获取主线程
+@property (class, readonly, strong) NSThread *currentThread;
+@property (class, readonly, strong) NSThread *mainThread;
+// 当前线程是否是主线程
+@property (class, readonly) BOOL isMainThread;
+
+// 取消线程
+- (void)cancel;
+
+// 使当前线程暂停 N 秒
++ (void)sleepUntilDate:(NSDate *)date;
++ (void)sleepForTimeInterval:(NSTimeInterval)ti;
+
+// 强制关闭线程
++ (void)exit;
 ```
 
 ### 线程加锁
@@ -545,3 +560,4 @@ NSThread *thread = [[NSThread alloc] initWithTarget:self selector:@selector(down
 2. [iOS 多线程编程总结](https://bestswifter.com/multithreadconclusion/#)
 3. [Objective-C 的底层并发 API](http://www.cocoachina.com/industry/20130821/6842.html)
 4. [iOS 开发系列 -- 并行开发其实很容易](http://www.cnblogs.com/kenshincui/p/3983982.html)
+5. [关于 iOS 多线程，你看我就够了](https://www.jianshu.com/p/0b0d9b1f1f19)
