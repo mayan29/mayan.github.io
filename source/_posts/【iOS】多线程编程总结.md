@@ -6,15 +6,25 @@ tags:
 ---
 
 
-iOS 多线程基本有以下四类：
+多线程在 iOS 开发中有以下四类：
 
-1. pthread：跨平台、使用难度大，几乎不用（程序员管理线程）
-2. NSThread：更加面向对象、简单易用、直接操作线程对象，偶尔使用（程序员管理线程）
-3. GCD：代替 NSThread、充分利用设备内核，经常使用（自动管理线程）
-4. NSOperation：基于 GCD、更加面向对象，经常使用（自动管理线程）
+| 多线程 | 特点 | 线程管理 | 使用几率 |
+| --- | --- | --- | --- |
+| pthread | 跨平台、使用难度大 | 程序员管理线程 | 几乎不用 |
+| NSThread | 更加面向对象、简单易用、直接操作线程对象 | 程序员管理线程 | 偶尔使用 |
+| GCD | 代替 NSThread、充分利用设备内核 | 自动管理线程 | 经常使用 |
+| NSOperation | 基于 GCD、更加面向对象 | 自动管理线程 | 经常使用 |
 
-> 主线程：1M，显示 UI 界面、处理滚动拖拽事件
-> 子线程：512KB
+多线程的优点：
+
+- 能适当提高程序的执行效率
+- 能适当提高资源利用率（CPU、内存利用率）
+
+多线程的缺点：
+
+- 开启线程需要占用一定的内存空间（默认情况下，主线程占用 1M，子线程占用 512KB），如果开启大量的线程，会占用大量的内存空间，降低程序的性能
+- 线程越多，CPU 在调度线程上的开销就越大
+- 程序设计更加复杂：比如线程之间的通信、多线程的数据共享
 
 
 ## GCD
@@ -23,7 +33,7 @@ GCD（Grand Central Dispatch，牛逼的中枢调度器）是 iOS 4.0 引入的�
 
 > 线程，是执行程序最基本的单元，它有自己栈和寄存器。说得再具体一些，线程就是一个 CPU 执行的一条无分叉的命令列。对于多线程，其中每一条线程都会有自己的栈和寄存器。
 
-### 1. 同步 / 异步 & 串行队列 / 并发队列
+### 1. 同步 / 异步 & 串行队列 / 并行队列
 
 > 同步（sync） ：只能在当前线程中执行任务
 > 异步（async）：可以在新的线程中执行任务
@@ -302,9 +312,231 @@ dispatch_resume(self.timer);
 
 ## NSOperation
 
-从简单意义上来说，NSOperation 是对 GCD 中的 block 进行的封装，它也表示一个要被执行的任务。不仅如此，NSOperation 表示的任务还可以被取消。它还有三种状态 isExecuted、isFinished 和 isCancelled 以方便我们通过 KVC 对它的状态进行监听。
+从简单意义上来说，NSOperation 就是对 GCD 中的 block 进行的封装。相对 GCD 来说，使用 NSOperation 会增加一点点额外的开销，但是我们却换来了非常强大的灵活性和功能，我们可以给 operation 之间添加依赖关系、取消一个正在执行的 operation 、暂停和恢复 operation queue 等。并且它有三种状态 isExecuted、isFinished 和 isCancelled 以方便我们通过 KVC 对它的状态进行监听。
+
+### 1. 异步并发队列
+
+用 NSBlockOperation 是因为 NSOperation 是一个基类，不应该直接生成 NSOperation 对象，而是应该用它的子类。NSBlockOperation 是苹果预定义的子类，它可以用来封装一个或多个 block。
+
+#### 标准创建
+
+```objc
+// 1. 创建队列
+NSOperationQueue *queue = [[NSOperationQueue alloc] init];
+
+// 2. 创建操作
+NSBlockOperation *operation = [NSBlockOperation blockOperationWithBlock:^{
+    NSLog(@"执行任务 A, 线程 %@", [NSThread currentThread]);
+}];
+[operation addExecutionBlock:^{
+    NSLog(@"执行任务 B, 线程 %@", [NSThread currentThread]);
+}];
+[operation addExecutionBlock:^{
+    NSLog(@"执行任务 C, 线程 %@", [NSThread currentThread]);
+}];
+
+// 3. 添加操作到队列，自动异步执行
+[queue addOperation:operation];
+    
+// 打印结果：
+// 执行任务 B, 线程 <NSThread: 0x6000002783c0>{number = 4, name = (null)}
+// 执行任务 A, 线程 <NSThread: 0x600000277800>{number = 3, name = (null)}
+// 执行任务 C, 线程 <NSThread: 0x60400027a6c0>{number = 5, name = (null)}
+```
+
+#### 快速创建
+
+```objc
+NSOperationQueue *queue = [[NSOperationQueue alloc] init];
+    
+[queue addOperationWithBlock:^{
+    NSLog(@"执行任务 A, 线程 %@", [NSThread currentThread]);
+}];
+[queue addOperationWithBlock:^{
+    NSLog(@"执行任务 B, 线程 %@", [NSThread currentThread]);
+}];
+[queue addOperationWithBlock:^{
+    NSLog(@"执行任务 C, 线程 %@", [NSThread currentThread]);
+}];
+    
+// 打印结果：
+// 执行任务 B, 线程 <NSThread: 0x60400026eb80>{number = 3, name = (null)}
+// 执行任务 C, 线程 <NSThread: 0x600000273700>{number = 5, name = (null)}
+// 执行任务 A, 线程 <NSThread: 0x60400007c500>{number = 4, name = (null)}
+```
+
+#### 调用方式创建
+
+```objc
+NSOperationQueue *queue = [[NSOperationQueue alloc] init];
+    
+NSInvocationOperation *operationA = [[NSInvocationOperation alloc] initWithTarget:self selector:@selector(methodA) object:nil];
+NSInvocationOperation *operationB = [[NSInvocationOperation alloc] initWithTarget:self selector:@selector(methodB) object:nil];
+NSInvocationOperation *operationC = [[NSInvocationOperation alloc] initWithTarget:self selector:@selector(methodC) object:nil];
+    
+[queue addOperation:operationA];
+[queue addOperation:operationB];
+[queue addOperation:operationC];
+
+- (void)methodA {
+    NSLog(@"执行任务 A, 线程 %@", [NSThread currentThread]);
+}
+- (void)methodB {
+    NSLog(@"执行任务 B, 线程 %@", [NSThread currentThread]);
+}
+- (void)methodC {
+    NSLog(@"执行任务 C, 线程 %@", [NSThread currentThread]);
+}
+```
+
+### 2. 最大并发数 & 依赖关系
+
+用 NSOperation 模仿一下 GCD 的信号量 & 任务组。可能是我没有理解到位？反正我还是感觉 GCD 最好用，清晰明了。
+
+```objc
+// 1. 创建队列
+NSOperationQueue *queue = [[NSOperationQueue alloc] init];
+    
+// 2. 限制每次最多并发 3 个
+queue.maxConcurrentOperationCount = 3;
+    
+// 2. 创建操作
+NSBlockOperation *operationA = [NSBlockOperation blockOperationWithBlock:^{
+    NSLog(@"下载图片 A");
+    sleep(2);
+}];
+NSBlockOperation *operationB = [NSBlockOperation blockOperationWithBlock:^{
+    NSLog(@"下载图片 B");
+    sleep(2);
+}];
+NSBlockOperation *operationC = [NSBlockOperation blockOperationWithBlock:^{
+    NSLog(@"下载图片 C");
+    sleep(2);
+}];
+NSBlockOperation *operationD = [NSBlockOperation blockOperationWithBlock:^{
+    NSLog(@"下载图片 D");
+    sleep(2);
+}];
+NSBlockOperation *operationE = [NSBlockOperation blockOperationWithBlock:^{
+    NSLog(@"下载图片 E");
+    sleep(2);
+}];
+NSBlockOperation *operationEnd = [NSBlockOperation blockOperationWithBlock:^{
+    NSLog(@"任务全部执行完毕");
+}];
+    
+// 3. 添加操作到队列，自动异步执行
+[queue addOperation:operationA];
+[queue addOperation:operationB];
+[queue addOperation:operationC];
+[queue addOperation:operationD];
+[queue addOperation:operationE];
+[queue addOperation:operationEnd];
+    
+// 4. 添加所有依赖
+[operationEnd addDependency:operationA];
+[operationEnd addDependency:operationB];
+[operationEnd addDependency:operationC];
+[operationEnd addDependency:operationD];
+[operationEnd addDependency:operationE];
+```
+
+打印结果
+
+```objc
+2016-12-22 14:33:16.295008+0800 GCD[35716:6312067] 下载图片 A
+2016-12-22 14:33:16.295008+0800 GCD[35716:6312068] 下载图片 C
+2016-12-22 14:33:16.295008+0800 GCD[35716:6312069] 下载图片 B
+2016-12-22 14:33:18.298938+0800 GCD[35716:6312068] 下载图片 E
+2016-12-22 14:33:18.298903+0800 GCD[35716:6312070] 下载图片 D
+2016-12-22 14:33:20.301242+0800 GCD[35716:6312070] 任务全部执行完毕
+```
+
+### 3. 取消任务
+
+如果我们有两次网络请求，第二次请求会用到第一次的数据。如果此时网络情况不好，第一次请求超时了，那么第二次请求也没有必要发送了。当然，用户也有可能人为地取消某个 NSOperation。
+
+当某个 NSOperation 被取消时，我们应该尽可能的清除 NSOperation 内部的数据并且把 cancelled 和 finished 设为 true，把 executing 设为 false。
+
+```objc
+[operation cancel]; // 取消某个 operation
+```
+
+### 4. 其他方法
+
+```objc
+NSOperationQueue *queue = [NSOperationQueue mainQueue];  // 主队列
+[queue cancelAllOperations];  // 取消队列所有操作
+[queue setSuspended:YES];  // YES暂停，NO恢复队列
+``` 
 
 
+## NSThread
+
+NSThread 是轻量级的多线程开发，使用起来也并不复杂，但是使用 NSThread 需要自己管理线程生命周期。
+
+### 创建多线程
+
+```objc
+// 标准创建
+NSThread *thread = [[NSThread alloc] initWithTarget:self selector:@selector(download) object:nil];
+[thread start];
+
+// 快速创建
+[NSThread detachNewThreadSelector:@selector(download) toTarget:self withObject:nil];
+
+// 隐式创建
+[self performSelectorInBackground:@selector(download) withObject:nil];
+```
+
+### 其他方法
+
+```objc
+[NSThread mainThread];  // 获取主线程
+[NSThread isMainThread];  // 当前线程是否为主线程
+[NSThread sleepForTimeInterval:5];  // 睡 5 秒
+[NSThread exit];  // 强制关闭线程
+[self performSelectorOnMainThread:@selector(downloadFinish:) withObject:image waitUntilDone:YES];  // 返回主线程
+```
+
+### 线程加锁
+
+```objc
+- (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
+    
+    _ticketNum = 100;
+    
+    _thread_1 = [[NSThread alloc] initWithTarget:self selector:@selector(saleTicket) object:nil];
+    _thread_2 = [[NSThread alloc] initWithTarget:self selector:@selector(saleTicket) object:nil];
+    _thread_3 = [[NSThread alloc] initWithTarget:self selector:@selector(saleTicket) object:nil];
+    
+    _thread_1.name = @"一号窗口";
+    _thread_2.name = @"二号窗口";
+    _thread_3.name = @"三号窗口";
+    
+    [_thread_1 start];
+    [_thread_2 start];
+    [_thread_3 start];
+}
+
+- (void)saleTicket {
+    
+    while (1) {
+        @synchronized (self) {  // 加锁
+            
+            if (_ticketNum > 0) {
+                
+                _ticketNum --;
+                NSLog(@"%@卖了一张票，剩余%d张票", [NSThread currentThread].name, _ticketNum);
+                
+            } else {
+                return;  // 退出循环
+            }
+            
+        }  // 解锁
+    }
+}
+```
 
 
 ## 参考资料
@@ -312,11 +544,4 @@ dispatch_resume(self.timer);
 1. [一篇专题让你秒懂GCD死锁问题!](https://www.jianshu.com/p/201ccb40a3f8)
 2. [iOS 多线程编程总结](https://bestswifter.com/multithreadconclusion/#)
 3. [Objective-C 的底层并发 API](http://www.cocoachina.com/industry/20130821/6842.html)
-
-
-
-
-
-
-
-
+4. [iOS 开发系列 -- 并行开发其实很容易](http://www.cnblogs.com/kenshincui/p/3983982.html)

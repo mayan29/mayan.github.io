@@ -381,7 +381,6 @@ A present B
 
 - 检测内存泄露（http://wereadteam.github.io/2016/02/22/MLeaksFinder/?from=singlemessage&isappinstalled=0）
 - KVO与KVC原理、KVO、Notification、Delegate优缺点、最推荐的官方文档（http://www.jianshu.com/p/f1393d10109d）（http://www.tuicool.com/articles/mUVJVb）
-- GCD 与 NSOperation（https://bestswifter.com/multithreadconclusion/）
 - Runtime（http://www.ianisme.com/ios/2019.html）
 - block（http://blog.ibireme.com/2013/11/27/objc-block/）
 - atomic 线程安全、@synchronized（http://www.cocoachina.com/bbs/read.php?tid-301674.html）（http://www.cnblogs.com/wendingding/p/3805841.html）
