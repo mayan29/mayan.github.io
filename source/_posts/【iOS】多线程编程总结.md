@@ -6,47 +6,65 @@ tags:
 ---
 
 
-多线程在 iOS 开发中有以下四类：
+## 基本概念
 
-| 多线程 | 特点 | 线程管理 | 使用几率 |
-| --- | --- | --- | --- |
-| pthread | 跨平台、使用难度大 | 程序员管理线程 | 几乎不用 |
-| NSThread | 更加面向对象、简单易用、直接操作线程对象 | 程序员管理线程 | 偶尔使用 |
-| GCD | 代替 NSThread、充分利用设备内核 | 自动管理线程 | 经常使用 |
-| NSOperation | 基于 GCD、更加面向对象 | 自动管理线程 | 经常使用 |
+### 线程
 
-多线程的优点：
+线程是执行程序最基本的单元，它有自己栈和寄存器。说得再具体一些，线程就是一个 CPU 执行的一条无分叉的命令列。对于多线程，其中每一条线程都会有自己的栈和寄存器。
+
+### 多线程的优点
 
 - 能适当提高程序的执行效率
 - 能适当提高资源利用率（CPU、内存利用率）
 
-多线程的缺点：
+### 多线程的缺点
 
 - 开启线程需要占用一定的内存空间（默认情况下，主线程占用 1M，子线程占用 512KB），如果开启大量的线程，会占用大量的内存空间，降低程序的性能
 - 线程越多，CPU 在调度线程上的开销就越大
 - 程序设计更加复杂：比如线程之间的通信、多线程的数据共享
 
+### 多线程实际应用
+
+- 单例模式
+- 耗时操作（数据库读写、处理音视频数据）
+- 接口请求数据
+
+### iOS 开发中的多线程
+
+| 类型 | 特点 | 线程生命周期 | 使用频率 |
+| --- | --- | --- | --- |
+| pthread | 跨平台、使用难度大 | 程序员管理线程 | 几乎不用 |
+| NSThread | 更加面向对象、简单易用、直接操作线程对象 | 程序员管理线程 | 偶尔使用 |
+| GCD | 代替 NSThread、充分利用设备多核 | 自动管理线程 | 经常使用 |
+| NSOperation | 基于 GCD、更加面向对象 | 自动管理线程 | 经常使用 |
+
 
 ## GCD
 
-GCD（Grand Central Dispatch，牛逼的中枢调度器）是 iOS 4.0 引入的多线程编程技术，其有两个核心的概念：任务和队列。GCD 会自动将队列中的任务取出来，放到对应的线程中执行。
+GCD（Grand Central Dispatch，牛逼的中枢调度器）是 iOS 4.0 引入的多线程编程技术，其有两个核心的概念：队列和执行方式。GCD 以 block 为基本单位，一个 block 中的代码可以作为一个任务，使用 block 的过程，就是把 block 放进合适的队列（串行 / 并行），并选择合适的执行方式（同步 / 异步）去执行。
 
-> 线程，是执行程序最基本的单元，它有自己栈和寄存器。说得再具体一些，线程就是一个 CPU 执行的一条无分叉的命令列。对于多线程，其中每一条线程都会有自己的栈和寄存器。
+### 1. 内部管理线程的优点
 
-### 1. 同步 / 异步 & 串行队列 / 并行队列
+当使用 GCD 的时候，你不用考虑线程方面的问题，只需考虑队列和任务。举个例子，如果我们直接使用线程，想要做一些并发的事情。我们可能把我们的任务分成 100 个小任务，同时创建 8 个线程，把这些小任务分别送到这 8 个线程中。但是这些小任务中会有一些三方函数，写这个函数的人同时也想要使用并发，可能同样会创建 8 个线程。所以，现在会同时创建 8 x 8 = 64 个线程。使用 GCD 就不会有这种问题，GCD 严格来说不是开一条线程，而是从池中获取。比如串行队列除了主队列外，每次执行任务都会获取一条线程。一个任务执行完毕后线程是会回到池，直到再次被唤起。而实际上当没有其它对手抢占了这条刚回到池中的线程时，同一个串行队列会继续获取到这条相同的线程执行下一个任务。
 
-> 同步（sync） ：会阻塞当前线程并等待 block 中的任务执行完毕，然后当前线程才会继续往下运行。
-> 异步（async）：当前线程会直接往下进行，不会阻塞当前线程。
-> 串行队列（Serial Dispatch Queue）：任务顺次执行，取出来一个，执行一个，然后再取下一个，这样一个一个执行。
-> 并发队列（Serial Dispatch Queue）：任务并发执行，取出来一个，放到另外的线程执行，然后再取下一个，这样看起来都是一起执行的。但是 GCD 会根据系统资源控制并行的数量，所以如果任务很多，并不会让所有任务同时执行。
+### 2. 核心概念
+
+- 同步执行（sync）：会阻塞当前线程，并等待 block 中的任务执行完毕，然后当前线程才会继续往下运行。
+- 异步执行（async）：不会阻塞当前线程，当前线程会直接往下进行。
+- 串行队列（Serial Dispatch Queue）：任务先进先出，顺次执行，每次只执行一个任务。
+- 并行队列（Concurrent Dispatch Queue）：任务依然是先进先出，但是形成多个任务并发，这样看起来都是一起执行的。
+
+串行和并行针对的是队列（Dispatch Queue），同步和异步针对的是线程。
+
+### 3. 同步执行 / 异步执行 & 串行队列 / 并行队列
+
+- 同步执行 & 串行队列 —— 当前线程阻塞，并在当前线程一个一个执行，没有意义，在特定情况下还会造成死锁，略。
+
+- 同步执行 & 并行队列 —— 当前线程阻塞，开启多条线程一个一个执行，还会存在切换线程的耗时，同样没有意义，略。
+
+- 异步执行 & 串行队列 —— 当前线程不阻塞，开启一条线程一个一个执行。
 
 ```objc
-// 1. 同步执行 & 串行队列 —— 当前线程，一个一个执行，没有意义，略
-
-// 2. 同步执行 & 并行队列 —— 当前线程，一个一个执行，同样没有意义，略
-    
-// 3. 异步执行 & 串行队列 —— 其他线程，一个一个执行
-    
 dispatch_queue_t queue = dispatch_queue_create("com.mayan29.queue", DISPATCH_QUEUE_SERIAL);
 dispatch_async(queue, ^{
     NSLog(@"执行任务 A, 线程 %@", [NSThread currentThread]);
@@ -62,9 +80,11 @@ dispatch_async(queue, ^{
 // 执行任务 A, 线程 <NSThread: 0x60000026bcc0>{number = 3, name = (null)}
 // 执行任务 B, 线程 <NSThread: 0x60000026bcc0>{number = 3, name = (null)}
 // 执行任务 C, 线程 <NSThread: 0x60000026bcc0>{number = 3, name = (null)}
+```
     
-// 4. 异步执行 & 并行队列 —— 新开启多条线程，一起执行
-    
+- 异步执行 & 并行队列 —— 当前线程不阻塞，开启多条线程同时执行。
+   
+```objc 
 dispatch_queue_t queue = dispatch_queue_create("com.mayan29.queue", DISPATCH_QUEUE_CONCURRENT);
 dispatch_async(queue, ^{
     NSLog(@"执行任务 A, 线程 %@", [NSThread currentThread]);
@@ -82,7 +102,7 @@ dispatch_async(queue, ^{
 // 执行任务 A, 线程 <NSThread: 0x600000277800>{number = 3, name = (null)}
 ```
 
-### 2. 死锁问题
+### 4. 死锁问题
 
 在使用 GCD 的过程中，如果向当前串行队列中同步派发一个任务，就会导致死锁。比如下面两段代码都会导致死锁：
 
@@ -109,14 +129,14 @@ dispatch_async(queue, ^{
 
 其实在通常情况下我们不必要用 dispatch_sync，因为 dispatch_async 能够更好的利用 CPU，提升程序运行速度。只有当我们需要保证队列中的任务必须顺序执行时，才考虑使用 dispatch_sync。在使用 dispatch_sync 的时候应该分析当前处于哪个队列，以及任务会提交到哪个队列。
 
-### 3. 变更优先级
+### 5. 变更优先级
 
 ```objc
 dispatch_queue_t queue = dispatch_queue_create("com.mayan29.queue", DISPATCH_QUEUE_CONCURRENT);
 dispatch_set_target_queue(queue, dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0));
 ```    
 
-### 4. 任务组
+### 6. 任务组
 
 ```objc
 dispatch_group_t group = dispatch_group_create();
@@ -175,7 +195,7 @@ dispatch_group_notify(group, queue, ^{
 2016-12-21 14:53:47.340474+0800 GCD[13489:5363201] 任务全部执行完毕
 ```
 
-### 5. 栅栏函数
+### 7. 栅栏函数
 
 ```objc
 dispatch_queue_t queue = dispatch_queue_create("com.mayan29.queue", NULL);
@@ -196,7 +216,7 @@ dispatch_async(queue, ^{
 });
 ```
 
-### 6. Apply 循环执行
+### 8. Apply 循环执行
 
 ```objc
 NSArray *arr = @[@"执行 A 任务", @"执行 B 任务", @"执行 C 任务"];
@@ -210,7 +230,7 @@ dispatch_async(queue, ^{
 });
 ```
 
-### 7. 队列唤醒 & 挂起
+### 9. 队列唤醒 & 挂起
 
 ```objc
 dispatch_queue_t queue = dispatch_queue_create("com.mayan29.queue", NULL);
@@ -226,7 +246,7 @@ dispatch_suspend(queue);  // 挂起
 dispatch_resume(queue);  // 唤醒，执行任务 A
 ```
 
-### 8. 信号量
+### 10. 信号量
 
 其实最经典的例子就是批量下载。比如有 N 个图片需要一个一个下载，但是需要控制每次只能下载 3 个，就需要用到信号量了。
 
@@ -282,7 +302,7 @@ dispatch_group_notify(group, dispatch_get_main_queue(), ^{
 2016-12-21 16:56:48.455010+0800 GCD[15452:5524743] 任务全部执行完毕
 ```
 
-### 9. 定时器
+### 11. 定时器
 
 GCD 定时器不受 RunLoop 中 Mode 的影响（RunLoop 内部也是基于 GCD 实现的)，比如滚动 TableView 的时候，GCD 的定时器不受影响。
 
@@ -292,19 +312,19 @@ GCD 定时器不受 RunLoop 中 Mode 的影响（RunLoop 内部也是基于 GCD 
 
 
 self.timer = dispatch_source_create(DISPATCH_SOURCE_TYPE_TIMER, 0, 0, dispatch_get_global_queue(0, 0));
-    
-dispatch_time_t start = dispatch_time(DISPATCH_TIME_NOW, 3 * NSEC_PER_SEC);  // 3 秒以后开始
-dispatch_source_set_timer(self.timer, start, 1 * NSEC_PER_SEC, 0);  // 间隔 1 秒
+
+// 间隔 1 秒，并允许有 0.1 秒的误差
+dispatch_source_set_timer(self.timer, DISPATCH_TIME_NOW, 1 * NSEC_PER_SEC, 0.1 * NSEC_PER_SEC);
 dispatch_source_set_event_handler(self.timer, ^{
-       
+    
     NSLog(@"执行");
-        
+    
     // 10 秒之后停止
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(10 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         dispatch_cancel(self.timer);
     });
 });
-    
+
 // 启动定时器
 dispatch_resume(self.timer);
 ```
@@ -316,7 +336,7 @@ dispatch_resume(self.timer);
 
 ### 1. 异步并发队列
 
-用 NSBlockOperation 是因为 NSOperation 是一个基类，不应该直接生成 NSOperation 对象，而是应该用它的子类。NSBlockOperation 是苹果预定义的子类，它可以用来封装一个或多个 block。
+NSOperation 是一个基类，不应该直接生成 NSOperation 对象，而是应该用它的子类 NSBlockOperation。
 
 #### 标准创建
 
@@ -475,7 +495,7 @@ NSOperationQueue *queue = [NSOperationQueue mainQueue];  // 主队列
 
 这套方案是经过苹果封装后的，并且完全面向对象的，所以可以直接操控线程对象，非常直观和方便。但是，它的生命周期还是需要我们手动管理，所以这套方案也是偶尔用用，比如 [NSThread currentThread]。
 
-### 创建多线程
+### 1. 创建多线程
 
 ```objc
 // 标准创建
@@ -489,7 +509,7 @@ NSThread *thread = [[NSThread alloc] initWithTarget:self selector:@selector(down
 [self performSelectorInBackground:@selector(download) withObject:nil];
 ```
 
-### 其他方法
+### 2. 其他方法
 
 ```objc
 // 判断某个线程的状态的属性
@@ -514,7 +534,7 @@ NSThread *thread = [[NSThread alloc] initWithTarget:self selector:@selector(down
 + (void)exit;
 ```
 
-### 线程加锁
+### 3. 线程加锁
 
 ```objc
 - (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
@@ -556,8 +576,10 @@ NSThread *thread = [[NSThread alloc] initWithTarget:self selector:@selector(down
 
 ## 参考资料
 
-1. [一篇专题让你秒懂GCD死锁问题!](https://www.jianshu.com/p/201ccb40a3f8)
+1. [一篇专题让你秒懂 GCD 死锁问题](https://www.jianshu.com/p/201ccb40a3f8)
 2. [iOS 多线程编程总结](https://bestswifter.com/multithreadconclusion/#)
 3. [Objective-C 的底层并发 API](http://www.cocoachina.com/industry/20130821/6842.html)
 4. [iOS 开发系列 -- 并行开发其实很容易](http://www.cnblogs.com/kenshincui/p/3983982.html)
 5. [关于 iOS 多线程，你看我就够了](https://www.jianshu.com/p/0b0d9b1f1f19)
+6. [iOS 开发之多线程编程总结（一）](https://www.jianshu.com/p/95aa5446361d)
+7. [iOS 开发之多线程编程总结（二）](https://www.jianshu.com/p/2a614531187f)
