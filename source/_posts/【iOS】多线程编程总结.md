@@ -332,7 +332,7 @@ dispatch_resume(self.timer);
 
 ## NSOperation
 
-从简单意义上来说，NSOperation 就是对 GCD 中的 block 进行的封装。相对 GCD 来说，使用 NSOperation 会增加一点点额外的开销，但是我们却换来了非常强大的灵活性和功能，我们可以给 operation 之间添加依赖关系、取消一个正在执行的 operation 、暂停和恢复 operation queue 等。并且它有三种状态 isExecuted、isFinished 和 isCancelled 以方便我们通过 KVC 对它的状态进行监听。
+从简单意义上来说，NSOperation 就是对 GCD 中的 block 进行的封装。相对 GCD 来说，使用 NSOperation 会增加一点点额外的开销，但是我们却换来了非常强大的灵活性和功能，我们可以给 operation 之间添加依赖关系、取消一个正在执行的 operation、暂停和恢复 operation queue 等。并且它有三种状态 isExecuted、isFinished 和 isCancelled 以方便我们通过 KVC 对它的状态进行监听。
 
 ### 1. 异步并发队列
 
