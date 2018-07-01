@@ -1,0 +1,844 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="作者：坂本一树 / 古本智彦  出版日期：2013-6-1 豆瓣地址：https://book.douban.com/subject/24720270/  1. 引用计数内部实现查看引用计数相关源代码，可以看出每次都会取得 CFBasicHashRef 进行操作，由此可知苹果采用散列表（引用计数表）来管理引用计数。  散列表（Hash table，也叫哈希表），是根据 key 而直接访问在内存存">
+<meta property="og:type" content="article">
+<meta property="og:title" content="【读书笔记】《Objective-C 高级编程：iOS 与 OS X 多线程和内存管理》">
+<meta property="og:url" content="http://yoursite.com/2018/02/06/【读书笔记】《Objective-C 高级编程：iOS 与 OS X 多线程和内存管理》/index.html">
+<meta property="og:site_name" content="mayan`s blog">
+<meta property="og:description" content="作者：坂本一树 / 古本智彦  出版日期：2013-6-1 豆瓣地址：https://book.douban.com/subject/24720270/  1. 引用计数内部实现查看引用计数相关源代码，可以看出每次都会取得 CFBasicHashRef 进行操作，由此可知苹果采用散列表（引用计数表）来管理引用计数。  散列表（Hash table，也叫哈希表），是根据 key 而直接访问在内存存">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://yoursite.com/img/img029.png">
+<meta property="og:updated_time" content="2018-07-01T06:16:45.145Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="【读书笔记】《Objective-C 高级编程：iOS 与 OS X 多线程和内存管理》">
+<meta name="twitter:description" content="作者：坂本一树 / 古本智彦  出版日期：2013-6-1 豆瓣地址：https://book.douban.com/subject/24720270/  1. 引用计数内部实现查看引用计数相关源代码，可以看出每次都会取得 CFBasicHashRef 进行操作，由此可知苹果采用散列表（引用计数表）来管理引用计数。  散列表（Hash table，也叫哈希表），是根据 key 而直接访问在内存存">
+<meta name="twitter:image" content="http://yoursite.com/img/img029.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/02/06/【读书笔记】《Objective-C 高级编程：iOS 与 OS X 多线程和内存管理》/"/>
+
+
+
+
+
+  <title>【读书笔记】《Objective-C 高级编程：iOS 与 OS X 多线程和内存管理》 | mayan`s blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">mayan`s blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/02/06/【读书笔记】《Objective-C 高级编程：iOS 与 OS X 多线程和内存管理》/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="mayan">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.jpeg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="mayan`s blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">【读书笔记】《Objective-C 高级编程：iOS 与 OS X 多线程和内存管理》</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-02-06T10:31:22+08:00">
+                2018-02-06
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/读书笔记/" itemprop="url" rel="index">
+                    <span itemprop="name">读书笔记</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2018/02/06/【读书笔记】《Objective-C 高级编程：iOS 与 OS X 多线程和内存管理》/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count"
+                        data-disqus-identifier="2018/02/06/【读书笔记】《Objective-C 高级编程：iOS 与 OS X 多线程和内存管理》/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <blockquote>
+<p>作者：坂本一树 / 古本智彦 </p>
+<p>出版日期：2013-6-1</p>
+<p>豆瓣地址：<a href="https://book.douban.com/subject/24720270/" target="_blank" rel="noopener">https://book.douban.com/subject/24720270/</a></p>
+</blockquote>
+<h2 id="1-引用计数内部实现"><a href="#1-引用计数内部实现" class="headerlink" title="1. 引用计数内部实现"></a>1. 引用计数内部实现</h2><p>查看引用计数相关源代码，可以看出每次都会取得 <code>CFBasicHashRef</code> 进行操作，由此可知苹果采用散列表（引用计数表）来管理引用计数。</p>
+<blockquote>
+<p>散列表（Hash table，也叫哈希表），是根据 key 而直接访问在内存存储位置的数据结构。也就是说，它通过计算一个关于键值的函数，将所需查询的数据映射到表中一个位置来访问记录，这就加快了查找速度。这个映射函数称作散列函数，存放记录的数组称作散列表。</p>
+<p>一个通俗的例子是，为了查找电话簿中某人的号码，可以创建一个按照人名首字母顺序排列的表（即建立人名 x 到首字母 F(x) 的一个函数关系），在首字母为 W 的表中查找<code>王</code>姓的电话号码，显然比直接查找就要快得多。这里使用人名作为关键字，<code>取首字母</code>是这个例子中散列函数的函数法则 F()，存放首字母的表对应散列表。关键字和函数法则理论上可以任意确定。</p>
+</blockquote>
+<p>引用计数表各记录中存有内存块地址，可以各个记录追溯到各对象的内存块。这一特性在调试时有着重要的作用：即使出现故障导致对象占用的内存块损坏，但只要引用计数表没有被破坏，就能够确认各内存块的位置：</p>
+<p><img src="/img/img029.png" alt="image029"></p>
+<p>另外，在利用工具检测内存泄漏时，引用计数表的各记录也有助于检测各对象的持有者是否存在。</p>
+<h2 id="2-Block-的本质"><a href="#2-Block-的本质" class="headerlink" title="2. Block 的本质"></a>2. Block 的本质</h2><h3 id="例-1"><a href="#例-1" class="headerlink" title="例 1"></a>例 1</h3><figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> main(<span class="keyword">int</span> argc, <span class="keyword">const</span> <span class="keyword">char</span> * argv[]) &#123;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">void</span> (^blk)(<span class="keyword">void</span>) = ^&#123;</span><br><span class="line">        printf(<span class="string">"Hello World."</span>);</span><br><span class="line">    &#125;;</span><br><span class="line">    blk();</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>使用终端 <code>$ clang -rewrite-objc main.m</code> 将 Objective-C 代码转化成 C++ 源代码：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> __<span class="title">block_impl</span> &#123;</span></span><br><span class="line">  <span class="keyword">void</span> *isa;</span><br><span class="line">  <span class="keyword">int</span> Flags;</span><br><span class="line">  <span class="keyword">int</span> Reserved;</span><br><span class="line">  <span class="keyword">void</span> *FuncPtr;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">struct</span> __<span class="title">main_block_impl_0</span> &#123;</span></span><br><span class="line">  <span class="class"><span class="keyword">struct</span> __<span class="title">block_impl</span> <span class="title">impl</span>;</span></span><br><span class="line">  <span class="class"><span class="keyword">struct</span> __<span class="title">main_block_desc_0</span>* <span class="title">Desc</span>;</span></span><br><span class="line"></span><br><span class="line">  __main_block_impl_0(<span class="keyword">void</span> *fp, struct __main_block_desc_0 *desc, <span class="keyword">int</span> flags=<span class="number">0</span>) &#123;</span><br><span class="line">    impl.isa = &amp;_NSConcreteStackBlock;</span><br><span class="line">    impl.Flags = flags;</span><br><span class="line">    impl.FuncPtr = fp;</span><br><span class="line">    Desc = desc;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">static</span> <span class="keyword">void</span> __main_block_func_0(struct __main_block_impl_0 *__cself) &#123;</span><br><span class="line">  <span class="built_in">printf</span>(<span class="string">"Hello World."</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">static</span> <span class="class"><span class="keyword">struct</span> __<span class="title">main_block_desc_0</span> &#123;</span></span><br><span class="line">  <span class="keyword">size_t</span> reserved;</span><br><span class="line">  <span class="keyword">size_t</span> Block_size;</span><br><span class="line">&#125; __main_block_desc_0_DATA = &#123; </span><br><span class="line">  <span class="number">0</span>, </span><br><span class="line">  <span class="keyword">sizeof</span>(struct __main_block_impl_0)</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc, <span class="keyword">const</span> <span class="keyword">char</span> * argv[])</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">void</span> (*blk)(<span class="keyword">void</span>) = </span><br><span class="line">      ((<span class="keyword">void</span> (*)())&amp;__main_block_impl_0(</span><br><span class="line">        (<span class="keyword">void</span> *)__main_block_func_0, &amp;__main_block_desc_0_DATA)</span><br><span class="line">      );</span><br><span class="line"></span><br><span class="line">    ((<span class="keyword">void</span> (*)(__block_impl *))((__block_impl *)blk)-&gt;FuncPtr)((__block_impl *)blk);</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>我们来看 <code>main</code> 中构造函数的调用，因为转换较多，看起来不是很清楚，所以我们去掉转换的部分，具体如下：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc, <span class="keyword">const</span> <span class="keyword">char</span> * argv[])</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="class"><span class="keyword">struct</span> __<span class="title">main_block_impl_0</span> <span class="title">tmp</span> = __<span class="title">main_block_impl_0</span>(__<span class="title">main_block_func_0</span>, &amp;__<span class="title">main_block_desc_0_DATA</span>);</span></span><br><span class="line">    <span class="class"><span class="keyword">struct</span> __<span class="title">main_block_impl_0</span> *<span class="title">blk</span> = &amp;<span class="title">tmp</span>;</span></span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这样就容易理解了，该源代码中的 block 就是 <code>__main_block_impl_0</code> 结构体类型的局部变量，即栈上生成的 <code>__main_block_impl_0</code> 结构体实例。再来看 block 调用部分，这就是简单地使用函数指针调用函数。由 block 语法转换的 <code>__main_block_func_0</code> 函数指针被赋值成员变量 <code>FuncPtr</code> 中，在调用该函数的源代码中可以看出 block 正是作为参数进行了传递。所以 block 的本质即为 Objective-C 的对象。</p>
+<h3 id="例-2"><a href="#例-2" class="headerlink" title="例 2"></a>例 2</h3><figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> main(<span class="keyword">int</span> argc, <span class="keyword">const</span> <span class="keyword">char</span> * argv[]) &#123;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">int</span> num1 = <span class="number">10</span>;</span><br><span class="line">    <span class="keyword">int</span> num2 = <span class="number">20</span>;</span><br><span class="line">    <span class="keyword">void</span> (^blk)(<span class="keyword">void</span>) = ^&#123;</span><br><span class="line">        printf(<span class="string">"%d, %d"</span>, num1, num2);</span><br><span class="line">    &#125;;</span><br><span class="line">    blk();</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>使用终端 <code>$ clang -rewrite-objc main.m</code> 将 Objective-C 代码转化成 C++ 源代码：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> __<span class="title">block_impl</span> &#123;</span></span><br><span class="line">  <span class="keyword">void</span> *isa;</span><br><span class="line">  <span class="keyword">int</span> Flags;</span><br><span class="line">  <span class="keyword">int</span> Reserved;</span><br><span class="line">  <span class="keyword">void</span> *FuncPtr;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">struct</span> __<span class="title">main_block_impl_0</span> &#123;</span></span><br><span class="line">  <span class="class"><span class="keyword">struct</span> __<span class="title">block_impl</span> <span class="title">impl</span>;</span></span><br><span class="line">  <span class="class"><span class="keyword">struct</span> __<span class="title">main_block_desc_0</span>* <span class="title">Desc</span>;</span></span><br><span class="line"></span><br><span class="line">  <span class="keyword">int</span> num1;</span><br><span class="line">  <span class="keyword">int</span> num2;</span><br><span class="line"></span><br><span class="line">  __main_block_impl_0(<span class="keyword">void</span> *fp, struct __main_block_desc_0 *desc, <span class="keyword">int</span> _num1, <span class="keyword">int</span> _num2, <span class="keyword">int</span> flags=<span class="number">0</span>) : num1(_num1), num2(_num2) &#123;</span><br><span class="line">    impl.isa = &amp;_NSConcreteStackBlock;</span><br><span class="line">    impl.Flags = flags;</span><br><span class="line">    impl.FuncPtr = fp;</span><br><span class="line">    Desc = desc;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">static</span> <span class="keyword">void</span> __main_block_func_0(struct __main_block_impl_0 *__cself) &#123;</span><br><span class="line">  <span class="keyword">int</span> num1 = __cself-&gt;num1; <span class="comment">// bound by copy</span></span><br><span class="line">  <span class="keyword">int</span> num2 = __cself-&gt;num2; <span class="comment">// bound by copy</span></span><br><span class="line"></span><br><span class="line">  <span class="built_in">printf</span>(<span class="string">"%d, %d"</span>, num1, num2);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">static</span> <span class="class"><span class="keyword">struct</span> __<span class="title">main_block_desc_0</span> &#123;</span></span><br><span class="line">  <span class="keyword">size_t</span> reserved;</span><br><span class="line">  <span class="keyword">size_t</span> Block_size;</span><br><span class="line">&#125; __main_block_desc_0_DATA = &#123;</span><br><span class="line">  <span class="number">0</span>, </span><br><span class="line">  <span class="keyword">sizeof</span>(struct __main_block_impl_0)</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc, <span class="keyword">const</span> <span class="keyword">char</span> * argv[])</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">int</span> num1 = <span class="number">10</span>;</span><br><span class="line">    <span class="keyword">int</span> num2 = <span class="number">20</span>;</span><br><span class="line">    <span class="keyword">void</span> (*blk)(<span class="keyword">void</span>) = </span><br><span class="line">      ((<span class="keyword">void</span> (*)())&amp;__main_block_impl_0(</span><br><span class="line">        (<span class="keyword">void</span> *)__main_block_func_0, &amp;__main_block_desc_0_DATA, num1, num2)</span><br><span class="line">      );</span><br><span class="line"></span><br><span class="line">    ((<span class="keyword">void</span> (*)(__block_impl *))((__block_impl *)blk)-&gt;FuncPtr)((__block_impl *)blk);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>与上一个例子相比，block 语法表达式中使用的局部变量被作为成员变量追加到了 <code>__main_block_impl_0</code> 结构体中。总的来说，所谓截取局部变量值意味着在执行 block 语法时，block 语法表达式所使用的自动变量值被保存到 block 自身中。</p>
+<h3 id="例-3"><a href="#例-3" class="headerlink" title="例 3"></a>例 3</h3><figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> main(<span class="keyword">int</span> argc, <span class="keyword">const</span> <span class="keyword">char</span> * argv[]) &#123;</span><br><span class="line">    </span><br><span class="line">    __block <span class="keyword">int</span> num1 = <span class="number">10</span>;</span><br><span class="line">    __block <span class="keyword">int</span> num2 = <span class="number">20</span>;</span><br><span class="line">    <span class="keyword">void</span> (^blk)(<span class="keyword">void</span>) = ^&#123;</span><br><span class="line">        num1 = <span class="number">100</span>;</span><br><span class="line">        num2 = <span class="number">200</span>;</span><br><span class="line">        printf(<span class="string">"%d, %d"</span>, num1, num2);</span><br><span class="line">    &#125;;</span><br><span class="line">    blk();</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>使用终端 <code>$ clang -rewrite-objc main.m</code> 将 Objective-C 代码转化成 C++ 源代码：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> __<span class="title">block_impl</span> &#123;</span></span><br><span class="line">  <span class="keyword">void</span> *isa;</span><br><span class="line">  <span class="keyword">int</span> Flags;</span><br><span class="line">  <span class="keyword">int</span> Reserved;</span><br><span class="line">  <span class="keyword">void</span> *FuncPtr;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">struct</span> __<span class="title">Block_byref_num1_0</span> &#123;</span></span><br><span class="line">  <span class="keyword">void</span> *__isa;</span><br><span class="line">  __Block_byref_num1_0 *__forwarding;</span><br><span class="line">  <span class="keyword">int</span> __flags;</span><br><span class="line">  <span class="keyword">int</span> __size;</span><br><span class="line">  <span class="keyword">int</span> num1;</span><br><span class="line">&#125;;</span><br><span class="line"><span class="class"><span class="keyword">struct</span> __<span class="title">Block_byref_num2_1</span> &#123;</span></span><br><span class="line">  <span class="keyword">void</span> *__isa;</span><br><span class="line">  __Block_byref_num2_1 *__forwarding;</span><br><span class="line">  <span class="keyword">int</span> __flags;</span><br><span class="line">  <span class="keyword">int</span> __size;</span><br><span class="line">  <span class="keyword">int</span> num2;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">struct</span> __<span class="title">main_block_impl_0</span> &#123;</span></span><br><span class="line">  <span class="class"><span class="keyword">struct</span> __<span class="title">block_impl</span> <span class="title">impl</span>;</span></span><br><span class="line">  <span class="class"><span class="keyword">struct</span> __<span class="title">main_block_desc_0</span>* <span class="title">Desc</span>;</span></span><br><span class="line"></span><br><span class="line">  __Block_byref_num1_0 *num1; <span class="comment">// by ref</span></span><br><span class="line">  __Block_byref_num2_1 *num2; <span class="comment">// by ref</span></span><br><span class="line"></span><br><span class="line">  __main_block_impl_0(<span class="keyword">void</span> *fp, struct __main_block_desc_0 *desc, __Block_byref_num1_0 *_num1, __Block_byref_num2_1 *_num2, <span class="keyword">int</span> flags=<span class="number">0</span>) : num1(_num1-&gt;__forwarding), num2(_num2-&gt;__forwarding) &#123;</span><br><span class="line">    impl.isa = &amp;_NSConcreteStackBlock;</span><br><span class="line">    impl.Flags = flags;</span><br><span class="line">    impl.FuncPtr = fp;</span><br><span class="line">    Desc = desc;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">static</span> <span class="keyword">void</span> __main_block_func_0(struct __main_block_impl_0 *__cself) &#123;</span><br><span class="line">  __Block_byref_num1_0 *num1 = __cself-&gt;num1; <span class="comment">// bound by ref</span></span><br><span class="line">  __Block_byref_num2_1 *num2 = __cself-&gt;num2; <span class="comment">// bound by ref</span></span><br><span class="line"></span><br><span class="line">  (num1-&gt;__forwarding-&gt;num1) = <span class="number">100</span>;</span><br><span class="line">  (num2-&gt;__forwarding-&gt;num2) = <span class="number">200</span>;</span><br><span class="line">  <span class="built_in">printf</span>(<span class="string">"%d, %d"</span>, (num1-&gt;__forwarding-&gt;num1), (num2-&gt;__forwarding-&gt;num2));</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">static</span> <span class="keyword">void</span> __main_block_copy_0(struct __main_block_impl_0*dst, struct __main_block_impl_0*src) &#123;</span><br><span class="line">    _Block_object_assign(</span><br><span class="line">      (<span class="keyword">void</span>*)&amp;dst-&gt;num1, </span><br><span class="line">      (<span class="keyword">void</span>*)src-&gt;num1, </span><br><span class="line">      <span class="number">8</span><span class="comment">/*BLOCK_FIELD_IS_BYREF*/</span>);</span><br><span class="line">    _Block_object_assign(</span><br><span class="line">      (<span class="keyword">void</span>*)&amp;dst-&gt;num2, </span><br><span class="line">      (<span class="keyword">void</span>*)src-&gt;num2,</span><br><span class="line">       <span class="number">8</span><span class="comment">/*BLOCK_FIELD_IS_BYREF*/</span>);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">static</span> <span class="keyword">void</span> __main_block_dispose_0(struct __main_block_impl_0*src) &#123;</span><br><span class="line">  _Block_object_dispose(</span><br><span class="line">    (<span class="keyword">void</span>*)src-&gt;num1,</span><br><span class="line">    <span class="number">8</span><span class="comment">/*BLOCK_FIELD_IS_BYREF*/</span>);</span><br><span class="line">  _Block_object_dispose(</span><br><span class="line">    (<span class="keyword">void</span>*)src-&gt;num2, </span><br><span class="line">    <span class="number">8</span><span class="comment">/*BLOCK_FIELD_IS_BYREF*/</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">static</span> <span class="class"><span class="keyword">struct</span> __<span class="title">main_block_desc_0</span> &#123;</span></span><br><span class="line">  <span class="keyword">size_t</span> reserved;</span><br><span class="line">  <span class="keyword">size_t</span> Block_size;</span><br><span class="line">  <span class="keyword">void</span> (*copy)(struct __main_block_impl_0*, struct __main_block_impl_0*);</span><br><span class="line">  <span class="keyword">void</span> (*dispose)(struct __main_block_impl_0*);</span><br><span class="line">&#125; __main_block_desc_0_DATA = &#123; </span><br><span class="line">  <span class="number">0</span>, </span><br><span class="line">  <span class="keyword">sizeof</span>(struct __main_block_impl_0), __main_block_copy_0, __main_block_dispose_0</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc, <span class="keyword">const</span> <span class="keyword">char</span> * argv[])</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    __attribute__((__blocks__(byref))) __Block_byref_num1_0 num1 = &#123;</span><br><span class="line">      (<span class="keyword">void</span>*)<span class="number">0</span>,</span><br><span class="line">      (__Block_byref_num1_0 *)&amp;num1, </span><br><span class="line">      <span class="number">0</span>, </span><br><span class="line">      <span class="keyword">sizeof</span>(__Block_byref_num1_0), </span><br><span class="line">      <span class="number">10</span></span><br><span class="line">    &#125;;</span><br><span class="line">    __attribute__((__blocks__(byref))) __Block_byref_num2_1 num2 = &#123;</span><br><span class="line">      (<span class="keyword">void</span>*)<span class="number">0</span>,</span><br><span class="line">      (__Block_byref_num2_1 *)&amp;num2,</span><br><span class="line">       <span class="number">0</span>, </span><br><span class="line">       <span class="keyword">sizeof</span>(__Block_byref_num2_1), </span><br><span class="line">       <span class="number">20</span></span><br><span class="line">    &#125;;</span><br><span class="line">    <span class="keyword">void</span> (*blk)(<span class="keyword">void</span>) = ((<span class="keyword">void</span> (*)())&amp;__main_block_impl_0((<span class="keyword">void</span> *)__main_block_func_0, &amp;__main_block_desc_0_DATA, (__Block_byref_num1_0 *)&amp;num1, (__Block_byref_num2_1 *)&amp;num2, <span class="number">570425344</span>));</span><br><span class="line"></span><br><span class="line">    ((<span class="keyword">void</span> (*)(__block_impl *))((__block_impl *)blk)-&gt;FuncPtr)((__block_impl *)blk);</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>我们发现，添加了 <code>__block</code> 的局部变量竟然变成了结构体实例，栈上生成该结构体的实例：</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">struct</span> __Block_byref_num1_0 &#123;</span><br><span class="line">  <span class="keyword">void</span> *__isa;</span><br><span class="line">  __Block_byref_num1_0 *__forwarding;</span><br><span class="line">  <span class="keyword">int</span> __flags;</span><br><span class="line">  <span class="keyword">int</span> __size;</span><br><span class="line">  <span class="keyword">int</span> num1;</span><br><span class="line">&#125;;</span><br><span class="line"><span class="keyword">struct</span> __Block_byref_num2_1 &#123;</span><br><span class="line">  <span class="keyword">void</span> *__isa;</span><br><span class="line">  __Block_byref_num2_1 *__forwarding;</span><br><span class="line">  <span class="keyword">int</span> __flags;</span><br><span class="line">  <span class="keyword">int</span> __size;</span><br><span class="line">  <span class="keyword">int</span> num2;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<h2 id="3-Block-存储域"><a href="#3-Block-存储域" class="headerlink" title="3. Block 存储域"></a>3. Block 存储域</h2><p>通过前面说明可知，block 转换为 block 结构体类型的局部变量，即栈上生成的该结构体的实例。通过之前的说明可知 block 也是 Objective-C 对象，该 block 的类为 <code>_NSConcreteStackBlock</code>，具体整理如下：</p>
+<table>
+<thead>
+<tr>
+<th>类</th>
+<th>设置对象的存储域</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>_NSConcreteStackBlock</td>
+<td>栈</td>
+</tr>
+<tr>
+<td>_NSConcreteGlobalBlock</td>
+<td>程序的数据区域（.data 区）</td>
+</tr>
+<tr>
+<td>_NSConcreteMallocBlock</td>
+<td>堆</td>
+</tr>
+</tbody>
+</table>
+<h5 id="NSConcreteStackBlock-类型："><a href="#NSConcreteStackBlock-类型：" class="headerlink" title="_NSConcreteStackBlock 类型："></a>_NSConcreteStackBlock 类型：</h5><figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> main(<span class="keyword">int</span> argc, <span class="keyword">const</span> <span class="keyword">char</span> * argv[]) &#123;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">void</span> (^blk)(<span class="keyword">void</span>) = ^&#123;</span><br><span class="line">        printf(<span class="string">"Hello World!"</span>);</span><br><span class="line">    &#125;;</span><br><span class="line">    blk();</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h5 id="NSConcreteGlobalBlock-类型："><a href="#NSConcreteGlobalBlock-类型：" class="headerlink" title="_NSConcreteGlobalBlock 类型："></a>_NSConcreteGlobalBlock 类型：</h5><figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">void</span> (^blk)(<span class="keyword">void</span>) = ^&#123;</span><br><span class="line">    printf(<span class="string">"Hello World!"</span>);</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">int</span> main(<span class="keyword">int</span> argc, <span class="keyword">const</span> <span class="keyword">char</span> * argv[]) &#123;</span><br><span class="line">    </span><br><span class="line">    blk();</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h5 id="NSConcreteMallocBlock-类型："><a href="#NSConcreteMallocBlock-类型：" class="headerlink" title="_NSConcreteMallocBlock 类型："></a>_NSConcreteMallocBlock 类型：</h5><p>实际上，大多数情形下编译器会恰当进行判断，自动生成将 block 从栈上复制到堆上的代码</p>
+<h2 id="4-GCD-几种常用方法"><a href="#4-GCD-几种常用方法" class="headerlink" title="4. GCD 几种常用方法"></a>4. GCD 几种常用方法</h2><h3 id="4-1-dispatch-get-global-queue"><a href="#4-1-dispatch-get-global-queue" class="headerlink" title="4.1. dispatch_get_global_queue"></a>4.1. dispatch_get_global_queue</h3><p>我们没有必要通过 <code>dispatch_queue_create</code> 函数逐个生成队列，只要获取系统标准提供的队列 <code>Global Dispatch Queue</code> 即可，获取方法如下：</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Global Dispatch Queue（高优先级）的获取方法</span></span><br><span class="line"><span class="built_in">dispatch_queue_t</span> hightQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, <span class="number">0</span>);</span><br><span class="line">    </span><br><span class="line"><span class="comment">// Global Dispatch Queue（默认优先级）的获取方法</span></span><br><span class="line"><span class="built_in">dispatch_queue_t</span> defaultQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, <span class="number">0</span>);</span><br><span class="line">    </span><br><span class="line"><span class="comment">// Global Dispatch Queue（低优先级）的获取方法</span></span><br><span class="line"><span class="built_in">dispatch_queue_t</span> lowQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, <span class="number">0</span>);</span><br><span class="line">    </span><br><span class="line"><span class="comment">// Global Dispatch Queue（后台优先级）的获取方法</span></span><br><span class="line"><span class="built_in">dispatch_queue_t</span> backgroundQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, <span class="number">0</span>);</span><br><span class="line">```    </span><br><span class="line"></span><br><span class="line"><span class="meta">### 4.2. dispatch\_set\_target\_queue</span></span><br><span class="line"></span><br><span class="line">第一个参数为要设置优先级的 queue，第二个参数是参照物，即将第一个 queue 的优先级和第二个 queue 的优先级设置一样：</span><br><span class="line"></span><br><span class="line">```objc</span><br><span class="line"><span class="built_in">dispatch_queue_t</span> queue = dispatch_queue_create(<span class="string">"queue"</span>, <span class="literal">NULL</span>);</span><br><span class="line"><span class="built_in">dispatch_queue_t</span> backgroundQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, <span class="number">0</span>);</span><br><span class="line">dispatch_set_target_queue(queue, backgroundQueue);</span><br></pre></td></tr></table></figure>
+<p>还有一种使用场景是，使用 <code>dispatch_set_target_queue</code> 将多个串行的 <code>queue</code> 指定到了同一目标，那么多个串行 <code>queue</code> 在目标 <code>queue</code> 上就是同步执行了，不再是并行执行：</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 1.创建目标队列</span></span><br><span class="line"><span class="built_in">dispatch_queue_t</span> targetQueue = dispatch_queue_create(<span class="string">"target.queue"</span>, DISPATCH_QUEUE_SERIAL);</span><br><span class="line">    </span><br><span class="line"><span class="comment">// 2.创建 3 个串行队列</span></span><br><span class="line"><span class="built_in">dispatch_queue_t</span> queue1 = dispatch_queue_create(<span class="string">"queue.1"</span>, DISPATCH_QUEUE_SERIAL);</span><br><span class="line"><span class="built_in">dispatch_queue_t</span> queue2 = dispatch_queue_create(<span class="string">"queue.2"</span>, DISPATCH_QUEUE_SERIAL);</span><br><span class="line"><span class="built_in">dispatch_queue_t</span> queue3 = dispatch_queue_create(<span class="string">"queue.3"</span>, DISPATCH_QUEUE_SERIAL);</span><br><span class="line">    </span><br><span class="line"><span class="comment">// 3.将 3 个串行队列分别添加到目标队列</span></span><br><span class="line">dispatch_set_target_queue(queue1, targetQueue);</span><br><span class="line">dispatch_set_target_queue(queue2, targetQueue);</span><br><span class="line">dispatch_set_target_queue(queue3, targetQueue);</span><br><span class="line">    </span><br><span class="line"><span class="built_in">dispatch_async</span>(queue1, ^&#123;</span><br><span class="line">    <span class="built_in">NSLog</span>(<span class="string">@"1 in"</span>);</span><br><span class="line">    [<span class="built_in">NSThread</span> sleepForTimeInterval:<span class="number">3.</span>f];</span><br><span class="line">    <span class="built_in">NSLog</span>(<span class="string">@"1 out"</span>);</span><br><span class="line">&#125;);    </span><br><span class="line"><span class="built_in">dispatch_async</span>(queue2, ^&#123;</span><br><span class="line">    <span class="built_in">NSLog</span>(<span class="string">@"2 in"</span>);</span><br><span class="line">    [<span class="built_in">NSThread</span> sleepForTimeInterval:<span class="number">2.</span>f];</span><br><span class="line">    <span class="built_in">NSLog</span>(<span class="string">@"2 out"</span>);</span><br><span class="line">&#125;);</span><br><span class="line"><span class="built_in">dispatch_async</span>(queue3, ^&#123;</span><br><span class="line">    <span class="built_in">NSLog</span>(<span class="string">@"3 in"</span>);</span><br><span class="line">    [<span class="built_in">NSThread</span> sleepForTimeInterval:<span class="number">1.</span>f];</span><br><span class="line">    <span class="built_in">NSLog</span>(<span class="string">@"3 out"</span>);</span><br><span class="line">&#125;);</span><br><span class="line">``` </span><br><span class="line"></span><br><span class="line">打印结果为：</span><br><span class="line"></span><br><span class="line">```objc</span><br><span class="line"><span class="number">2018</span><span class="number">-02</span><span class="number">-02</span> <span class="number">10</span>:<span class="number">51</span>:<span class="number">04.495511</span>+<span class="number">0800</span> Test[<span class="number">9744</span>:<span class="number">161033</span>] <span class="number">1</span> <span class="keyword">in</span></span><br><span class="line"><span class="number">2018</span><span class="number">-02</span><span class="number">-02</span> <span class="number">10</span>:<span class="number">51</span>:<span class="number">07.500984</span>+<span class="number">0800</span> Test[<span class="number">9744</span>:<span class="number">161033</span>] <span class="number">1</span> <span class="keyword">out</span></span><br><span class="line"><span class="number">2018</span><span class="number">-02</span><span class="number">-02</span> <span class="number">10</span>:<span class="number">51</span>:<span class="number">07.501277</span>+<span class="number">0800</span> Test[<span class="number">9744</span>:<span class="number">161033</span>] <span class="number">2</span> <span class="keyword">in</span></span><br><span class="line"><span class="number">2018</span><span class="number">-02</span><span class="number">-02</span> <span class="number">10</span>:<span class="number">51</span>:<span class="number">09.504112</span>+<span class="number">0800</span> Test[<span class="number">9744</span>:<span class="number">161033</span>] <span class="number">2</span> <span class="keyword">out</span></span><br><span class="line"><span class="number">2018</span><span class="number">-02</span><span class="number">-02</span> <span class="number">10</span>:<span class="number">51</span>:<span class="number">09.504318</span>+<span class="number">0800</span> Test[<span class="number">9744</span>:<span class="number">161033</span>] <span class="number">3</span> <span class="keyword">in</span></span><br><span class="line"><span class="number">2018</span><span class="number">-02</span><span class="number">-02</span> <span class="number">10</span>:<span class="number">51</span>:<span class="number">10.509577</span>+<span class="number">0800</span> Test[<span class="number">9744</span>:<span class="number">161033</span>] <span class="number">3</span> <span class="keyword">out</span></span><br></pre></td></tr></table></figure>
+<h3 id="4-3-dispatch-apply"><a href="#4-3-dispatch-apply" class="headerlink" title="4.3. dispatch_apply"></a>4.3. dispatch_apply</h3><figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">dispatch_queue_t</span> queue = dispatch_get_global_queue(<span class="number">0</span>, <span class="number">0</span>);</span><br><span class="line">dispatch_apply(<span class="number">10</span>, queue, ^(size_t index) &#123;</span><br><span class="line">    <span class="built_in">NSLog</span>(<span class="string">@"%zu"</span>, index);</span><br><span class="line">&#125;);</span><br><span class="line"><span class="built_in">NSLog</span>(<span class="string">@"done"</span>);</span><br></pre></td></tr></table></figure>
+<p>如上代码执行结果为：</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">2018</span><span class="number">-02</span><span class="number">-02</span> <span class="number">14</span>:<span class="number">28</span>:<span class="number">35.807653</span>+<span class="number">0800</span> Test[<span class="number">10129</span>:<span class="number">300472</span>] <span class="number">0</span></span><br><span class="line"><span class="number">2018</span><span class="number">-02</span><span class="number">-02</span> <span class="number">14</span>:<span class="number">28</span>:<span class="number">35.807653</span>+<span class="number">0800</span> Test[<span class="number">10129</span>:<span class="number">300507</span>] <span class="number">3</span></span><br><span class="line"><span class="number">2018</span><span class="number">-02</span><span class="number">-02</span> <span class="number">14</span>:<span class="number">28</span>:<span class="number">35.807653</span>+<span class="number">0800</span> Test[<span class="number">10129</span>:<span class="number">300508</span>] <span class="number">1</span></span><br><span class="line"><span class="number">2018</span><span class="number">-02</span><span class="number">-02</span> <span class="number">14</span>:<span class="number">28</span>:<span class="number">35.807828</span>+<span class="number">0800</span> Test[<span class="number">10129</span>:<span class="number">300472</span>] <span class="number">4</span></span><br><span class="line"><span class="number">2018</span><span class="number">-02</span><span class="number">-02</span> <span class="number">14</span>:<span class="number">28</span>:<span class="number">35.807653</span>+<span class="number">0800</span> Test[<span class="number">10129</span>:<span class="number">300506</span>] <span class="number">2</span></span><br><span class="line"><span class="number">2018</span><span class="number">-02</span><span class="number">-02</span> <span class="number">14</span>:<span class="number">28</span>:<span class="number">35.807832</span>+<span class="number">0800</span> Test[<span class="number">10129</span>:<span class="number">300507</span>] <span class="number">5</span></span><br><span class="line"><span class="number">2018</span><span class="number">-02</span><span class="number">-02</span> <span class="number">14</span>:<span class="number">28</span>:<span class="number">35.807845</span>+<span class="number">0800</span> Test[<span class="number">10129</span>:<span class="number">300508</span>] <span class="number">6</span></span><br><span class="line"><span class="number">2018</span><span class="number">-02</span><span class="number">-02</span> <span class="number">14</span>:<span class="number">28</span>:<span class="number">35.807948</span>+<span class="number">0800</span> Test[<span class="number">10129</span>:<span class="number">300472</span>] <span class="number">7</span></span><br><span class="line"><span class="number">2018</span><span class="number">-02</span><span class="number">-02</span> <span class="number">14</span>:<span class="number">28</span>:<span class="number">35.808007</span>+<span class="number">0800</span> Test[<span class="number">10129</span>:<span class="number">300506</span>] <span class="number">8</span></span><br><span class="line"><span class="number">2018</span><span class="number">-02</span><span class="number">-02</span> <span class="number">14</span>:<span class="number">28</span>:<span class="number">35.808077</span>+<span class="number">0800</span> Test[<span class="number">10129</span>:<span class="number">300507</span>] <span class="number">9</span></span><br><span class="line"><span class="number">2018</span><span class="number">-02</span><span class="number">-02</span> <span class="number">14</span>:<span class="number">28</span>:<span class="number">35.808545</span>+<span class="number">0800</span> Test[<span class="number">10129</span>:<span class="number">300472</span>] done</span><br></pre></td></tr></table></figure>
+<p>在多线程中执行各个处理的执行时间不定，但是输出结果中最后的 done 必定在最后的位置上，这是因为 <code>dispatch_apply</code> 函数会等待全部处理执行结束。例如要对 <code>NSArray</code> 类对象的所有元素执行处理时，不必一个一个编写 for 循环部分：</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">NSArray</span> *arr = @[<span class="string">@"第一个元素"</span>,</span><br><span class="line">                 <span class="string">@"第二个元素"</span>,</span><br><span class="line">                 <span class="string">@"第三个元素"</span>,</span><br><span class="line">                 <span class="string">@"第四个元素"</span>,</span><br><span class="line">                 <span class="string">@"第五个元素"</span>];</span><br><span class="line"></span><br><span class="line"><span class="built_in">dispatch_queue_t</span> queue = dispatch_get_global_queue(<span class="number">0</span>, <span class="number">0</span>);</span><br><span class="line">dispatch_apply(arr.count, queue, ^(size_t index) &#123;</span><br><span class="line">    <span class="built_in">NSLog</span>(<span class="string">@"%zu : %@"</span>, index, arr[index]);</span><br><span class="line">&#125;);</span><br><span class="line"><span class="built_in">NSLog</span>(<span class="string">@"done"</span>);</span><br></pre></td></tr></table></figure>
+<p>打印结果为：</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">2018</span><span class="number">-02</span><span class="number">-02</span> <span class="number">14</span>:<span class="number">35</span>:<span class="number">09.766620</span>+<span class="number">0800</span> Test[<span class="number">10156</span>:<span class="number">311140</span>] <span class="number">0</span> : 第一个元素</span><br><span class="line"><span class="number">2018</span><span class="number">-02</span><span class="number">-02</span> <span class="number">14</span>:<span class="number">35</span>:<span class="number">09.766621</span>+<span class="number">0800</span> Test[<span class="number">10156</span>:<span class="number">311222</span>] <span class="number">1</span> : 第二个元素</span><br><span class="line"><span class="number">2018</span><span class="number">-02</span><span class="number">-02</span> <span class="number">14</span>:<span class="number">35</span>:<span class="number">09.766622</span>+<span class="number">0800</span> Test[<span class="number">10156</span>:<span class="number">311223</span>] <span class="number">3</span> : 第四个元素</span><br><span class="line"><span class="number">2018</span><span class="number">-02</span><span class="number">-02</span> <span class="number">14</span>:<span class="number">35</span>:<span class="number">09.766632</span>+<span class="number">0800</span> Test[<span class="number">10156</span>:<span class="number">311224</span>] <span class="number">2</span> : 第三个元素</span><br><span class="line"><span class="number">2018</span><span class="number">-02</span><span class="number">-02</span> <span class="number">14</span>:<span class="number">35</span>:<span class="number">09.766840</span>+<span class="number">0800</span> Test[<span class="number">10156</span>:<span class="number">311222</span>] <span class="number">4</span> : 第五个元素</span><br><span class="line"><span class="number">2018</span><span class="number">-02</span><span class="number">-02</span> <span class="number">14</span>:<span class="number">35</span>:<span class="number">09.766958</span>+<span class="number">0800</span> Test[<span class="number">10156</span>:<span class="number">311140</span>] done</span><br></pre></td></tr></table></figure>
+<h3 id="4-4-dispatch-suspend-dispatch-resume"><a href="#4-4-dispatch-suspend-dispatch-resume" class="headerlink" title="4.4. dispatch_suspend / dispatch_resume"></a>4.4. dispatch_suspend / dispatch_resume</h3><p><code>dispatch_suspend</code> 和 <code>dispatch_resume</code> 提供了挂起、恢复队列的功能，简单来说，就是可以暂停、恢复队列上的任务。但是这里的挂起，并不能保证可以立即停止队列上正在运行的 <code>block</code>，未执行的 <code>block</code> 会被挂起。</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">dispatch_queue_t</span> queue = dispatch_queue_create(<span class="string">"queue"</span>, DISPATCH_QUEUE_SERIAL);</span><br><span class="line"></span><br><span class="line"><span class="built_in">dispatch_async</span>(queue, ^&#123;</span><br><span class="line">    <span class="built_in">NSLog</span>(<span class="string">@"挂起队列之前，打印后延迟 5 秒"</span>);</span><br><span class="line">    sleep(<span class="number">5</span>);</span><br><span class="line">    <span class="built_in">NSLog</span>(<span class="string">@"挂起队列之前，延迟 5 秒后的打印"</span>);</span><br><span class="line">&#125;);</span><br><span class="line"><span class="built_in">dispatch_async</span>(queue, ^&#123;</span><br><span class="line">    <span class="built_in">NSLog</span>(<span class="string">@"挂起队列之前，打印后延迟 5 秒，再一次"</span>);</span><br><span class="line">    sleep(<span class="number">5</span>);</span><br><span class="line">    <span class="built_in">NSLog</span>(<span class="string">@"挂起队列之前，延迟 5 秒后的打印，再一次"</span>);</span><br><span class="line">&#125;);</span><br><span class="line">    </span><br><span class="line"><span class="built_in">NSLog</span>(<span class="string">@"打印之后延迟 1 秒"</span>);</span><br><span class="line">sleep(<span class="number">1</span>);</span><br><span class="line">    </span><br><span class="line"><span class="built_in">NSLog</span>(<span class="string">@"挂起队列"</span>);</span><br><span class="line">dispatch_suspend(queue);</span><br><span class="line">    </span><br><span class="line"><span class="built_in">NSLog</span>(<span class="string">@"挂起队列之后，打印后延迟 10 秒"</span>);</span><br><span class="line">sleep(<span class="number">10</span>);</span><br><span class="line">    </span><br><span class="line"><span class="built_in">NSLog</span>(<span class="string">@"恢复队列"</span>);</span><br><span class="line">dispatch_resume(queue);</span><br></pre></td></tr></table></figure>
+<p>打印结果为：</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">2018</span><span class="number">-02</span><span class="number">-02</span> <span class="number">15</span>:<span class="number">00</span>:<span class="number">15.817281</span>+<span class="number">0800</span> Test[<span class="number">10265</span>:<span class="number">348250</span>] 打印之后延迟 <span class="number">1</span> 秒</span><br><span class="line"><span class="number">2018</span><span class="number">-02</span><span class="number">-02</span> <span class="number">15</span>:<span class="number">00</span>:<span class="number">15.817281</span>+<span class="number">0800</span> Test[<span class="number">10265</span>:<span class="number">348322</span>] 挂起队列之前，打印后延迟 <span class="number">5</span> 秒</span><br><span class="line"><span class="number">2018</span><span class="number">-02</span><span class="number">-02</span> <span class="number">15</span>:<span class="number">00</span>:<span class="number">16.818663</span>+<span class="number">0800</span> Test[<span class="number">10265</span>:<span class="number">348250</span>] 挂起队列</span><br><span class="line"><span class="number">2018</span><span class="number">-02</span><span class="number">-02</span> <span class="number">15</span>:<span class="number">00</span>:<span class="number">16.818853</span>+<span class="number">0800</span> Test[<span class="number">10265</span>:<span class="number">348250</span>] 挂起队列之后，打印后延迟 <span class="number">10</span> 秒</span><br><span class="line"><span class="number">2018</span><span class="number">-02</span><span class="number">-02</span> <span class="number">15</span>:<span class="number">00</span>:<span class="number">20.821085</span>+<span class="number">0800</span> Test[<span class="number">10265</span>:<span class="number">348322</span>] 挂起队列之前，延迟 <span class="number">5</span> 秒后的打印</span><br><span class="line"><span class="number">2018</span><span class="number">-02</span><span class="number">-02</span> <span class="number">15</span>:<span class="number">00</span>:<span class="number">26.820438</span>+<span class="number">0800</span> Test[<span class="number">10265</span>:<span class="number">348250</span>] 恢复队列</span><br><span class="line"><span class="number">2018</span><span class="number">-02</span><span class="number">-02</span> <span class="number">15</span>:<span class="number">00</span>:<span class="number">31.826083</span>+<span class="number">0800</span> Test[<span class="number">10265</span>:<span class="number">348327</span>] 挂起队列之前，延迟 <span class="number">5</span> 秒后的打印，再一次</span><br></pre></td></tr></table></figure>
+<h3 id="4-5-dispatch-semaphore-wait-dispatch-semaphore-signal"><a href="#4-5-dispatch-semaphore-wait-dispatch-semaphore-signal" class="headerlink" title="4.5. dispatch_semaphore_wait / dispatch_semaphore_signal"></a>4.5. dispatch_semaphore_wait / dispatch_semaphore_signal</h3><p>当并行执行的处理更新数据时，会产生数据不一致的情况，有时应该程序还会异常结束。如下例子，不考虑顺序，将所有数据添加到 <code>NSMutableArray</code> 中：</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">dispatch_queue_t</span> queue = dispatch_get_global_queue(<span class="number">0</span>, <span class="number">0</span>);</span><br><span class="line">    </span><br><span class="line"><span class="built_in">NSMutableArray</span> *arr = [<span class="built_in">NSMutableArray</span> array];</span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">100000</span>; i++) &#123;</span><br><span class="line">    <span class="built_in">dispatch_async</span>(queue, ^&#123;</span><br><span class="line">        [arr addObject:@(i)];</span><br><span class="line">        <span class="built_in">NSLog</span>(<span class="string">@"已经添加：%d"</span>, i);</span><br><span class="line">    &#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>打印途中崩溃停止，所以此时我们应该使用 <code>Dispatch Semaphore</code> 。<code>Dispatch Semaphore</code> 是持有计数的信号，类似于过马路时常用的手旗，可以通过时举起手旗，不可通过时放下手旗。<code>Dispatch Semaphore</code> 使用计数来实现该功能，计数为 0 时等待，计数为 1 或者大于 1 时，减去 1 而不等待。</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">dispatch_queue_t</span> queue = dispatch_get_global_queue(<span class="number">0</span>, <span class="number">0</span>);</span><br><span class="line">dispatch_semaphore_t semaphore = dispatch_semaphore_create(<span class="number">1</span>);</span><br><span class="line">    </span><br><span class="line"><span class="built_in">NSMutableArray</span> *arr = [<span class="built_in">NSMutableArray</span> array];</span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">100000</span>; i++) &#123;</span><br><span class="line">    <span class="built_in">dispatch_async</span>(queue, ^&#123;</span><br><span class="line">        <span class="comment">// 一直等待，直到 semaphore 的计数值达到大于等于 1</span></span><br><span class="line">        dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER);</span><br><span class="line">        [arr addObject:@(i)];</span><br><span class="line">        <span class="built_in">NSLog</span>(<span class="string">@"已经添加：%d"</span>, i);</span><br><span class="line">        <span class="comment">// 通过该函数将 semaphore 计数值加 1</span></span><br><span class="line">        dispatch_semaphore_signal(semaphore);</span><br><span class="line">    &#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="4-6-Dispatch-I-O-Dispatch-Data"><a href="#4-6-Dispatch-I-O-Dispatch-Data" class="headerlink" title="4.6. Dispatch I/O / Dispatch Data"></a>4.6. Dispatch I/O / Dispatch Data</h3><p>在读取较大的文件时，如果将文件分成合适的大小并使用并行队列读取的话,应该会比一般的读取速度快不少。 在 GCD 当中能实现这一功能的就是 Dispatch I/O 和 Dispatch Data。具体代码实现参照 Apple System Log API 里的<a href="https://opensource.apple.com/source/Libc/Libc-763.11/gen/asl.c" target="_blank" rel="noopener">源代码</a>。</p>
+<h2 id="5-GCD-的实现"><a href="#5-GCD-的实现" class="headerlink" title="5. GCD 的实现"></a>5. GCD 的实现</h2><p>涉及到低层的太多，总结不出来，只能贴上<a href="https://github.com/mayan29/BlogCode/tree/master/【读书笔记】《Objective-C%20高级编程：iOS%20与%20OS%20X%20多线程和内存管理》" target="_blank" rel="noopener">原文</a>了。。。</p>
+<h2 id="后记"><a href="#后记" class="headerlink" title="后记"></a>后记</h2><blockquote>
+<p>去年仅阅读了第一篇章，今年花了 4、5 天时间把整本书全部阅读完成。感觉讲的挺不错的，就是翻译的有点不通顺，废话也略多。感觉比较有用的地方是，block 编译成 c++ 代码后的解析，对 block 低层实现原理豁然开朗。</p>
+<p>本以为年前没有迭代任务，可以慢慢地看书了，突然要在年前启动一个新项目，有点浮躁了，后面的 GCD 低层看不下去了，心态崩了[衰]</p>
+</blockquote>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/05/05/【读书笔记】《Effective Objective-C 2.0 编写高质量 iOS 与 OS X 代码的 52 个有效方法》/" rel="next" title="【读书笔记】《Effective Objective-C 2.0 编写高质量 iOS 与 OS X 代码的 52 个有效方法》">
+                <i class="fa fa-chevron-left"></i> 【读书笔记】《Effective Objective-C 2.0 编写高质量 iOS 与 OS X 代码的 52 个有效方法》
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/03/22/【iOS】保持界面流畅的技巧/" rel="prev" title="【iOS】保持界面流畅的技巧">
+                【iOS】保持界面流畅的技巧 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/uploads/avatar.jpeg"
+                alt="mayan" />
+            
+              <p class="site-author-name" itemprop="name">mayan</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">8</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">3</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/mayan29" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="mailto:18511560993@gmail.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-引用计数内部实现"><span class="nav-text">1. 引用计数内部实现</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-Block-的本质"><span class="nav-text">2. Block 的本质</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#例-1"><span class="nav-text">例 1</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#例-2"><span class="nav-text">例 2</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#例-3"><span class="nav-text">例 3</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-Block-存储域"><span class="nav-text">3. Block 存储域</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#NSConcreteStackBlock-类型："><span class="nav-text">_NSConcreteStackBlock 类型：</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#NSConcreteGlobalBlock-类型："><span class="nav-text">_NSConcreteGlobalBlock 类型：</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#NSConcreteMallocBlock-类型："><span class="nav-text">_NSConcreteMallocBlock 类型：</span></a></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-GCD-几种常用方法"><span class="nav-text">4. GCD 几种常用方法</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#4-1-dispatch-get-global-queue"><span class="nav-text">4.1. dispatch_get_global_queue</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-3-dispatch-apply"><span class="nav-text">4.3. dispatch_apply</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-4-dispatch-suspend-dispatch-resume"><span class="nav-text">4.4. dispatch_suspend / dispatch_resume</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-5-dispatch-semaphore-wait-dispatch-semaphore-signal"><span class="nav-text">4.5. dispatch_semaphore_wait / dispatch_semaphore_signal</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-6-Dispatch-I-O-Dispatch-Data"><span class="nav-text">4.6. Dispatch I/O / Dispatch Data</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-GCD-的实现"><span class="nav-text">5. GCD 的实现</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#后记"><span class="nav-text">后记</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">mayan</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Gemini</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+    
+      <script id="dsq-count-scr" src="https://mayan29.disqus.com/count.js" async></script>
+    
+
+    
+      <script type="text/javascript">
+        var disqus_config = function () {
+          this.page.url = 'http://yoursite.com/2018/02/06/【读书笔记】《Objective-C 高级编程：iOS 与 OS X 多线程和内存管理》/';
+          this.page.identifier = '2018/02/06/【读书笔记】《Objective-C 高级编程：iOS 与 OS X 多线程和内存管理》/';
+          this.page.title = '【读书笔记】《Objective-C 高级编程：iOS 与 OS X 多线程和内存管理》';
+        };
+        var d = document, s = d.createElement('script');
+        s.src = 'https://mayan29.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', '' + +new Date());
+        (d.head || d.body).appendChild(s);
+      </script>
+    
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
