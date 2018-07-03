@@ -336,7 +336,7 @@ dispatch_resume(self.timer);
 
 ### 1. 异步并发队列
 
-NSOperation 是一个基类，不应该直接生成 NSOperation 对象，而是应该用它的子类 NSBlockOperation。
+NSOperation 是一个基类，不应该直接生成 NSOperation 对象，而是应该用它的子类 NSBlockOperation 或者 NSInvocationOperation，两种方式本质没有区别。
 
 #### 标准创建
 
