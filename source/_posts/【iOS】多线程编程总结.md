@@ -127,16 +127,9 @@ dispatch_async(queue, ^{
 
 任务 B 要等任务 A 执行完才能执行，任务 A 又排在任务 B 后面，意味着任务 A 要在任务 B 执行完才能执行，所以他们进入了互相等待的局面，这就是死锁。
 
-其实在通常情况下我们不必要用 dispatch_sync，因为 dispatch_async 能够更好的利用 CPU，提升程序运行速度。只有当我们需要保证队列中的任务必须顺序执行时，才考虑使用 dispatch_sync。在使用 dispatch_sync 的时候应该分析当前处于哪个队列，以及任务会提交到哪个队列。
+其实在通常情况下我们不必要用 dispatch_sync，因为 dispatch_async 能够更好的利用 CPU，提升程序运行速度。只有当我们需要保证队列中的任务必须顺序执行时，才考虑使用 dispatch_sync。在使用 dispatch_sync 的时候应该分析当前处于哪个队列，以及任务会提交到哪个队列。 
 
-### 5. 变更优先级
-
-```objc
-dispatch_queue_t queue = dispatch_queue_create("com.mayan29.queue", DISPATCH_QUEUE_CONCURRENT);
-dispatch_set_target_queue(queue, dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0));
-```    
-
-### 6. 任务组
+### 5. 任务组
 
 ```objc
 dispatch_group_t group = dispatch_group_create();
@@ -192,7 +185,7 @@ dispatch_group_notify(group, queue, ^{
 // 任务全部执行完毕
 ```
 
-### 7. 栅栏函数
+### 6. 栅栏函数
 
 ```objc
 dispatch_queue_t queue = dispatch_queue_create("com.mayan29.queue", NULL);
@@ -213,7 +206,7 @@ dispatch_async(queue, ^{
 });
 ```
 
-### 8. Apply 循环执行
+### 7. Apply 循环执行
 
 ```objc
 NSArray *arr = @[@"执行 A 任务", @"执行 B 任务", @"执行 C 任务"];
@@ -227,7 +220,7 @@ dispatch_async(queue, ^{
 });
 ```
 
-### 9. 队列唤醒 & 挂起
+### 8. 队列唤醒 & 挂起
 
 ```objc
 dispatch_queue_t queue = dispatch_queue_create("com.mayan29.queue", NULL);
@@ -243,7 +236,7 @@ dispatch_suspend(queue);  // 挂起
 dispatch_resume(queue);  // 唤醒，执行任务 A
 ```
 
-### 10. 信号量
+### 9. 信号量
 
 其实最经典的例子就是批量下载。比如有 N 个图片需要一个一个下载，但是需要控制每次只能下载 3 个，就需要用到信号量了。
 
@@ -299,7 +292,7 @@ dispatch_group_notify(group, dispatch_get_main_queue(), ^{
 2016-12-21 16:56:48.455010+0800 GCD[15452:5524743] 任务全部执行完毕
 ```
 
-### 11. 定时器
+### 10. 定时器
 
 GCD 定时器不受 RunLoop 中 Mode 的影响（RunLoop 内部也是基于 GCD 实现的)，比如滚动 TableView 的时候，GCD 的定时器不受影响。
 
@@ -325,7 +318,7 @@ dispatch_source_set_event_handler(self.timer, ^{
 dispatch_resume(self.timer);
 ```
 
-### 12. 单例模式
+### 11. 单例模式
 
 ```objc
 + (Manager *)sharedInstance {
@@ -484,7 +477,7 @@ NSBlockOperation *operationEnd = [NSBlockOperation blockOperationWithBlock:^{
 
 - (void)cancelAllOperations;  // 取消队列中所有任务
 - (void)waitUntilAllOperationsAreFinished;  // 阻塞当前线程直到此队列中所有任务执行完毕
-``` 
+```
 
 
 ## NSThread
