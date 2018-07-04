@@ -45,7 +45,7 @@ GCD（Grand Central Dispatch，牛逼的中枢调度器）是 iOS 4.0 引入的�
 
 ### 1. 内部管理线程的优点
 
-当使用 GCD 的时候，你不用考虑线程方面的问题，只需考虑队列和任务。举个例子，如果我们直接使用线程，想要做一些并发的事情。我们可能把我们的任务分成 100 个小任务，同时创建 8 个线程，把这些小任务分别送到这 8 个线程中。但是这些小任务中会有一些三方函数，写这个函数的人同时也想要使用并发，可能同样会创建 8 个线程。所以，现在会同时创建 8 x 8 = 64 个线程。使用 GCD 就不会有这种问题，GCD 严格来说不是开一条线程，而是从池中获取。比如串行队列除了主队列外，每次执行任务都会获取一条线程。一个任务执行完毕后线程是会回到池，直到再次被唤起。而实际上当没有其它对手抢占了这条刚回到池中的线程时，同一个串行队列会继续获取到这条相同的线程执行下一个任务。
+当使用 GCD 的时候，你不用考虑线程方面的问题，只需考虑队列和任务。举个例子，如果我们直接使用线程，想要做一些并发的事情。我们可能把我们的任务分成 N 个小任务，同时创建 8 个线程，把这些小任务分别送到这 8 个线程中。但是这些小任务中会有一些三方函数，写这个函数的人同时也想要使用并发，可能同样会创建 8 个线程。所以，现在会同时创建 8 x 8 = 64 个线程。使用 GCD 就不会有这种问题，GCD 严格来说不是开一条线程，而是从池中获取。比如串行队列除了主队列外，每次执行任务都会获取一条线程。一个任务执行完毕后线程是会回到池，直到再次被唤起。而实际上当没有其它对手抢占了这条刚回到池中的线程时，同一个串行队列会继续获取到这条相同的线程执行下一个任务。
 
 ### 2. 核心概念
 
@@ -160,18 +160,18 @@ dispatch_group_notify(group, queue, ^{
 ```objc
 dispatch_group_t group = dispatch_group_create();
 dispatch_queue_t queue = dispatch_queue_create("com.mayan29.queue", NULL);
-    
+
 dispatch_group_async(group, queue, ^{
-    NSLog(@"执行 A 任务");
+    NSLog(@"执行任务 A, 线程 %@", [NSThread currentThread]);
 });
 dispatch_group_async(group, queue, ^{
-    NSLog(@"执行 B 任务");
+    NSLog(@"执行任务 B, 线程 %@", [NSThread currentThread]);
 });
 dispatch_group_async(group, queue, ^{
     sleep(5);
-    NSLog(@"执行 C 任务");
+    NSLog(@"执行任务 C, 线程 %@", [NSThread currentThread]);
 });
-    
+
 // 等待 2 秒，如果是不限时间可改为 DISPATCH_TIME_FOREVER
 long result = dispatch_group_wait(group, dispatch_time(DISPATCH_TIME_NOW, 2 * NSEC_PER_SEC));
 if (result == 0) {
@@ -179,20 +179,17 @@ if (result == 0) {
 } else {
     NSLog(@"任务正在处理");
 }
-    
+
 dispatch_group_notify(group, queue, ^{
     NSLog(@"任务全部执行完毕");
 });
-```
-
-打印结果
     
-```objc
-2016-12-21 14:53:39.334517+0800 GCD[13489:5363201] 执行 A 任务
-2016-12-21 14:53:39.334677+0800 GCD[13489:5363201] 执行 B 任务
-2016-12-21 14:53:44.335772+0800 GCD[13489:5363152] 任务正在处理
-2016-12-21 14:53:47.340231+0800 GCD[13489:5363201] 执行 C 任务
-2016-12-21 14:53:47.340474+0800 GCD[13489:5363201] 任务全部执行完毕
+// 打印结果：
+// 执行任务 A, 线程 <NSThread: 0x60400026f4c0>{number = 3, name = (null)}
+// 执行任务 B, 线程 <NSThread: 0x60400026f4c0>{number = 3, name = (null)}
+// 任务正在处理
+// 执行任务 C, 线程 <NSThread: 0x60400026f4c0>{number = 3, name = (null)}
+// 任务全部执行完毕
 ```
 
 ### 7. 栅栏函数
@@ -310,7 +307,6 @@ GCD 定时器不受 RunLoop 中 Mode 的影响（RunLoop 内部也是基于 GCD 
 @property (nonatomic, strong) dispatch_source_t timer;
 
 
-
 self.timer = dispatch_source_create(DISPATCH_SOURCE_TYPE_TIMER, 0, 0, dispatch_get_global_queue(0, 0));
 
 // 间隔 1 秒，并允许有 0.1 秒的误差
@@ -329,12 +325,29 @@ dispatch_source_set_event_handler(self.timer, ^{
 dispatch_resume(self.timer);
 ```
 
+### 12. 单例模式
+
+```objc
++ (Manager *)sharedInstance {
+    
+    static Manager *sharedManagerInstance = nil;
+    static dispatch_once_t onceToken;
+    
+    dispatch_once(&onceToken, ^{
+        sharedManagerInstance = [[Manager alloc] init];
+
+    });
+    
+    return sharedManagerInstance;
+}
+```
+
 
 ## NSOperation
 
 从简单意义上来说，NSOperation 就是对 GCD 中的 block 进行的封装。相对 GCD 来说，使用 NSOperation 会增加一点点额外的开销，但是我们却换来了非常强大的灵活性和功能，我们可以给 operation 之间添加依赖关系、取消一个正在执行的 operation、暂停和恢复 operation queue 等。并且它有三种状态 isExecuted、isFinished 和 isCancelled 以方便我们通过 KVC 对它的状态进行监听。
 
-### 1. 异步并发队列
+### 1. 创建多线程
 
 NSOperation 是一个基类，不应该直接生成 NSOperation 对象，而是应该用它的子类 NSBlockOperation 或者 NSInvocationOperation，两种方式本质没有区别。
 
@@ -383,30 +396,6 @@ NSOperationQueue *queue = [[NSOperationQueue alloc] init];
 // 执行任务 B, 线程 <NSThread: 0x60400026eb80>{number = 3, name = (null)}
 // 执行任务 C, 线程 <NSThread: 0x600000273700>{number = 5, name = (null)}
 // 执行任务 A, 线程 <NSThread: 0x60400007c500>{number = 4, name = (null)}
-```
-
-#### 调用方式创建
-
-```objc
-NSOperationQueue *queue = [[NSOperationQueue alloc] init];
-    
-NSInvocationOperation *operationA = [[NSInvocationOperation alloc] initWithTarget:self selector:@selector(methodA) object:nil];
-NSInvocationOperation *operationB = [[NSInvocationOperation alloc] initWithTarget:self selector:@selector(methodB) object:nil];
-NSInvocationOperation *operationC = [[NSInvocationOperation alloc] initWithTarget:self selector:@selector(methodC) object:nil];
-    
-[queue addOperation:operationA];
-[queue addOperation:operationB];
-[queue addOperation:operationC];
-
-- (void)methodA {
-    NSLog(@"执行任务 A, 线程 %@", [NSThread currentThread]);
-}
-- (void)methodB {
-    NSLog(@"执行任务 B, 线程 %@", [NSThread currentThread]);
-}
-- (void)methodC {
-    NSLog(@"执行任务 C, 线程 %@", [NSThread currentThread]);
-}
 ```
 
 ### 2. 最大并发数 & 依赖关系
@@ -472,22 +461,29 @@ NSBlockOperation *operationEnd = [NSBlockOperation blockOperationWithBlock:^{
 2016-12-22 14:33:20.301242+0800 GCD[35716:6312070] 任务全部执行完毕
 ```
 
-### 3. 取消任务
+### 3. 其他方法
 
-如果我们有两次网络请求，第二次请求会用到第一次的数据。如果此时网络情况不好，第一次请求超时了，那么第二次请求也没有必要发送了。当然，用户也有可能人为地取消某个 NSOperation。
-
-当某个 NSOperation 被取消时，我们应该尽可能的清除 NSOperation 内部的数据并且把 cancelled 和 finished 设为 true，把 executing 设为 false。
+#### NSOperation 方法
 
 ```objc
-[operation cancel]; // 取消某个 operation
+@property (readonly, getter=isCancelled)  BOOL cancelled;   // 判断任务是否取消
+@property (readonly, getter=isExecuting)  BOOL executing;   // 判断任务是否正在执行
+@property (readonly, getter=isFinished)   BOOL finished;    // 判断任务是否完成
+@property (readonly, getter=isConcurrent) BOOL concurrent;  // 判断任务是否并行
+@property (nullable, copy) void (^completionBlock)();  // 完成后需要执行的操作
+@property NSOperationQueuePriority queuePriority;  // 优先级
+
+- (void)cancel;  // 取消任务
+- (void)waitUntilFinished;  // 阻塞当前线程直到此任务执行完毕
 ```
 
-### 4. 其他方法
+#### NSOperation Queue 方法
 
 ```objc
-NSOperationQueue *queue = [NSOperationQueue mainQueue];  // 主队列
-[queue cancelAllOperations];  // 取消队列所有操作
-[queue setSuspended:YES];  // YES暂停，NO恢复队列
+@property (getter=isSuspended) BOOL suspended;  // YES，暂停；NO，恢复队列
+
+- (void)cancelAllOperations;  // 取消队列中所有任务
+- (void)waitUntilAllOperationsAreFinished;  // 阻塞当前线程直到此队列中所有任务执行完毕
 ``` 
 
 
@@ -583,3 +579,4 @@ NSThread *thread = [[NSThread alloc] initWithTarget:self selector:@selector(down
 5. [关于 iOS 多线程，你看我就够了](https://www.jianshu.com/p/0b0d9b1f1f19)
 6. [iOS 开发之多线程编程总结（一）](https://www.jianshu.com/p/95aa5446361d)
 7. [iOS 开发之多线程编程总结（二）](https://www.jianshu.com/p/2a614531187f)
+8. [iOS 开发之多线程编程总结（三）](https://www.jianshu.com/p/01a9b8c9e963)
