@@ -248,13 +248,57 @@ Android 中日志工具类 Log 提供了五种方法来打印日志：
 
 ### 手动创建活动
 
+#### 创建活动
+
 新创建一个 Android 项目，项目名称可以叫做 ActivityTest，在添加活动页面选择 Add No Activity，默认创建一个没有 Activity 的项目。
 
 ![Add No Activity](http://pd5z3o7sm.bkt.clouddn.com/image/2018-06-23/003.png)
 
+目前项目中虽然还是会自动生成很多文件，但是 app/src/main/java/com.example.mayan.activitytest 目录应该是空的。右击 com.example.mayan.activitytest 包 -> New -> Activity -> Empty Activity，将活动命名为 FirstActivity。
 
+![Empty Activity](http://pd5z3o7sm.bkt.clouddn.com/image/2018-06-23/004.png)
 
+其中勾选 `Generate Layout File` 表示会自动为 FirstActivity 创建一个对应的布局文件，勾选 `Launcher Activity` 表示会自动将 FirstActivity 设置为当前项目的主活动，勾选 `Backwards Compatibility` 表示会为项目启用向下兼容的模式。不要勾选 `Generate Layout File` 和 `Launcher Activity` 这两个选项，下面我们将会一个个手动来完成。
 
+#### 创建和加载布局
+
+Android 程序的设计讲究逻辑和视图分离，最好每一个活动都能对应一个布局，布局就是用来显示界面内容的，因此我们现在就来手动创建一个布局文件。
+
+右击 app/src/main/res 目录 -> New -> Directory，创建一个名为 layout 的目录。然后右击 layout目录 -> Layout resource file，创建一个名为 first_layout 的布局文件，根元素默认选择为 LinearLayout。我们现在对这个布局稍作编辑，添加一个按钮：
+
+```java
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <!--match_parent 表示当前元素和父元素一样宽-->
+    <!--wrap_content 表示当前高度只要能刚好包含里面的内容就好-->
+    <Button
+        android:id="@+id/button_1"
+        android:layout_width="match_parent"   
+        android:layout_height="wrap_content"  
+        android:text="Button 1"
+        />
+
+</LinearLayout>
+```
+
+然后重回 FirstActivity 活动中加载这个布局：
+
+```java
+public class FirstActivity extends AppCompatActivity {
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.first_layout);
+    }
+}
+```
+
+#### 在 AndroidManifest 文件中注册
+
+虽然 Android Studio 已经在 AndroidManifest.xml 中自动注册了活动，但是还没有为程序配置主活动。
 
 
 
