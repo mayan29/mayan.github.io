@@ -19,7 +19,7 @@ tags:
 
 ## Android 简介
 
-### 1. 系统架构
+### 系统架构
 
 Android 大致可以分为四层架构：Linux 内核层、系统运行库层、应用框架层、应用层。
 
@@ -31,7 +31,7 @@ Android 大致可以分为四层架构：Linux 内核层、系统运行库层、
 
 - 应用层：所有安装在手机上的应用程序都是属于这一层的，比如系统自带的联系人、短信等程序。
 
-### 2. 开发组件
+### 开发组件
 
 Android 系统四大组件分别是活动（Activity）、服务（Service）、广播接收器（Broadcast Receiver）、内容提供器（Content Provider）。
 
@@ -296,13 +296,81 @@ public class FirstActivity extends AppCompatActivity {
 }
 ```
 
-#### 在 AndroidManifest 文件中注册
+#### 注册活动
 
-虽然 Android Studio 已经在 AndroidManifest.xml 中自动注册了活动，但是还没有为程序配置主活动。
+虽然 Android Studio 已经在 AndroidManifest.xml 中自动注册了活动，但是还没有为程序配置主活动。在 AndroidManifest.xml 中，修改如下代码将 FirstActivity 设置为主活动：
 
+```java
+<activity android:name=".FirstActivity" android:label="This is FirstActitvity">
+    <intent-filter>
+        <action android:name="android.intent.action.MAIN"/>
+        <category android:name="android.intent.category.LAUNCHER"/>
+    </intent-filter>
+</activity>
+```
 
+一切准备就绪了，让我们来运行一下程序吧。        
 
+### 信息提示 Toast
 
+在 FirstActivity.java 中添加 button1 的点击事件，点击后弹出一个 Toast：
 
+```java
+Button button1 = findViewById(R.id.button_1);
+button1.setOnClickListener(new View.OnClickListener() {
+    @Override
+    public void onClick(View view) {
+        Toast.makeText(FirstActivity.this, "You clicked Button1", Toast.LENGTH_SHORT).show();
+    }
+});
+```
 
+### 菜单栏 Menu
 
+首先在 res 目录下新建一个 menu 文件夹，然后在这个文件夹下再新建一个名叫 main 的菜单文件，右击 menu 文件夹 -> New -> Menu resource file，文件名输入 main，然后在 main.xml 中添加如下代码：
+
+```java
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:id="@+id/add_item" android:title="Add"/>
+    <item android:id="@+id/remove_item" android:title="Remove"/>
+
+</menu>
+```
+
+接着重新回到 FirstActivity.java 中来重写 `onCreateOptionsMenu()` 和 `onOptionsItemSelected()` 方法，重写方法可以使用 ^ + O 快捷键。
+
+```java
+@Override
+public boolean onCreateOptionsMenu(Menu menu) {
+    getMenuInflater().inflate(R.menu.main, menu);
+    return true;
+}
+
+@Override
+public boolean onOptionsItemSelected(MenuItem item) {
+    switch (item.getItemId()) {
+        case R.id.add_item:
+            Toast.makeText(this, "You clicked Add", Toast.LENGTH_SHORT).show();
+            break;
+        case R.id.remove_item:
+            Toast.makeText(this, "You clicked Remove", Toast.LENGTH_SHORT).show();
+            break;
+        default:
+    }
+    return true;
+}
+```    
+
+### 销毁活动
+
+除了按下 Back 键，我们还可以通过代码销毁当前活动，修改按钮监听器中的代码：
+
+```java
+button1.setOnClickListener(new View.OnClickListener() {
+    @Override
+    public void onClick(View view) {
+        finish();
+    }
+});
+```
